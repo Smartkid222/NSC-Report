@@ -886,7 +886,6 @@
                 required
               >
                 <option value="Teacher">Teacher</option>
-                <option value="Class Teacher">Class Teacher</option>
                 <option value="Admin">Admin</option>
                 <option value="Head">Head</option>
               </select>
@@ -932,19 +931,6 @@
                   required
                 />
               </div>
-            </div>
-
-            <div id="class-teacher-group" class="form-group hidden">
-              <label>Assigned Class</label>
-              <select id="signupClass" class="form-control">
-                <option value="" disabled selected>Select Class</option>
-                <option value="JSS1">JSS1</option>
-                <option value="JSS2">JSS2</option>
-                <option value="JSS3">JSS3</option>
-                <option value="SSS1">SSS1</option>
-                <option value="SSS2">SSS2</option>
-                <option value="SSS3">SSS3</option>
-              </select>
             </div>
 
             <div id="subject-group">
@@ -1640,6 +1626,28 @@
         },
       };
 
+      let isInitialLoad = true;
+
+      window.addEventListener("popstate", (event) => {
+        // Skip the popstate that browsers sometimes fire on initial page load
+        if (isInitialLoad) {
+          isInitialLoad = false;
+          return;
+        }
+
+        // Normal back navigation
+        app.goBack();
+
+        // Safety: if internal stack is empty → trap further backs
+        if (app.state.navHistory.length === 0) {
+          history.pushState(
+            { section: "home", title: "Dashboard" },
+            document.title,
+            window.location.href,
+          );
+        }
+      });
+
       // --- 4. APP CONTROLLER ---
       const app = {
         state: {
@@ -1653,22 +1661,34 @@
 
         // Call this before showing any major section
         pushHistory: function (sectionId, title, backAction = null) {
+          // Save internal navigation state
           this.state.navHistory.push({
             section: sectionId,
             title: title,
             action: backAction || (() => this.goHome()),
           });
+
+          // Tell browser "we moved to a new view" (without changing URL)
+          history.pushState(
+            { section: sectionId },
+            title || document.title,
+            window.location.href,
+          );
         },
 
         goBack: function () {
           if (this.state.navHistory.length > 0) {
-            const prev = this.state.navHistory.pop();
-            if (prev.action) {
-              prev.action();
+            // Remove the last navigation step
+            const previous = this.state.navHistory.pop();
+
+            // Either run custom back action or show previous section
+            if (previous.action) {
+              previous.action();
             } else {
-              this.showSection(prev.section);
+              this.showSection(previous.section);
             }
           } else {
+            // Already at home/dashboard → stay here (don't go to login)
             this.goHome();
           }
         },
@@ -1717,9 +1737,7 @@
         },
         handleRoleChange: function () {
           const r = document.getElementById("signupRole").value;
-          document
-            .getElementById("class-teacher-group")
-            .classList.toggle("hidden", r !== "Class Teacher");
+          // Only Admin and Head don't need subjects
           document
             .getElementById("subject-group")
             .classList.toggle("hidden", r === "Admin" || r === "Head");
@@ -1763,21 +1781,18 @@
           const fname = document.getElementById("signupFirstName").value;
           const lname = document.getElementById("signupLastName").value;
           const role = document.getElementById("signupRole").value;
-          let cls =
-            role === "Class Teacher"
-              ? document.getElementById("signupClass").value
-              : "";
-          if (role === "Class Teacher" && !cls)
-            return this.showToast("Select assigned class", "error");
+
+          // Teachers must have at least one subject
           if (role === "Teacher" && this.state.draftSubjects.length === 0)
-            return this.showToast("Add subject", "error");
+            return this.showToast("Add at least one subject", "error");
+
           const u = {
             title,
             firstName: fname,
             lastName: lname,
             pass: document.getElementById("signupPass").value,
             role,
-            assignedClass: cls,
+            assignedClass: "", // No longer used - Class Teacher role removed
             subjects: [...this.state.draftSubjects],
           };
           const success = await GoogleSheetService.signup(u);
@@ -1832,37 +1847,26 @@
             this.state.currentUser.name;
           document.getElementById("user-role").textContent =
             this.state.currentUser.role;
+          // IMPORTANT: only initialize history AFTER successful login
+          if (!history.state || history.state.section !== "dashboard") {
+            history.replaceState(
+              { section: "dashboard" },
+              "Dashboard",
+              window.location.href,
+            );
+            // Optional: one extra entry so first back doesn't exit browser
+            history.pushState(
+              { section: "dashboard" },
+              "Dashboard",
+              window.location.href,
+            );
+          }
           this.renderLanding();
         },
         renderLanding: function () {
           const r = this.state.currentUser.role;
           const land = document.getElementById("landing-grid");
           land.innerHTML = "";
-
-          // --- CLASS TEACHER SECTION ---
-          if (r === "Class Teacher") {
-            const assignedClass = this.state.currentUser.assignedClass;
-            if (assignedClass) {
-              land.innerHTML += `
-                <div class="card" onclick="app.loadAdminRoster('${assignedClass}', 'exam')" style="border: 2px solid var(--primary); background: #f0f9ff;">
-                    <div class="card-content">
-                        <div class="card-icon">📝</div>
-                        <div class="card-title">My Class: ${assignedClass}</div>
-                        <div class="card-meta">Exam Results (CA + Exam)</div>
-                    </div>
-                    <div class="card-footer"><button class="btn btn-primary btn-sm w-full">View</button></div>
-                </div>
-                <div class="card" onclick="app.loadAdminRoster('${assignedClass}', 'midterm')" style="border: 2px solid var(--warning); background: #fffbeb;">
-                    <div class="card-content">
-                        <div class="card-icon">📊</div>
-                        <div class="card-title">My Class: ${assignedClass}</div>
-                        <div class="card-meta">Mid-Term Results</div>
-                    </div>
-                    <div class="card-footer"><button class="btn btn-primary btn-sm w-full">View</button></div>
-                </div>
-              `;
-            }
-          }
 
           // --- ADMIN/HEAD SECTION ---
           if (r === "Admin" || r === "Head") {
@@ -1890,7 +1894,7 @@
                     `;
           }
 
-          // --- DIRECTORIES ---
+          // --- DIRECTORIES (Available to all roles) ---
           land.innerHTML += `
             <div class="card" onclick="app.loadClassList('exam')">
                 <div class="card-content"><div class="card-icon">⌨️</div><div class="card-title">Exam Directory</div><div class="card-meta">Enter Exam Scores</div></div>
@@ -1947,6 +1951,7 @@
         // --- PERFORMANCE & BROADSHEET (FIXED) ---
         loadPerformance: async function () {
           this.showSection("section-performance");
+          this.pushHistory("section-performance", "Student Performance");
           const container = document.getElementById("perf-container");
           container.innerHTML = `
     <div class="list-header">
@@ -2151,11 +2156,10 @@
           document.getElementById("roster-title").textContent =
             `${cls} - ${this.state.viewContext.resultType.toUpperCase()} Roster`;
 
-          const isClassTeacher =
-            this.state.currentUser.role === "Class Teacher";
+          // Add Student button is always visible for Admin/Head
           const addBtn = document.getElementById("btn-roster-add-student");
           if (addBtn) {
-            addBtn.style.display = isClassTeacher ? "none" : "inline-flex";
+            addBtn.style.display = "inline-flex";
           }
 
           const stds = await GoogleSheetService.loadStudents(cls);
@@ -2182,13 +2186,9 @@
             tbody.innerHTML =
               '<tr><td colspan="5" class="text-center">No students found.</td></tr>';
           }
-          this.pushHistory("section-admin-roster", cls);
+          this.pushHistory("section-admin-roster", `${cls} Roster`);
           document.getElementById("btn-back").onclick = () => {
-            if (this.state.currentUser.role === "Class Teacher") {
-              this.goHome();
-            } else {
-              this.loadClassSelectionForAdmin(resultType);
-            }
+            this.loadClassSelectionForAdmin(resultType);
           };
         },
 
@@ -2203,17 +2203,8 @@
           );
           document.getElementById("btn-back").onclick = () => app.goBack();
 
-          if (r === "Class Teacher") {
-            classesToShow.push(this.state.currentUser.assignedClass);
-            this.state.currentUser.subjects.forEach((s) => {
-              if (s.class === "ALL JSS")
-                classesToShow.push("JSS1", "JSS2", "JSS3");
-              else if (s.class === "ALL SSS")
-                classesToShow.push("SSS1", "SSS2", "SSS3");
-              else if (!classesToShow.includes(s.class))
-                classesToShow.push(s.class);
-            });
-          } else if (r === "Teacher") {
+          if (r === "Teacher") {
+            // Teachers only see classes they're assigned to teach
             this.state.currentUser.subjects.forEach((s) => {
               if (s.class === "ALL JSS")
                 classesToShow.push("JSS1", "JSS2", "JSS3");
@@ -2223,6 +2214,7 @@
                 classesToShow.push(s.class);
             });
           } else {
+            // Admin and Head see all classes
             classesToShow = ALL_CLASSES;
           }
 
@@ -2272,6 +2264,7 @@
           if (r === "Admin" || r === "Head") {
             subsToShow = isJSS ? JSS_SUBJECTS : SSS_SUBJECTS.All;
           } else {
+            // Teacher - only subjects they teach
             subsToShow = this.state.currentUser.subjects
               .filter(
                 (s) =>
@@ -2314,7 +2307,7 @@
           this.state.viewContext.sub = sub;
           const mode = this.state.viewContext.mode;
           const isMidTerm = mode === "midterm";
-          this.pushHistory("section-batch-entry", sub);
+          this.pushHistory("section-batch-entry", `${cls} - ${sub}`);
           document.getElementById("btn-back").onclick = () =>
             app.loadSubjectList(cls);
 
@@ -2355,6 +2348,7 @@
           document.getElementById("batch-crumb-class").textContent = cls;
           document.getElementById("batch-crumb-subject").textContent = sub;
 
+          // Only Admin/Head can add students from batch entry
           document.getElementById("batch-actions").innerHTML =
             this.state.currentUser.role === "Admin" ||
             this.state.currentUser.role === "Head"
@@ -2486,12 +2480,14 @@
           document.getElementById("det-name").textContent =
             s.name + (isMidTerm ? " (Mid-Term)" : " (Exam)");
 
-          const isClassTeacher =
-            this.state.currentUser.role === "Class Teacher";
-          const inputStyle = isClassTeacher
-            ? "border: none; background: transparent; padding: 0; color: inherit;"
-            : "";
-          const readonlyAttr = isClassTeacher ? "readonly" : "";
+          // Only Admin/Head can edit scores in student detail view
+          const canEdit =
+            this.state.currentUser.role === "Admin" ||
+            this.state.currentUser.role === "Head";
+          const inputStyle = canEdit
+            ? ""
+            : "border: none; background: transparent; padding: 0; color: inherit;";
+          const readonlyAttr = canEdit ? "" : "readonly";
 
           const thead = document.getElementById("det-score-head");
           const tbody = document.getElementById("det-score-rows");
@@ -2538,7 +2534,7 @@
             'button[onclick="app.saveAdminOverride()"]',
           );
           if (saveBtn) {
-            saveBtn.style.display = isClassTeacher ? "none" : "inline-flex";
+            saveBtn.style.display = canEdit ? "inline-flex" : "none";
           }
         },
 
@@ -2566,7 +2562,7 @@
             scores,
           );
           if (res.status === "success") {
-            this.showToast("Admin Override Saved", "success");
+            this.showToast("Scores Saved Successfully", "success");
             this.loadStudentDetail(sid);
           } else {
             this.showToast("Error saving", "error");
@@ -2836,6 +2832,7 @@
         // --- FEE MANAGEMENT (UPDATED FOR GOOGLE SHEETS) ---
         loadFees: async function () {
           this.showSection("section-fees");
+          this.pushHistory("section-fees", "Fee Management");
           const clsFilter = document.getElementById("feeClassFilter");
           const curVal = clsFilter.value;
           clsFilter.innerHTML =
