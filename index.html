@@ -124,6 +124,10 @@
         background-color: var(--danger);
         color: white;
       }
+      .btn-success {
+        background-color: var(--success);
+        color: white;
+      }
       .btn-sm {
         padding: 0.5rem 1rem;
         font-size: 0.85rem;
@@ -141,6 +145,44 @@
       .btn-filter.active {
         background: var(--primary);
         color: white;
+      }
+
+      /* --- FLOATING SAVE BUTTON --- */
+      .floating-save-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        padding: 15px 30px;
+        border-radius: 50px;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 1rem;
+        box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+      }
+      .floating-save-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(14, 165, 233, 0.5);
+      }
+      .floating-save-btn:active {
+        transform: translateY(0);
+      }
+      .floating-save-btn.show {
+        display: flex;
+      }
+      .floating-save-btn i {
+        font-size: 1.2rem;
       }
 
       /* --- LOADING OVERLAY --- */
@@ -376,6 +418,16 @@
         color: var(--primary-dark);
       }
 
+      .badge-disabled {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+
+      .badge-active {
+        background: #dcfce7;
+        color: #15803d;
+      }
+
       /* --- TABLES --- */
       .list-container {
         background: var(--surface);
@@ -469,6 +521,9 @@
       .toast.error {
         background-color: var(--danger);
       }
+      .toast.warning {
+        background-color: var(--warning);
+      }
 
       /* --- BREADCRUMBS --- */
       .breadcrumbs {
@@ -478,6 +533,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        flex-wrap: wrap;
       }
       .breadcrumbs span {
         cursor: pointer;
@@ -492,6 +548,50 @@
         color: var(--text);
         font-weight: 700;
         text-decoration: none;
+      }
+      .breadcrumbs span.crumb-clickable {
+        cursor: pointer;
+      }
+      .breadcrumbs span.crumb-clickable:hover {
+        color: var(--primary);
+        text-decoration: underline;
+      }
+
+      /* --- DISABLED USER OVERLAY --- */
+      .disabled-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(239, 68, 68, 0.1);
+        backdrop-filter: blur(8px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9998;
+      }
+      .disabled-message {
+        background: white;
+        padding: 40px 60px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        animation: slideUp 0.4s ease;
+      }
+      .disabled-message i {
+        font-size: 4rem;
+        color: var(--danger);
+        margin-bottom: 20px;
+      }
+      .disabled-message h2 {
+        color: var(--danger);
+        margin-bottom: 10px;
+      }
+      .disabled-message p {
+        color: var(--secondary);
+        margin-bottom: 20px;
       }
 
       /* =========================================
@@ -695,7 +795,8 @@
         .breadcrumbs,
         header,
         .toast,
-        .modal-overlay {
+        .modal-overlay,
+        .floating-save-btn {
           display: none !important;
         }
       }
@@ -768,6 +869,13 @@
         .forms-wrapper {
           padding: 20px;
         }
+
+        .floating-save-btn {
+          bottom: 20px;
+          right: 20px;
+          padding: 12px 24px;
+          font-size: 0.9rem;
+        }
       }
 
       /* Mid-Term Input Specifics */
@@ -790,6 +898,29 @@
 
     <!-- TOAST -->
     <div id="toast" class="toast"></div>
+
+    <!-- FLOATING SAVE BUTTON -->
+    <button
+      id="floatingSaveBtn"
+      class="floating-save-btn"
+      onclick="app.saveBatchScores()"
+    >
+      <i class="fas fa-save"></i>
+      <span>Save All Scores</span>
+    </button>
+
+    <!-- DISABLED USER OVERLAY -->
+    <div id="disabled-overlay" class="disabled-overlay hidden">
+      <div class="disabled-message">
+        <i class="fas fa-user-lock"></i>
+        <h2>Account Disabled</h2>
+        <p>
+          Your account has been disabled by an administrator.<br />You cannot
+          enter or edit scores.
+        </p>
+        <button class="btn btn-outline" onclick="app.logout()">Logout</button>
+      </div>
+    </div>
 
     <!-- ================= AUTH VIEW ================= -->
     <div id="view-auth" class="auth-wrapper">
@@ -1050,15 +1181,21 @@
             <span class="font-bold">All Staff Directory</span>
           </div>
           <div class="list-container">
-            <div class="list-header"><h2>Staff Members</h2></div>
+            <div class="list-header">
+              <h2>Staff Members</h2>
+              <p class="text-sm text-secondary">
+                Manage staff access and permissions
+              </p>
+            </div>
             <div style="overflow-x: auto">
               <table>
                 <thead>
                   <tr>
                     <th>Name</th>
                     <th>Role</th>
-                    <th>Assigned Class</th>
                     <th>Subjects</th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody id="staff-tbody"></tbody>
@@ -1183,12 +1320,8 @@
 
         <!-- 5. BATCH SCORE ENTRY (Exam & Mid-Term) -->
         <section id="section-batch-entry" class="hidden">
-          <div class="breadcrumbs">
-            <span onclick="app.goHome()">Home</span> >
-            <span id="batch-crumb-dir"></span> >
-            <span id="batch-crumb-class"></span> >
-            <span id="batch-crumb-subject"></span>
-            <span id="btn-back">← Back</span>
+          <div class="breadcrumbs" id="batch-breadcrumbs">
+            <!-- Dynamic breadcrumbs will be inserted here -->
           </div>
           <div
             class="flex justify-between items-center"
@@ -1207,20 +1340,12 @@
               </table>
             </div>
           </div>
-          <div style="margin-top: 20px; text-align: right">
-            <button class="btn btn-primary" onclick="app.saveBatchScores()">
-              Save All Scores
-            </button>
-          </div>
         </section>
 
         <!-- 6. ADMIN CLASS ROSTER (Exam & Mid-Term) -->
         <section id="section-admin-roster" class="hidden">
-          <div class="breadcrumbs">
-            <span onclick="app.goHome()">Home</span> >
-            <span id="roster-crumb-type"></span> >
-            <span id="roster-crumb-class" class="font-bold"></span>
-            <span id="btn-back">← Back</span>
+          <div class="breadcrumbs" id="roster-breadcrumbs">
+            <!-- Dynamic breadcrumbs will be inserted here -->
           </div>
           <div class="list-container">
             <div class="list-header">
@@ -1252,10 +1377,8 @@
 
         <!-- 7. STUDENT DETAIL (Exam & Mid-Term) -->
         <section id="section-student-detail" class="hidden">
-          <div class="breadcrumbs">
-            <span onclick="app.goHome()">Home</span> >
-            <span id="det-crumb-cls"></span> > <span id="det-crumb-name"></span>
-            <span id="btn-back">← Back</span>
+          <div class="breadcrumbs" id="detail-breadcrumbs">
+            <!-- Dynamic breadcrumbs will be inserted here -->
           </div>
           <div class="list-container" style="padding: 20px">
             <div
@@ -1436,6 +1559,28 @@
       </div>
     </div>
 
+    <!-- Confirm Toggle Staff Status Modal -->
+    <div id="modal-toggle-staff" class="modal-overlay">
+      <div class="modal">
+        <h3 id="toggle-staff-title">Toggle Staff Status</h3>
+        <p id="toggle-staff-message" style="margin: 20px 0"></p>
+        <input type="hidden" id="toggleStaffId" />
+        <input type="hidden" id="toggleStaffCurrentStatus" />
+        <div class="flex justify-between" style="margin-top: 20px">
+          <button class="btn btn-outline" onclick="app.closeModals()">
+            Cancel
+          </button>
+          <button
+            class="btn btn-danger"
+            id="toggle-staff-btn"
+            onclick="app.confirmToggleStaffStatus()"
+          >
+            Disable
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Hidden Printable Area -->
     <div id="printable-area"></div>
 
@@ -1569,7 +1714,7 @@
         },
         signup: async function (userObj) {
           const res = await this._post("signup", userObj);
-          return res.status === "success";
+          return res; // Return full response to get error messages
         },
         loadStudents: async function (className) {
           const res = await this._post("getStudents", { className });
@@ -1609,6 +1754,13 @@
         getAllStaff: async function () {
           const res = await this._post("getTeachers", {});
           return res.status === "success" ? res.teachers : [];
+        },
+        toggleStaffStatus: async function (staffId, currentStatus) {
+          const res = await this._post("toggleStaffStatus", {
+            staffId: staffId,
+            disable: !currentStatus,
+          });
+          return res;
         },
         // --- FEE API CALLS ---
         getFeeTransactions: async function () {
@@ -1704,6 +1856,13 @@
               // We still need to verify credentials with backend
               GoogleSheetService.login(user.name, user.pass).then((u) => {
                 if (u) {
+                  // Check if user is disabled
+                  if (u.disabled) {
+                    document
+                      .getElementById("disabled-overlay")
+                      .classList.remove("hidden");
+                    return;
+                  }
                   this.state.currentUser = u;
                   sessionStorage.setItem("currentUser", JSON.stringify(u));
                   this.showDashboard();
@@ -1714,7 +1873,16 @@
 
           const u = sessionStorage.getItem("currentUser");
           if (u) {
-            this.state.currentUser = JSON.parse(u);
+            const user = JSON.parse(u);
+            // Check if user is disabled
+            if (user.disabled) {
+              document
+                .getElementById("disabled-overlay")
+                .classList.remove("hidden");
+              document.getElementById("view-auth").classList.remove("hidden");
+              return;
+            }
+            this.state.currentUser = user;
             this.showDashboard();
           } else {
             document.getElementById("view-auth").classList.remove("hidden");
@@ -1795,15 +1963,16 @@
             assignedClass: "", // No longer used - Class Teacher role removed
             subjects: [...this.state.draftSubjects],
           };
-          const success = await GoogleSheetService.signup(u);
-          if (success) {
+          const res = await GoogleSheetService.signup(u);
+          if (res.status === "success") {
             this.showToast("Account created! Please login.", "success");
             this.switchAuthTab("login");
             document.getElementById("form-signup").reset();
             this.state.draftSubjects = [];
             this.renderChips();
           } else {
-            this.showToast("Signup failed", "error");
+            // Show the specific error message from the backend
+            this.showToast(res.message || "Signup failed", "error");
           }
         },
         handleLogin: async function (e) {
@@ -1816,6 +1985,14 @@
 
           const u = await GoogleSheetService.login(name, pass);
           if (u) {
+            // Check if user is disabled
+            if (u.disabled) {
+              document
+                .getElementById("disabled-overlay")
+                .classList.remove("hidden");
+              return;
+            }
+
             this.state.currentUser = u;
             sessionStorage.setItem("currentUser", JSON.stringify(u));
 
@@ -1836,6 +2013,7 @@
         },
         logout: function () {
           sessionStorage.removeItem("currentUser");
+          localStorage.removeItem("rememberedUser");
           window.location.reload();
         },
 
@@ -1880,7 +2058,7 @@
                             <div class="card-footer"><button class="btn btn-primary btn-sm w-full">Open</button></div>
                         </div>
                         <div class="card" onclick="app.loadStaffList()">
-                            <div class="card-content"><div class="card-icon">👥</div><div class="card-title">All Staff</div><div class="card-meta">View Staff Directory</div></div>
+                            <div class="card-content"><div class="card-icon">👥</div><div class="card-title">All Staff</div><div class="card-meta">Manage Staff Access</div></div>
                             <div class="card-footer"><button class="btn btn-primary btn-sm w-full">View</button></div>
                         </div>
                         <div class="card" onclick="app.loadPerformance()">
@@ -1913,6 +2091,14 @@
             .querySelectorAll("main section")
             .forEach((s) => s.classList.add("hidden"));
           document.getElementById(id).classList.remove("hidden");
+
+          // Show/hide floating save button
+          const floatingBtn = document.getElementById("floatingSaveBtn");
+          if (id === "section-batch-entry") {
+            floatingBtn.classList.add("show");
+          } else {
+            floatingBtn.classList.remove("show");
+          }
         },
         goHome: function () {
           this.showSection("section-landing");
@@ -1937,15 +2123,80 @@
                     .map((s) => `${s.subject} (${s.class})`)
                     .join(", ")
                 : "N/A";
+
+            const isDisabled = member.disabled === true;
+            const statusBadge = isDisabled
+              ? '<span class="badge badge-disabled">Disabled</span>'
+              : '<span class="badge badge-active">Active</span>';
+
+            const toggleBtn =
+              member.role === "Admin" || member.role === "Head"
+                ? '<span style="color: var(--secondary); font-size: 0.8rem;">Cannot disable</span>'
+                : `<button class="btn ${isDisabled ? "btn-success" : "btn-danger"} btn-sm" onclick="app.openToggleStaffModal('${member.id}', '${member.name}', ${isDisabled})">
+                  ${isDisabled ? "Enable" : "Disable"}
+                </button>`;
+
             tbody.innerHTML += `
                 <tr>
                     <td><strong>${member.name}</strong></td>
                     <td><span class="badge">${member.role}</span></td>
-                    <td>${member.assignedClass || "-"}</td>
                     <td style="font-size: 0.85rem; color: var(--secondary);">${subjects}</td>
+                    <td>${statusBadge}</td>
+                    <td>${toggleBtn}</td>
                 </tr>
               `;
           });
+        },
+
+        openToggleStaffModal: function (staffId, staffName, currentStatus) {
+          document.getElementById("toggleStaffId").value = staffId;
+          document.getElementById("toggleStaffCurrentStatus").value =
+            currentStatus;
+
+          if (currentStatus) {
+            // Currently disabled - will enable
+            document.getElementById("toggle-staff-title").textContent =
+              "Enable Staff Member";
+            document.getElementById("toggle-staff-message").textContent =
+              `Are you sure you want to ENABLE "${staffName}"? They will be able to enter and edit scores.`;
+            document.getElementById("toggle-staff-btn").textContent = "Enable";
+            document.getElementById("toggle-staff-btn").className =
+              "btn btn-success";
+          } else {
+            // Currently enabled - will disable
+            document.getElementById("toggle-staff-title").textContent =
+              "Disable Staff Member";
+            document.getElementById("toggle-staff-message").textContent =
+              `Are you sure you want to DISABLE "${staffName}"? They will NOT be able to enter or edit scores.`;
+            document.getElementById("toggle-staff-btn").textContent = "Disable";
+            document.getElementById("toggle-staff-btn").className =
+              "btn btn-danger";
+          }
+
+          document.getElementById("modal-toggle-staff").style.display = "flex";
+        },
+
+        confirmToggleStaffStatus: async function () {
+          const staffId = document.getElementById("toggleStaffId").value;
+          const currentStatus =
+            document.getElementById("toggleStaffCurrentStatus").value ===
+            "true";
+
+          const res = await GoogleSheetService.toggleStaffStatus(
+            staffId,
+            currentStatus,
+          );
+
+          if (res.status === "success") {
+            this.showToast(
+              `Staff member ${currentStatus ? "enabled" : "disabled"} successfully`,
+              "success",
+            );
+            this.closeModals();
+            this.loadStaffList();
+          } else {
+            this.showToast("Error updating staff status", "error");
+          }
         },
 
         // --- PERFORMANCE & BROADSHEET (FIXED) ---
@@ -2148,6 +2399,18 @@
             resultType || this.state.viewContext.resultType;
 
           this.showSection("section-admin-roster");
+
+          // Build clickable breadcrumbs
+          const dirType =
+            this.state.viewContext.resultType === "midterm"
+              ? "Mid-Term Results"
+              : "Exam Results";
+          document.getElementById("roster-breadcrumbs").innerHTML = `
+            <span onclick="app.goHome()">Home</span> > 
+            <span class="crumb-clickable" onclick="app.loadClassSelectionForAdmin('${this.state.viewContext.resultType}')">${dirType}</span> > 
+            <span class="font-bold">${cls}</span>
+          `;
+
           document.getElementById("roster-crumb-class").textContent = cls;
           document.getElementById("roster-crumb-type").textContent =
             this.state.viewContext.resultType === "midterm"
@@ -2187,9 +2450,6 @@
               '<tr><td colspan="5" class="text-center">No students found.</td></tr>';
           }
           this.pushHistory("section-admin-roster", `${cls} Roster`);
-          document.getElementById("btn-back").onclick = () => {
-            this.loadClassSelectionForAdmin(resultType);
-          };
         },
 
         // --- DIRECTORY (Score Entry) ---
@@ -2201,7 +2461,6 @@
             "section-landing",
             mode === "midterm" ? "Mid-Term Directory" : "Exam Directory",
           );
-          document.getElementById("btn-back").onclick = () => app.goBack();
 
           if (r === "Teacher") {
             // Teachers only see classes they're assigned to teach
@@ -2258,8 +2517,6 @@
           const isJSS = clsName.startsWith("JSS");
           let subsToShow = [];
           this.pushHistory("section-landing", clsName);
-          document.getElementById("btn-back").onclick = () =>
-            app.loadClassList(this.state.viewContext.mode);
 
           if (r === "Admin" || r === "Head") {
             subsToShow = isJSS ? JSS_SUBJECTS : SSS_SUBJECTS.All;
@@ -2282,7 +2539,7 @@
           grid.innerHTML = `
                     <div class="breadcrumbs">
                         <span onclick="app.goHome()">Home</span> > 
-                        <span onclick="app.loadClassList('${this.state.viewContext.mode}')">${dirName} Directory</span> > 
+                        <span class="crumb-clickable" onclick="app.loadClassList('${this.state.viewContext.mode}')">${dirName} Directory</span> > 
                         <span>${clsName}</span>
                     </div>
                 `;
@@ -2307,20 +2564,15 @@
           this.state.viewContext.sub = sub;
           const mode = this.state.viewContext.mode;
           const isMidTerm = mode === "midterm";
-          this.pushHistory("section-batch-entry", `${cls} - ${sub}`);
-          document.getElementById("btn-back").onclick = () =>
-            app.loadSubjectList(cls);
-
-          const bread = document.getElementById("landing-grid");
           const dirName = isMidTerm ? "Mid-Term" : "Exam";
-          bread.innerHTML = `
-                    <div class="breadcrumbs">
-                        <span onclick="app.goHome()">Home</span> > 
-                        <span onclick="app.loadClassList('${mode}')">${dirName} Directory</span> > 
-                        <span onclick="app.loadSubjectList('${cls}')">${cls}</span> > 
-                        <span class="font-bold">${sub}</span>
-                    </div>
-                `;
+
+          // Build clickable breadcrumbs
+          document.getElementById("batch-breadcrumbs").innerHTML = `
+            <span onclick="app.goHome()">Home</span> > 
+            <span class="crumb-clickable" onclick="app.loadClassList('${mode}')">${dirName} Directory</span> > 
+            <span class="crumb-clickable" onclick="app.loadSubjectList('${cls}')">${cls}</span> > 
+            <span class="font-bold">${sub}</span>
+          `;
 
           const thead = document.getElementById("batch-headers");
           if (isMidTerm) {
@@ -2343,10 +2595,6 @@
             document.getElementById("batch-entry-title").innerText =
               "Exam Score Entry";
           }
-
-          document.getElementById("batch-crumb-dir").textContent = dirName;
-          document.getElementById("batch-crumb-class").textContent = cls;
-          document.getElementById("batch-crumb-subject").textContent = sub;
 
           // Only Admin/Head can add students from batch entry
           document.getElementById("batch-actions").innerHTML =
@@ -2414,6 +2662,7 @@
             });
           }
 
+          this.pushHistory("section-batch-entry", `${cls} - ${sub}`);
           this.showSection("section-batch-entry");
         },
 
@@ -2452,10 +2701,6 @@
 
           if (res && res.status === "success") {
             this.showToast("Scores Saved Successfully", "success");
-            this.loadBatchEntry(
-              this.state.viewContext.cls,
-              this.state.viewContext.sub,
-            );
           } else {
             this.showToast("Error saving", "error");
           }
@@ -2475,8 +2720,16 @@
           const isMidTerm = this.state.viewContext.resultType === "midterm";
 
           this.showSection("section-student-detail");
-          document.getElementById("det-crumb-cls").textContent = s.class;
-          document.getElementById("det-crumb-name").textContent = s.name;
+
+          // Build clickable breadcrumbs
+          const dirType = isMidTerm ? "Mid-Term Results" : "Exam Results";
+          document.getElementById("detail-breadcrumbs").innerHTML = `
+            <span onclick="app.goHome()">Home</span> > 
+            <span class="crumb-clickable" onclick="app.loadClassSelectionForAdmin('${isMidTerm ? "midterm" : "exam"}')">${dirType}</span> > 
+            <span class="crumb-clickable" onclick="app.loadAdminRoster('${s.class}', '${isMidTerm ? "midterm" : "exam"}')">${s.class}</span> > 
+            <span class="font-bold">${s.name}</span>
+          `;
+
           document.getElementById("det-name").textContent =
             s.name + (isMidTerm ? " (Mid-Term)" : " (Exam)");
 
