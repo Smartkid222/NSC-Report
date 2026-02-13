@@ -2418,20 +2418,38 @@
   `;
 
           const select = document.getElementById("perf-class-select");
+          const switchBtn = document.getElementById("perf-switch-type");
 
+          // Handle Class Selection Change
           select.onchange = (e) => {
             const cls = e.target.value;
-            if (cls) app.renderBroadsheet(cls, "exam");
+            if (cls) {
+              // Reset to Exam view and button text when changing class
+              switchBtn.textContent = "Switch to Mid-Term";
+              app.renderBroadsheet(cls, "exam");
+            }
           };
 
-          document.getElementById("perf-switch-type").onclick = (e) => {
+          // Handle Switch Button Click
+          switchBtn.onclick = (e) => {
             const cls = select.value;
-            const current = e.target.textContent.includes("Mid")
-              ? "exam"
-              : "midterm";
-            e.target.textContent =
-              current === "exam" ? "Switch to Mid-Term" : "Switch to Exam";
-            if (cls) app.renderBroadsheet(cls, current);
+            if (!cls) return; // Do nothing if no class is selected
+
+            const currentText = e.target.textContent;
+            let targetMode = "";
+
+            // If button says "Switch to Mid-Term", we are currently in Exam. Switch TO Mid-Term.
+            if (currentText.includes("Mid-Term")) {
+              targetMode = "midterm";
+              e.target.textContent = "Switch to Exam";
+            }
+            // If button says "Switch to Exam", we are currently in Mid-Term. Switch TO Exam.
+            else {
+              targetMode = "exam";
+              e.target.textContent = "Switch to Mid-Term";
+            }
+
+            app.renderBroadsheet(cls, targetMode);
           };
         },
 
@@ -2452,35 +2470,81 @@
 
           const subjects = data.subjects;
           const isMidTerm = type === "midterm";
-          const scoreKey = isMidTerm ? "total" : "total";
           const isJSS = className.startsWith("JSS");
 
-          let thead = "<tr><th>Admin ID</th><th>Name</th>";
+          // 1. Calculate Totals and Percentages for all students first
+          const processedStudents = data.students.map((student) => {
+            let rowTotal = 0;
+            let subjectCount = 0;
+
+            subjects.forEach((sub) => {
+              const sc = student.scores[sub] || {};
+              const val = isMidTerm
+                ? sc.total || 0
+                : (sc.ca || 0) + (sc.exam || 0);
+              if (val > 0) {
+                rowTotal += val;
+                subjectCount++;
+              }
+            });
+
+            const percentage =
+              subjectCount > 0 ? (rowTotal / subjectCount).toFixed(1) : 0;
+
+            return {
+              ...student,
+              totalScore: rowTotal,
+              avgPerc: parseFloat(percentage),
+              subjectCount: subjectCount,
+            };
+          });
+
+          // 2. Sort Students Highest to Lowest
+          processedStudents.sort((a, b) => b.avgPerc - a.avgPerc);
+
+          // 3. Generate Table Headers
+          let thead = "<tr><th>Position</th><th>Admin ID</th><th>Name</th>";
           subjects.forEach((sub) => {
             thead += `<th title="${sub}">${sub}</th>`;
           });
-          thead += "<th>Total</th><th>%</th><th>Position</th></tr>";
+          thead += "<th>Total</th><th>%</th></tr>";
 
+          // 4. Generate Rows (Loop through sorted students)
           let rowsHtml = "";
-          const studentTotals = [];
           const subjectBest = {};
           const lowPerformers = [];
           subjects.forEach(
             (sub) => (subjectBest[sub] = { max: 0, students: [] }),
           );
 
-          data.students.forEach((student) => {
-            let rowTotal = 0;
-            let subjectCount = 0;
+          let lastPerc = null;
+          let rank = 0;
 
-            let cells = `<td>${student.id}</td><td><strong>${student.name}</strong></td>`;
+          processedStudents.forEach((student, index) => {
+            // Handle Ranking (Ties get same rank)
+            if (
+              index > 0 &&
+              student.avgPerc === processedStudents[index - 1].avgPerc
+            ) {
+              // Same rank as previous
+            } else {
+              rank = index + 1;
+            }
 
+            const positionStr = app.getOrdinal(rank);
+
+            // Start Row
+            let cells = `<td style="font-weight:bold; background:#f8fafc;">${positionStr}</td>`;
+            cells += `<td>${student.id}</td><td><strong>${student.name}</strong></td>`;
+
+            // Subject Scores
             subjects.forEach((sub) => {
               const sc = student.scores[sub] || {};
-              const val = sc[scoreKey] ?? 0;
+              const val = isMidTerm
+                ? sc.total || 0
+                : (sc.ca || 0) + (sc.exam || 0);
+
               if (val > 0) {
-                rowTotal += val;
-                subjectCount++;
                 if (val > subjectBest[sub].max) {
                   subjectBest[sub].max = val;
                   subjectBest[sub].students = [student.name];
@@ -2488,38 +2552,29 @@
                   subjectBest[sub].students.push(student.name);
                 }
               }
+
               const display = val > 0 ? val : "-";
               const grade = val > 0 ? app.getGrade(val, isJSS) : "-";
               cells += `<td style="text-align:center;">${display}<br><small>${grade}</small></td>`;
             });
 
-            const percentage =
-              subjectCount > 0 ? (rowTotal / subjectCount).toFixed(1) : 0;
-            studentTotals.push({
-              id: student.id,
-              total: rowTotal,
-              perc: parseFloat(percentage),
-              name: student.name,
-            });
-            if (percentage < app.state.lowThreshold && subjectCount > 0) {
-              lowPerformers.push({ name: student.name, perc: percentage });
+            cells += `<td style="font-weight:bold;text-align:center;">${student.totalScore}</td>`;
+            cells += `<td style="font-weight:bold;color:var(--primary);text-align:center;">${student.avgPerc}%</td>`;
+
+            rowsHtml += `<tr>${cells}</tr>`;
+
+            // Check for low performers
+            if (
+              student.avgPerc < app.state.lowThreshold &&
+              student.subjectCount > 0
+            ) {
+              lowPerformers.push({ name: student.name, perc: student.avgPerc });
             }
-
-            cells += `<td style="font-weight:bold;text-align:center;">${rowTotal}</td>`;
-            cells += `<td style="font-weight:bold;color:var(--primary);text-align:center;">${percentage}%</td>`;
-            cells += `<td class="position-cell">-</td>`;
-
-            rowsHtml += `<tr data-sid="${student.id}">${cells}</tr>`;
           });
 
-          studentTotals.sort((a, b) => b.perc - a.perc);
-          studentTotals.forEach((s, idx) => {
-            const row = container.querySelector(`tr[data-sid="${s.id}"]`);
-            if (row) row.querySelector(".position-cell").textContent = idx + 1;
-          });
-
+          // 5. Class Average Row
           let avgRow =
-            '<tr style="background:#f1f5f9;font-weight:600;"><td colspan="2">Class Average</td>';
+            '<tr style="background:#f1f5f9;font-weight:600;"><td colspan="3">Class Average</td>';
           subjects.forEach((sub) => {
             const avg = data.subjectAverages[sub] || 0;
             avgRow += `<td style="text-align:center;">${avg.toFixed(1)}</td>`;
@@ -2530,8 +2585,9 @@
           avgRow +=
             '<td>-</td><td style="color:var(--primary);">' +
             overallAvg.toFixed(1) +
-            "%</td><td>-</td></tr>";
+            "%</td></tr>";
 
+          // 6. Stats HTML
           let statsHtml =
             '<div style="padding:1rem; background:#eff6ff; border-radius:8px;">';
           statsHtml +=
@@ -2564,10 +2620,11 @@
           }
           statsHtml += "</div>";
 
+          // 7. Render to DOM
           container.innerHTML = `
     <div style="margin-bottom:1.5rem;">
       <h3 style="margin:0;">${className} – ${isMidTerm ? "Mid-Term" : "Exam"} Broadsheet</h3>
-      <small style="color:var(--secondary);">Session: 2025/2026 • Students: ${data.students.length} • Subjects: ${subjects.length}</small>
+      <small style="color:var(--secondary);">Session: 2025/2026 • Students: ${processedStudents.length} • Subjects: ${subjects.length}</small>
     </div>
     <table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
       <thead style="background:#f1f5f9;">${thead}</thead>
@@ -3257,6 +3314,12 @@
             if (s >= 40) return "E8";
             return "F9";
           }
+        },
+
+        getOrdinal: function (n) {
+          const s = ["th", "st", "nd", "rd"];
+          const v = n % 100;
+          return n + (s[(v - 20) % 10] || s[v] || s[0]);
         },
 
         // ==========================================
