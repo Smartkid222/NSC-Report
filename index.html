@@ -668,11 +668,23 @@
         border-color: var(--primary);
       }
 
+      /* Custom Fee Input */
+      .custom-fee-group {
+        margin-top: 15px;
+        padding: 15px;
+        background: #f8fafc;
+        border-radius: 8px;
+        border: 1px dashed var(--border);
+        display: none;
+      }
+      .custom-fee-group.show {
+        display: block;
+      }
+
       /* --- PRINT STYLES --- */
       #printable-area {
         display: none;
       }
-      /* --- ENHANCED PRINT STYLES --- */
       @media print {
         body * {
           visibility: hidden;
@@ -789,16 +801,6 @@
           padding-top: 5px;
           font-size: 14px;
         }
-
-        /* Prevent screen elements from appearing */
-        .btn,
-        .breadcrumbs,
-        header,
-        .toast,
-        .modal-overlay,
-        .floating-save-btn {
-          display: none !important;
-        }
       }
 
       /* =========================================
@@ -878,7 +880,6 @@
         }
       }
 
-      /* Mid-Term Input Specifics */
       .input-midterm {
         font-size: 1.5rem !important;
         text-align: center;
@@ -1209,7 +1210,6 @@
           <div class="breadcrumbs">
             <span onclick="app.goHome()">Home</span> >
             <span class="font-bold">Student Performance</span>
-            <span id="btn-back">← Back</span>
           </div>
           <div class="list-container">
             <div class="list-header">
@@ -1219,7 +1219,6 @@
               </div>
             </div>
             <div id="perf-container"></div>
-            <!-- Dynamic content here -->
           </div>
         </section>
 
@@ -1228,7 +1227,6 @@
           <div class="breadcrumbs">
             <span onclick="app.goHome()">Home</span> >
             <span class="font-bold">Fee Management</span>
-            <span id="btn-back">← Back</span>
           </div>
           <div class="fee-tabs">
             <button
@@ -1318,11 +1316,9 @@
           </div>
         </section>
 
-        <!-- 5. BATCH SCORE ENTRY (Exam & Mid-Term) -->
+        <!-- 5. BATCH SCORE ENTRY -->
         <section id="section-batch-entry" class="hidden">
-          <div class="breadcrumbs" id="batch-breadcrumbs">
-            <!-- Dynamic breadcrumbs will be inserted here -->
-          </div>
+          <div class="breadcrumbs" id="batch-breadcrumbs"></div>
           <div
             class="flex justify-between items-center"
             style="margin-bottom: 20px"
@@ -1342,11 +1338,9 @@
           </div>
         </section>
 
-        <!-- 6. ADMIN CLASS ROSTER (Exam & Mid-Term) -->
+        <!-- 6. ADMIN CLASS ROSTER -->
         <section id="section-admin-roster" class="hidden">
-          <div class="breadcrumbs" id="roster-breadcrumbs">
-            <!-- Dynamic breadcrumbs will be inserted here -->
-          </div>
+          <div class="breadcrumbs" id="roster-breadcrumbs"></div>
           <div class="list-container">
             <div class="list-header">
               <h2 id="roster-title">Class Roster</h2>
@@ -1375,11 +1369,9 @@
           </div>
         </section>
 
-        <!-- 7. STUDENT DETAIL (Exam & Mid-Term) -->
+        <!-- 7. STUDENT DETAIL -->
         <section id="section-student-detail" class="hidden">
-          <div class="breadcrumbs" id="detail-breadcrumbs">
-            <!-- Dynamic breadcrumbs will be inserted here -->
-          </div>
+          <div class="breadcrumbs" id="detail-breadcrumbs"></div>
           <div class="list-container" style="padding: 20px">
             <div
               class="flex justify-between items-center"
@@ -1391,9 +1383,7 @@
               </button>
             </div>
             <table class="rp-table">
-              <thead id="det-score-head">
-                <!-- Headers injected via JS -->
-              </thead>
+              <thead id="det-score-head"></thead>
               <tbody id="det-score-rows"></tbody>
             </table>
             <div class="flex gap-2" style="margin-top: 20px">
@@ -1410,6 +1400,7 @@
     </div>
 
     <!-- ================= MODALS ================= -->
+
     <!-- Payment Modal -->
     <div id="modal-pay" class="modal-overlay">
       <div class="modal">
@@ -1425,33 +1416,122 @@
             style="background: #f1f5f9"
           />
         </div>
+
+        <!-- Student Type Selection -->
         <div class="form-group">
-          <label>Student Type</label>
-          <div class="flex gap-4" style="margin-top: 5px">
-            <label style="font-weight: normal"
-              ><input
+          <label>Student Fee Type</label>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 10px;
+              margin-top: 5px;
+            "
+          >
+            <label
+              style="
+                font-weight: normal;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              "
+            >
+              <input
                 type="radio"
                 name="stdType"
                 value="Old"
                 checked
                 onchange="app.calcModalTotal()"
               />
-              Old Student</label
+              Old Student
+            </label>
+            <label
+              style="
+                font-weight: normal;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              "
             >
-            <label style="font-weight: normal"
-              ><input
+              <input
                 type="radio"
                 name="stdType"
                 value="New"
                 onchange="app.calcModalTotal()"
               />
-              New Student (Pay Reg. Fee)</label
+              New Student
+            </label>
+            <label
+              style="
+                font-weight: normal;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              "
             >
+              <input
+                type="radio"
+                name="stdType"
+                value="Teacher's Child"
+                onchange="app.calcModalTotal()"
+              />
+              Teacher's Child
+            </label>
+            <label
+              style="
+                font-weight: normal;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              "
+            >
+              <input
+                type="radio"
+                name="stdType"
+                value="Scholarship"
+                onchange="app.calcModalTotal()"
+              />
+              Scholarship
+            </label>
+            <label
+              style="
+                font-weight: normal;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                grid-column: span 2;
+              "
+            >
+              <input
+                type="radio"
+                name="stdType"
+                value="Custom"
+                onchange="app.calcModalTotal()"
+              />
+              Custom Fee
+            </label>
           </div>
         </div>
+
+        <!-- Custom Fee Input (Hidden by default) -->
+        <div id="customFeeGroup" class="custom-fee-group">
+          <label>Enter Custom Total Fee (₦)</label>
+          <input
+            type="number"
+            id="payCustomAmount"
+            class="form-control"
+            placeholder="e.g. 40000"
+            oninput="app.calcModalTotal()"
+          />
+          <small style="color: var(--secondary)"
+            >This amount will be the total fee expected from this
+            student.</small
+          >
+        </div>
+
         <div class="grid-2">
           <div class="form-group">
-            <label>Base Fee</label>
+            <label>Base Fee (Standard)</label>
             <input
               type="text"
               id="payBaseFee"
@@ -1471,6 +1551,7 @@
             />
           </div>
         </div>
+
         <div class="form-group">
           <label>Total Due</label>
           <div
@@ -1480,6 +1561,7 @@
             ₦0
           </div>
         </div>
+
         <div class="form-group">
           <label>Amount Paying (₦)</label>
           <input
@@ -1489,12 +1571,99 @@
             placeholder="0.00"
           />
         </div>
+
         <div class="flex justify-between" style="margin-top: 20px">
           <button class="btn btn-outline" onclick="app.closeModals()">
             Cancel
           </button>
           <button class="btn btn-primary" onclick="app.confirmPayment()">
             Save Payment
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Fee Profile Modal -->
+    <div id="modal-edit-fee" class="modal-overlay">
+      <div class="modal">
+        <h3>Edit Student Fee Profile</h3>
+        <input type="hidden" id="editFeeStudentId" />
+        <div class="form-group">
+          <label>Student Name</label>
+          <input
+            type="text"
+            id="editFeeStudentName"
+            class="form-control"
+            readonly
+            style="background: #f1f5f9"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Change Fee Type</label>
+          <select
+            id="editFeeType"
+            class="form-control"
+            onchange="app.handleEditFeeTypeChange()"
+          >
+            <option value="Old">Old Student (Standard Fee)</option>
+            <option value="New">New Student (Standard + Reg)</option>
+            <option value="Teacher's Child">
+              Teacher's Child (50% Discount)
+            </option>
+            <option value="Scholarship">Scholarship (Free)</option>
+            <option value="Custom">Custom Amount</option>
+          </select>
+        </div>
+
+        <div id="editCustomFeeGroup" class="custom-fee-group">
+          <label>Custom Fee Amount (₦)</label>
+          <input
+            type="number"
+            id="editCustomAmount"
+            class="form-control"
+            placeholder="Enter total fee"
+          />
+        </div>
+
+        <!-- NEW: Paid Amount Input -->
+        <div
+          class="form-group"
+          style="
+            margin-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+          "
+        >
+          <label>Total Amount Paid (₦)</label>
+          <input
+            type="number"
+            id="editFeePaid"
+            class="form-control"
+            placeholder="Enter total amount paid so far"
+          />
+          <small style="color: var(--secondary); font-size: 0.8rem">
+            Note: Editing this will create a transaction adjustment to match
+            this amount.
+          </small>
+        </div>
+
+        <p
+          style="
+            font-size: 0.85rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+          "
+        >
+          Changes will update the student's profile and transaction history.
+        </p>
+
+        <div class="flex justify-between" style="margin-top: 20px">
+          <button class="btn btn-outline" onclick="app.closeModals()">
+            Cancel
+          </button>
+          <button class="btn btn-primary" onclick="app.saveFeeProfile()">
+            Update Profile
           </button>
         </div>
       </div>
@@ -1688,12 +1857,25 @@
       };
 
       // --- 3. GOOGLE SHEETS SERVICE ---
+      // --- 3. GOOGLE SHEET SERVICE (With Cache) ---
       const GoogleSheetService = {
         URL: "https://script.google.com/macros/s/AKfycbw-GHQzYVauehu_C_0NICw8G2SaNnz1Bu7Ho7V4vPilEuwREzAZaidS10VPlOBB_Xyg/exec",
 
+        // Simple in-memory cache
+        cache: {
+          students: {}, // Key: 'JSS1', Value: [Array of students]
+          lastFetch: {},
+        },
+
         _post: async function (action, data = {}) {
           const loader = document.getElementById("loader");
-          loader.style.display = "flex";
+          // Only show loader if we don't have cached data for this action
+          const cacheKey = data.className || data.adminNo || action;
+          const hasCache =
+            action === "getStudents" && this.cache.students[cacheKey];
+
+          if (!hasCache) loader.style.display = "flex";
+
           try {
             const response = await fetch(this.URL, {
               method: "POST",
@@ -1714,32 +1896,64 @@
         },
         signup: async function (userObj) {
           const res = await this._post("signup", userObj);
-          return res; // Return full response to get error messages
+          return res;
         },
+
+        // OPTIMIZED LOAD
         loadStudents: async function (className) {
+          // 1. Check Cache first
+          if (this.cache.students[className]) {
+            console.log("Loading from cache:", className);
+            return this.cache.students[className];
+          }
+
+          // 2. Fetch from server
           const res = await this._post("getStudents", { className });
-          return res.status === "success" ? res.students : [];
+          const students = res.status === "success" ? res.students : [];
+
+          // 3. Save to Cache
+          if (res.status === "success") {
+            this.cache.students[className] = students;
+          }
+          return students;
         },
+
+        // INVALIDATE CACHE on Save
+        clearCache: function (className) {
+          if (className) {
+            delete this.cache.students[className];
+          } else {
+            this.cache.students = {}; // Clear all
+          }
+        },
+
         saveScores: async function (className, subject, scores) {
-          return await this._post("saveScores", {
+          const res = await this._post("saveScores", {
             className: className,
             subject: subject,
             scores: scores,
           });
+          // Clear cache for this class so data is fresh next time
+          if (res.status === "success") this.clearCache(className);
+          return res;
         },
         saveMidTermScores: async function (className, subject, scores) {
-          return await this._post("saveMidTermScores", {
+          const res = await this._post("saveMidTermScores", {
             className: className,
             subject: subject,
             scores: scores,
           });
+          if (res.status === "success") this.clearCache(className);
+          return res;
         },
         saveAdminScores: async function (adminNo, className, scores) {
-          return await this._post("saveSingleStudentScores", {
+          const res = await this._post("saveSingleStudentScores", {
             adminNo: adminNo,
             className: className,
             scores: scores,
           });
+          if (res.status === "success") this.clearCache(className);
+          return res;
         },
         getFullResult: async function (adminNo) {
           const res = await this._post("getFullResult", { adminNo });
@@ -1749,6 +1963,8 @@
         },
         addStudent: async function (stdData) {
           const res = await this._post("addStudent", stdData);
+          // Clear all cache because a new student affects class lists
+          if (res.status === "success") this.clearCache();
           return res.status === "success";
         },
         getAllStaff: async function () {
@@ -1776,21 +1992,29 @@
         saveFeeTransaction: async function (tx) {
           return await this._post("saveFeeTransaction", tx);
         },
+        updateStudentFeeProfile: async function (
+          studentId,
+          type,
+          customAmount,
+          paidAmount, // Add this parameter
+        ) {
+          return await this._post("updateStudentFeeProfile", {
+            studentId,
+            type,
+            customAmount: customAmount || 0,
+            paidAmount: paidAmount, // Send it
+          });
+        },
       };
 
       let isInitialLoad = true;
 
       window.addEventListener("popstate", (event) => {
-        // Skip the popstate that browsers sometimes fire on initial page load
         if (isInitialLoad) {
           isInitialLoad = false;
           return;
         }
-
-        // Normal back navigation
         app.goBack();
-
-        // Safety: if internal stack is empty → trap further backs
         if (app.state.navHistory.length === 0) {
           history.pushState(
             { section: "home", title: "Dashboard" },
@@ -1808,19 +2032,15 @@
           draftSubjects: [],
           feeContext: {},
           navHistory: [],
-          lowThreshold: 50, // % below which students "need help"
+          lowThreshold: 50,
         },
 
-        // Call this before showing any major section
         pushHistory: function (sectionId, title, backAction = null) {
-          // Save internal navigation state
           this.state.navHistory.push({
             section: sectionId,
             title: title,
             action: backAction || (() => this.goHome()),
           });
-
-          // Tell browser "we moved to a new view" (without changing URL)
           history.pushState(
             { section: sectionId },
             title || document.title,
@@ -1830,17 +2050,13 @@
 
         goBack: function () {
           if (this.state.navHistory.length > 0) {
-            // Remove the last navigation step
             const previous = this.state.navHistory.pop();
-
-            // Either run custom back action or show previous section
             if (previous.action) {
               previous.action();
             } else {
               this.showSection(previous.section);
             }
           } else {
-            // Already at home/dashboard → stay here (don't go to login)
             this.goHome();
           }
         },
@@ -1848,15 +2064,12 @@
         init: function () {
           FeeService.init();
 
-          // Check for remembered user
           const remembered = localStorage.getItem("rememberedUser");
           if (remembered) {
             try {
               const user = JSON.parse(remembered);
-              // We still need to verify credentials with backend
               GoogleSheetService.login(user.name, user.pass).then((u) => {
                 if (u) {
-                  // Check if user is disabled
                   if (u.disabled) {
                     document
                       .getElementById("disabled-overlay")
@@ -1874,7 +2087,6 @@
           const u = sessionStorage.getItem("currentUser");
           if (u) {
             const user = JSON.parse(u);
-            // Check if user is disabled
             if (user.disabled) {
               document
                 .getElementById("disabled-overlay")
@@ -1905,7 +2117,6 @@
         },
         handleRoleChange: function () {
           const r = document.getElementById("signupRole").value;
-          // Only Admin and Head don't need subjects
           document
             .getElementById("subject-group")
             .classList.toggle("hidden", r === "Admin" || r === "Head");
@@ -1950,7 +2161,6 @@
           const lname = document.getElementById("signupLastName").value;
           const role = document.getElementById("signupRole").value;
 
-          // Teachers must have at least one subject
           if (role === "Teacher" && this.state.draftSubjects.length === 0)
             return this.showToast("Add at least one subject", "error");
 
@@ -1960,7 +2170,7 @@
             lastName: lname,
             pass: document.getElementById("signupPass").value,
             role,
-            assignedClass: "", // No longer used - Class Teacher role removed
+            assignedClass: "",
             subjects: [...this.state.draftSubjects],
           };
           const res = await GoogleSheetService.signup(u);
@@ -1971,7 +2181,6 @@
             this.state.draftSubjects = [];
             this.renderChips();
           } else {
-            // Show the specific error message from the backend
             this.showToast(res.message || "Signup failed", "error");
           }
         },
@@ -1985,7 +2194,6 @@
 
           const u = await GoogleSheetService.login(name, pass);
           if (u) {
-            // Check if user is disabled
             if (u.disabled) {
               document
                 .getElementById("disabled-overlay")
@@ -1996,7 +2204,6 @@
             this.state.currentUser = u;
             sessionStorage.setItem("currentUser", JSON.stringify(u));
 
-            // Remember Me logic
             if (document.getElementById("rememberMe").checked) {
               localStorage.setItem(
                 "rememberedUser",
@@ -2025,14 +2232,12 @@
             this.state.currentUser.name;
           document.getElementById("user-role").textContent =
             this.state.currentUser.role;
-          // IMPORTANT: only initialize history AFTER successful login
           if (!history.state || history.state.section !== "dashboard") {
             history.replaceState(
               { section: "dashboard" },
               "Dashboard",
               window.location.href,
             );
-            // Optional: one extra entry so first back doesn't exit browser
             history.pushState(
               { section: "dashboard" },
               "Dashboard",
@@ -2046,7 +2251,6 @@
           const land = document.getElementById("landing-grid");
           land.innerHTML = "";
 
-          // --- ADMIN/HEAD SECTION ---
           if (r === "Admin" || r === "Head") {
             land.innerHTML += `
                         <div class="card" onclick="app.loadClassSelectionForAdmin('exam')">
@@ -2072,7 +2276,6 @@
                     `;
           }
 
-          // --- DIRECTORIES (Available to all roles) ---
           land.innerHTML += `
             <div class="card" onclick="app.loadClassList('exam')">
                 <div class="card-content"><div class="card-icon">⌨️</div><div class="card-title">Exam Directory</div><div class="card-meta">Enter Exam Scores</div></div>
@@ -2092,7 +2295,6 @@
             .forEach((s) => s.classList.add("hidden"));
           document.getElementById(id).classList.remove("hidden");
 
-          // Show/hide floating save button
           const floatingBtn = document.getElementById("floatingSaveBtn");
           if (id === "section-batch-entry") {
             floatingBtn.classList.add("show");
@@ -2154,7 +2356,6 @@
             currentStatus;
 
           if (currentStatus) {
-            // Currently disabled - will enable
             document.getElementById("toggle-staff-title").textContent =
               "Enable Staff Member";
             document.getElementById("toggle-staff-message").textContent =
@@ -2163,7 +2364,6 @@
             document.getElementById("toggle-staff-btn").className =
               "btn btn-success";
           } else {
-            // Currently enabled - will disable
             document.getElementById("toggle-staff-title").textContent =
               "Disable Staff Member";
             document.getElementById("toggle-staff-message").textContent =
@@ -2199,7 +2399,7 @@
           }
         },
 
-        // --- PERFORMANCE & BROADSHEET (FIXED) ---
+        // --- PERFORMANCE & BROADSHEET ---
         loadPerformance: async function () {
           this.showSection("section-performance");
           this.pushHistory("section-performance", "Student Performance");
@@ -2255,18 +2455,16 @@
           const scoreKey = isMidTerm ? "total" : "total";
           const isJSS = className.startsWith("JSS");
 
-          // Build table header
           let thead = "<tr><th>Admin ID</th><th>Name</th>";
           subjects.forEach((sub) => {
             thead += `<th title="${sub}">${sub}</th>`;
           });
           thead += "<th>Total</th><th>%</th><th>Position</th></tr>";
 
-          // Build rows + calculate totals/best/low
           let rowsHtml = "";
           const studentTotals = [];
-          const subjectBest = {}; // sub → {max:0, students:[]}
-          const lowPerformers = []; // students below threshold
+          const subjectBest = {};
+          const lowPerformers = [];
           subjects.forEach(
             (sub) => (subjectBest[sub] = { max: 0, students: [] }),
           );
@@ -2283,7 +2481,6 @@
               if (val > 0) {
                 rowTotal += val;
                 subjectCount++;
-                // Track best per subject
                 if (val > subjectBest[sub].max) {
                   subjectBest[sub].max = val;
                   subjectBest[sub].students = [student.name];
@@ -2310,19 +2507,17 @@
 
             cells += `<td style="font-weight:bold;text-align:center;">${rowTotal}</td>`;
             cells += `<td style="font-weight:bold;color:var(--primary);text-align:center;">${percentage}%</td>`;
-            cells += `<td class="position-cell">-</td>`; // filled later
+            cells += `<td class="position-cell">-</td>`;
 
             rowsHtml += `<tr data-sid="${student.id}">${cells}</tr>`;
           });
 
-          // Sort for position (descending perc)
           studentTotals.sort((a, b) => b.perc - a.perc);
           studentTotals.forEach((s, idx) => {
             const row = container.querySelector(`tr[data-sid="${s.id}"]`);
             if (row) row.querySelector(".position-cell").textContent = idx + 1;
           });
 
-          // Class average row (from backend)
           let avgRow =
             '<tr style="background:#f1f5f9;font-weight:600;"><td colspan="2">Class Average</td>';
           subjects.forEach((sub) => {
@@ -2337,7 +2532,6 @@
             overallAvg.toFixed(1) +
             "%</td><td>-</td></tr>";
 
-          // Build stats HTML
           let statsHtml =
             '<div style="padding:1rem; background:#eff6ff; border-radius:8px;">';
           statsHtml +=
@@ -2353,7 +2547,7 @@
           }
           statsHtml += "</ul>";
           if (lowPerformers.length > 0) {
-            lowPerformers.sort((a, b) => a.perc - b.perc); // Lowest first
+            lowPerformers.sort((a, b) => a.perc - b.perc);
             statsHtml +=
               "<strong>Students Needing Help (<" +
               app.state.lowThreshold +
@@ -2370,7 +2564,6 @@
           }
           statsHtml += "</div>";
 
-          // Final output
           container.innerHTML = `
     <div style="margin-bottom:1.5rem;">
       <h3 style="margin:0;">${className} – ${isMidTerm ? "Mid-Term" : "Exam"} Broadsheet</h3>
@@ -2387,7 +2580,7 @@
           statsContainer.innerHTML = statsHtml;
         },
 
-        // --- ADMIN MANAGE CLASSES (Split Logic) ---
+        // --- ADMIN MANAGE CLASSES ---
         loadClassSelectionForAdmin: function (resultType) {
           this.state.viewContext.resultType = resultType;
           this.loadClassList("admin-manage");
@@ -2400,7 +2593,6 @@
 
           this.showSection("section-admin-roster");
 
-          // Build clickable breadcrumbs
           const dirType =
             this.state.viewContext.resultType === "midterm"
               ? "Mid-Term Results"
@@ -2411,15 +2603,9 @@
             <span class="font-bold">${cls}</span>
           `;
 
-          document.getElementById("roster-crumb-class").textContent = cls;
-          document.getElementById("roster-crumb-type").textContent =
-            this.state.viewContext.resultType === "midterm"
-              ? "Mid-Term Results"
-              : "Exam Results";
           document.getElementById("roster-title").textContent =
             `${cls} - ${this.state.viewContext.resultType.toUpperCase()} Roster`;
 
-          // Add Student button is always visible for Admin/Head
           const addBtn = document.getElementById("btn-roster-add-student");
           if (addBtn) {
             addBtn.style.display = "inline-flex";
@@ -2463,7 +2649,6 @@
           );
 
           if (r === "Teacher") {
-            // Teachers only see classes they're assigned to teach
             this.state.currentUser.subjects.forEach((s) => {
               if (s.class === "ALL JSS")
                 classesToShow.push("JSS1", "JSS2", "JSS3");
@@ -2473,7 +2658,6 @@
                 classesToShow.push(s.class);
             });
           } else {
-            // Admin and Head see all classes
             classesToShow = ALL_CLASSES;
           }
 
@@ -2521,7 +2705,6 @@
           if (r === "Admin" || r === "Head") {
             subsToShow = isJSS ? JSS_SUBJECTS : SSS_SUBJECTS.All;
           } else {
-            // Teacher - only subjects they teach
             subsToShow = this.state.currentUser.subjects
               .filter(
                 (s) =>
@@ -2566,7 +2749,6 @@
           const isMidTerm = mode === "midterm";
           const dirName = isMidTerm ? "Mid-Term" : "Exam";
 
-          // Build clickable breadcrumbs
           document.getElementById("batch-breadcrumbs").innerHTML = `
             <span onclick="app.goHome()">Home</span> > 
             <span class="crumb-clickable" onclick="app.loadClassList('${mode}')">${dirName} Directory</span> > 
@@ -2596,7 +2778,6 @@
               "Exam Score Entry";
           }
 
-          // Only Admin/Head can add students from batch entry
           document.getElementById("batch-actions").innerHTML =
             this.state.currentUser.role === "Admin" ||
             this.state.currentUser.role === "Head"
@@ -2706,7 +2887,7 @@
           }
         },
 
-        // --- STUDENT DETAIL (Exam vs Mid-Term Logic) ---
+        // --- STUDENT DETAIL ---
         loadStudentDetail: async function (sid) {
           this.state.viewContext.sid = sid;
           const res = await GoogleSheetService.getFullResult(sid);
@@ -2721,7 +2902,6 @@
 
           this.showSection("section-student-detail");
 
-          // Build clickable breadcrumbs
           const dirType = isMidTerm ? "Mid-Term Results" : "Exam Results";
           document.getElementById("detail-breadcrumbs").innerHTML = `
             <span onclick="app.goHome()">Home</span> > 
@@ -2733,7 +2913,6 @@
           document.getElementById("det-name").textContent =
             s.name + (isMidTerm ? " (Mid-Term)" : " (Exam)");
 
-          // Only Admin/Head can edit scores in student detail view
           const canEdit =
             this.state.currentUser.role === "Admin" ||
             this.state.currentUser.role === "Head";
@@ -2747,7 +2926,6 @@
           tbody.innerHTML = "";
 
           if (isMidTerm) {
-            // MID-TERM TABLE
             thead.innerHTML = `<tr><th>Subject</th><th>Total (100)</th><th>Grade</th></tr>`;
             allSubs.forEach((sub) => {
               const score = res.scores[sub] || { total: "" };
@@ -2761,7 +2939,6 @@
                     `;
             });
           } else {
-            // EXAM TABLE
             thead.innerHTML = `<tr><th>Subject</th><th>CA</th><th>Exam</th><th>Total</th><th>Grade</th></tr>`;
             allSubs.forEach((sub) => {
               const score = res.scores[sub] || { ca: "", exam: "" };
@@ -3082,7 +3259,26 @@
           }
         },
 
-        // --- FEE MANAGEMENT (UPDATED FOR GOOGLE SHEETS) ---
+        // ==========================================
+        // FEE MANAGEMENT (UPDATED LOGIC)
+        // ==========================================
+
+        // Helper: Calculate fee based on type
+        calculateTotalFee: function (baseFee, regFee, type, customAmount) {
+          switch (type) {
+            case "New":
+              return baseFee + regFee;
+            case "Teacher's Child":
+              return baseFee * 0.5 + regFee; // 50% of school fee
+            case "Scholarship":
+              return 0;
+            case "Custom":
+              return customAmount || 0;
+            default:
+              return baseFee; // Old Student
+          }
+        },
+
         loadFees: async function () {
           this.showSection("section-fees");
           this.pushHistory("section-fees", "Fee Management");
@@ -3112,45 +3308,63 @@
           let stats = { exp: 0, col: 0, out: 0 };
 
           stds.forEach((s) => {
-            const isNew = s.status === "New";
-            const myTxs = allTx.filter((t) => t.studentId === s.id);
-            const paid = myTxs.reduce((sum, t) => sum + parseInt(t.amount), 0);
-
+            const type = s.status || "Old";
+            const customAmt = s.customFee || 0;
             const schoolFee = config ? config.schoolFee : 0;
             const regFee = config ? config.regFee : 0;
-            const totalFee = isNew ? schoolFee + regFee : schoolFee;
+
+            const totalFee = this.calculateTotalFee(
+              schoolFee,
+              regFee,
+              type,
+              customAmt,
+            );
+
+            const myTxs = allTx.filter((t) => t.studentId === s.id);
+            const paid = myTxs.reduce((sum, t) => sum + parseInt(t.amount), 0);
 
             stats.exp += totalFee;
             stats.col += paid;
             stats.out += totalFee - paid;
 
+            const balance = totalFee - paid;
             const badge =
-              totalFee - paid <= 0
+              balance <= 0
                 ? "status-paid"
                 : paid > 0
                   ? "status-partial"
                   : "status-owing";
 
+            let typeBadgeClass = "";
+            if (type === "Teacher's Child")
+              typeBadgeClass = "style='background:#e0f2fe; color:#0369a1;'";
+            if (type === "Scholarship")
+              typeBadgeClass = "style='background:#dcfce7; color:#15803d;'";
+            if (type === "Custom")
+              typeBadgeClass = "style='background:#fef9c3; color:#a16207;'";
+
+            // UPDATED: Pass 'paid' to openEditFeeModal
             tbody.innerHTML += `
                         <tr>
-                            <td><strong>${s.name}</strong><br><small>${
-                              s.id
-                            }</small></td>
-                            <td><span class="badge">${isNew ? "New" : "Old"} Student</span></td>
+                            <td><strong>${s.name}</strong><br><small>${s.id}</small></td>
+                            <td><span class="badge" ${typeBadgeClass}>${type}</span></td>
                             <td>₦${totalFee.toLocaleString()}</td>
                             <td>₦${paid.toLocaleString()}</td>
-                            <td style="color:var(--danger); font-weight:bold">₦${(totalFee - paid).toLocaleString()}</td>
+                            <td style="color:var(--danger); font-weight:bold">₦${balance.toLocaleString()}</td>
                             <td><span class="fee-status-badge ${badge}">${
-                              totalFee - paid <= 0
+                              balance <= 0
                                 ? "Paid"
                                 : paid > 0
                                   ? "Partial"
                                   : "Owing"
                             }</span></td>
                             <td>
-                                <button class="btn btn-primary btn-sm" onclick="app.openPayModal('${
-                                  s.id
-                                }', '${s.name}', '${cls}', ${isNew})">Pay</button>
+                                <div class="flex gap-2">
+                                    <button class="btn btn-outline btn-sm" onclick="app.openEditFeeModal('${s.id}', '${s.name}', '${type}', ${customAmt}, ${paid})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-primary btn-sm" onclick="app.openPayModal('${s.id}', '${s.name}', '${cls}', '${type}')">Pay</button>
+                                </div>
                             </td>
                         </tr>
                     `;
@@ -3164,7 +3378,8 @@
             `₦${stats.out.toLocaleString()}`;
         },
 
-        openPayModal: function (sid, name, cls, isNew) {
+        // --- PAY MODAL LOGIC ---
+        openPayModal: function (sid, name, cls, currentType) {
           const config = FeeService.getConfig()[cls];
           document.getElementById("payStudentId").value = sid;
           document.getElementById("payStudentName").value = name;
@@ -3181,24 +3396,47 @@
             reg: config.regFee,
           };
 
-          const radioVal = isNew ? "New" : "Old";
-          const radioBtn = document.querySelector(
-            `input[name="stdType"][value="${radioVal}"]`,
-          );
-          if (radioBtn) radioBtn.checked = true;
+          // Set the radio button to match current student type
+          const radios = document.querySelectorAll('input[name="stdType"]');
+          let typeFound = false;
+          radios.forEach((r) => {
+            if (r.value === currentType) {
+              r.checked = true;
+              typeFound = true;
+            }
+          });
+          // If type is Custom, we need to fetch the amount (simplified here as 0 or passed in context)
+          // For simplicity in Pay Modal, we default to Old if type isn't standard
+          if (!typeFound) {
+            document.querySelector(
+              'input[name="stdType"][value="Old"]',
+            ).checked = true;
+          }
 
           this.calcModalTotal();
-
           document.getElementById("modal-pay").style.display = "flex";
         },
 
         calcModalTotal: function () {
-          const isNew =
-            document.querySelector('input[name="stdType"]:checked').value ===
-            "New";
-          const total = isNew
-            ? this.state.feeContext.base + this.state.feeContext.reg
-            : this.state.feeContext.base;
+          const selectedType = document.querySelector(
+            'input[name="stdType"]:checked',
+          ).value;
+          const customGroup = document.getElementById("customFeeGroup");
+
+          let total = 0;
+          const base = this.state.feeContext.base;
+          const reg = this.state.feeContext.reg;
+
+          if (selectedType === "Custom") {
+            customGroup.classList.add("show");
+            const customVal =
+              parseInt(document.getElementById("payCustomAmount").value) || 0;
+            total = customVal;
+          } else {
+            customGroup.classList.remove("show");
+            total = this.calculateTotalFee(base, reg, selectedType, 0);
+          }
+
           document.getElementById("payTotalDue").textContent =
             `₦${total.toLocaleString()}`;
           return total;
@@ -3206,24 +3444,33 @@
 
         confirmPayment: async function () {
           const amount = parseInt(document.getElementById("payAmount").value);
-          const isNew =
-            document.querySelector('input[name="stdType"]:checked').value ===
-            "New";
+          const selectedType = document.querySelector(
+            'input[name="stdType"]:checked',
+          ).value;
 
           const totalDue = this.calcModalTotal();
 
           if (!amount || amount <= 0)
             return this.showToast("Invalid Amount", "warning");
-          if (amount > totalDue)
+          if (amount > totalDue && selectedType !== "Custom")
+            // Allow overpayment for custom adjustments? Usually no.
             return this.showToast("Amount exceeds due", "error");
 
+          // 1. Save Transaction
           const res = await GoogleSheetService.saveFeeTransaction({
             txId: Date.now().toString(),
             studentId: this.state.feeContext.sid,
             amount: amount,
-            type: isNew ? "New" : "Old",
+            type: selectedType,
             date: new Date().toISOString().split("T")[0],
           });
+
+          // 2. Update Student Profile if type changed (optional, but good for consistency)
+          // The backend handles keeping the type consistent or we can update it here.
+          // For now, we assume the type selected in payment modal is just for calculation reference
+          // OR it updates the student profile permanently.
+          // Ideally, "Edit" is for profile, "Pay" is for transaction.
+          // We will NOT update student profile here to keep concerns separate, unless specifically desired.
 
           if (res.status === "success") {
             this.showToast("Payment Recorded Successfully", "success");
@@ -3231,6 +3478,73 @@
             this.renderFeeTable(this.state.feeContext.cls);
           } else {
             this.showToast("Error saving payment", "error");
+          }
+        },
+
+        // --- EDIT FEE PROFILE LOGIC ---
+        openEditFeeModal: function (
+          sid,
+          name,
+          currentType,
+          currentCustomAmt,
+          currentPaid,
+        ) {
+          document.getElementById("editFeeStudentId").value = sid;
+          document.getElementById("editFeeStudentName").value = name;
+          document.getElementById("editFeeType").value = currentType;
+          document.getElementById("editCustomAmount").value =
+            currentCustomAmt || "";
+
+          // NEW: Set the paid amount
+          document.getElementById("editFeePaid").value = currentPaid || 0;
+
+          this.handleEditFeeTypeChange();
+          document.getElementById("modal-edit-fee").style.display = "flex";
+        },
+
+        handleEditFeeTypeChange: function () {
+          const type = document.getElementById("editFeeType").value;
+          const group = document.getElementById("editCustomFeeGroup");
+          if (type === "Custom") {
+            group.classList.add("show");
+          } else {
+            group.classList.remove("show");
+          }
+        },
+
+        saveFeeProfile: async function () {
+          const sid = document.getElementById("editFeeStudentId").value;
+          const type = document.getElementById("editFeeType").value;
+          const customAmt =
+            parseInt(document.getElementById("editCustomAmount").value) || 0;
+
+          // NEW: Get the edited paid amount
+          const paidAmt =
+            parseInt(document.getElementById("editFeePaid").value) || 0;
+
+          if (type === "Custom" && customAmt <= 0) {
+            return this.showToast(
+              "Please enter a valid custom amount",
+              "warning",
+            );
+          }
+
+          // UPDATED: Send paidAmt to server
+          const res = await GoogleSheetService.updateStudentFeeProfile(
+            sid,
+            type,
+            customAmt,
+            paidAmt, // New parameter
+          );
+
+          if (res.status === "success") {
+            this.showToast("Profile & Payments Updated", "success");
+            this.closeModals();
+            // Clear cache to reflect changes immediately
+            GoogleSheetService.clearCache();
+            this.loadFees();
+          } else {
+            this.showToast("Error updating profile", "error");
           }
         },
 
@@ -3363,13 +3677,20 @@
           let debtors = [];
 
           for (const s of students) {
+            const type = s.status || "Old";
+            const customAmt = s.customFee || 0;
+            const fees = config[s.class] || { schoolFee: 0, regFee: 0 };
+
+            const totalDue = this.calculateTotalFee(
+              fees.schoolFee,
+              fees.regFee,
+              type,
+              customAmt,
+            );
+
             const myTxs = allTx.filter((t) => t.studentId === s.id);
             const paid = myTxs.reduce((sum, t) => sum + Number(t.amount), 0);
-            const fees = config[s.class] || { schoolFee: 0, regFee: 0 };
-            const totalDue =
-              s.status === "New"
-                ? fees.schoolFee + fees.regFee
-                : fees.schoolFee;
+
             const balance = totalDue - paid;
 
             if (balance > 0) {
@@ -3377,7 +3698,7 @@
                 name: s.name,
                 id: s.id,
                 class: s.class,
-                type: s.status || "Old",
+                type: type,
                 total: totalDue,
                 paid: paid,
                 balance: balance,
@@ -3433,34 +3754,6 @@
             `Generated debtors report for ${cls === "ALL" ? "all classes" : cls}`,
             "success",
           );
-        },
-
-        getDocumentGrade: function (score) {
-          if (score >= 80) return "A";
-          if (score >= 70) return "B";
-          if (score >= 60) return "BC";
-          if (score >= 50) return "C";
-          if (score >= 40) return "P";
-          return "F";
-        },
-
-        getComment: function (grade) {
-          switch (grade) {
-            case "A":
-              return "Distinction";
-            case "B":
-              return "Excellent";
-            case "BC":
-              return "Very Good";
-            case "C":
-              return "Good";
-            case "P":
-              return "Pass";
-            case "F":
-              return "Fail";
-            default:
-              return "-";
-          }
         },
 
         showToast: function (msg, type) {
