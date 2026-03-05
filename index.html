@@ -649,6 +649,30 @@
         color: #b91c1c;
       }
 
+      /* --- FEE BATCH ENTRY STYLES --- */
+      .fee-table-select {
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+      .fee-table-input {
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        width: 100px;
+        font-size: 0.9rem;
+        text-align: right;
+      }
+      .custom-fee-inline {
+        display: none;
+        margin-top: 5px;
+      }
+      .custom-fee-inline.show {
+        display: block;
+      }
+
       .fee-tabs {
         display: flex;
         gap: 10px;
@@ -679,6 +703,15 @@
       }
       .custom-fee-group.show {
         display: block;
+      }
+      /* --- ACTION CELL FLEX --- */
+      .action-cell {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .action-cell .fee-table-input {
+        flex: 1;
       }
 
       /* --- PRINT STYLES --- */
@@ -1214,8 +1247,35 @@
           <div class="list-container">
             <div class="list-header">
               <div>
-                <h2>🏆 Top Performers</h2>
+                <h2>🏆 Student Performance</h2>
                 <p class="text-sm text-secondary">Based on average scores</p>
+              </div>
+              <!-- NEW: History Filters -->
+              <div class="flex gap-2 items-center">
+                <select
+                  id="perfSessionSelect"
+                  class="form-control"
+                  style="width: 150px"
+                >
+                  <option value="2025/2026">2025/2026</option>
+                  <option value="2024/2025">2024/2025</option>
+                  <option value="2023/2024">2023/2024</option>
+                </select>
+                <select
+                  id="perfTermSelect"
+                  class="form-control"
+                  style="width: 120px"
+                >
+                  <option value="1st">1st Term</option>
+                  <option value="2nd">2nd Term</option>
+                  <option value="3rd">3rd Term</option>
+                </select>
+                <button
+                  class="btn btn-outline btn-sm"
+                  onclick="app.printBroadsheet()"
+                >
+                  <i class="fas fa-print"></i> Print
+                </button>
               </div>
             </div>
             <div id="perf-container"></div>
@@ -1228,6 +1288,25 @@
             <span onclick="app.goHome()">Home</span> >
             <span class="font-bold">Fee Management</span>
           </div>
+
+          <!-- NEW: School Toggle -->
+          <div class="flex gap-2" style="margin-bottom: 15px">
+            <button
+              id="btn-school-sec"
+              class="btn btn-primary btn-sm"
+              onclick="app.switchFeeSchool('sec')"
+            >
+              Secondary School
+            </button>
+            <button
+              id="btn-school-pry"
+              class="btn btn-outline btn-sm"
+              onclick="app.switchFeeSchool('pry')"
+            >
+              Primary School
+            </button>
+          </div>
+
           <div class="fee-tabs">
             <button
               class="fee-tab-btn active"
@@ -1258,7 +1337,28 @@
             <div class="list-container">
               <div class="list-header">
                 <div><h2>Student Accounts</h2></div>
-                <div class="flex gap-2">
+                <div class="flex gap-2" style="flex-wrap: wrap">
+                  <!-- NEW: Session/Term Filters -->
+                  <select
+                    id="feeSessionSelect"
+                    class="form-control"
+                    style="width: 150px"
+                    onchange="app.handleFeeHistoryChange()"
+                  >
+                    <option value="2025/2026">2025/2026</option>
+                    <option value="2024/2025">2024/2025</option>
+                  </select>
+                  <select
+                    id="feeTermSelect"
+                    class="form-control"
+                    style="width: 120px"
+                    onchange="app.handleFeeHistoryChange()"
+                  >
+                    <option value="1st">1st Term</option>
+                    <option value="2nd">2nd Term</option>
+                    <option value="3rd">3rd Term</option>
+                  </select>
+                  <!-- Existing Buttons -->
                   <button
                     class="btn btn-outline btn-sm"
                     onclick="app.openDebtorModal()"
@@ -1269,7 +1369,7 @@
                     id="feeClassFilter"
                     class="form-control"
                     style="width: 200px"
-                    onchange="app.loadFees()"
+                    onchange="app.handleFeeClassChange(this.value)"
                   ></select>
                 </div>
               </div>
@@ -1306,7 +1406,10 @@
                     <tr>
                       <th>Class</th>
                       <th>School Fee (₦)</th>
-                      <th>Registration (New Student) (₦)</th>
+                      <th>Reg Fee (₦)</th>
+                      <th id="th-teacher-subsidy" class="hidden">
+                        Teacher Subsidy (₦)
+                      </th>
                     </tr>
                   </thead>
                   <tbody id="fee-settings-tbody"></tbody>
@@ -1394,6 +1497,98 @@
                 Back
               </button>
             </div>
+          </div>
+        </section>
+        <!-- AI QUESTION GENERATOR -->
+        <section id="section-ai" class="hidden">
+          <div class="breadcrumbs">
+            <span onclick="app.goHome()">Home</span> >
+            <span class="font-bold">AI Exam Generator</span>
+          </div>
+          <div class="list-container" style="padding: 20px">
+            <div class="list-header">
+              <div>
+                <h2>🤖 AI Question Generator</h2>
+                <p class="text-sm text-secondary">
+                  Generate exam questions instantly using AI.
+                </p>
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-top: 20px">
+              <div class="form-group">
+                <label>Subject</label>
+                <select id="aiSubject" class="form-control">
+                  <option>English Language</option>
+                  <option>Mathematics</option>
+                  <option>Biology</option>
+                  <option>Chemistry</option>
+                  <option>Physics</option>
+                  <option>Civic Education</option>
+                  <option>Economics</option>
+                  <option>Literature</option>
+                  <option>Geography</option>
+                  <option>Government</option>
+                  <option>Accounting</option>
+                  <option>Commerce</option>
+                  <option>Yoruba</option>
+                  <option>CRS</option>
+                  <option>Data Processing</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Topic / Theme</label>
+                <input
+                  type="text"
+                  id="aiTopic"
+                  class="form-control"
+                  placeholder="e.g. Quadratic Equations"
+                />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Question Type</label>
+                <select id="aiType" class="form-control">
+                  <option value="Multiple Choice (MCQ)">
+                    Multiple Choice (MCQ)
+                  </option>
+                  <option value="Theory / Essay">Theory / Essay</option>
+                  <option value="True or False">True or False</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Difficulty</label>
+                <select id="aiDifficulty" class="form-control">
+                  <option>Easy</option>
+                  <option selected>Medium</option>
+                  <option>Hard</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Number of Questions</label>
+              <input
+                type="number"
+                id="aiCount"
+                class="form-control"
+                value="10"
+                min="1"
+                max="50"
+              />
+            </div>
+
+            <button
+              class="btn btn-primary"
+              onclick="app.generateAiQuestions()"
+              style="margin-top: 10px"
+            >
+              <i class="fas fa-magic"></i> Generate Questions
+            </button>
+
+            <div id="ai-results" style="margin-top: 30px"></div>
           </div>
         </section>
       </main>
@@ -1750,6 +1945,47 @@
       </div>
     </div>
 
+    <!-- Print Configuration Modal -->
+    <div id="modal-print-config" class="modal-overlay">
+      <div class="modal">
+        <h3>Print Configuration</h3>
+        <div class="form-group">
+          <label>Session</label>
+          <select id="printSession" class="form-control">
+            <option value="2024/2025">2024/2025</option>
+            <option value="2025/2026" selected>2025/2026</option>
+            <option value="2026/2027">2026/2027</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Term</label>
+          <select id="printTerm" class="form-control">
+            <option value="1st" selected>1st Term</option>
+            <option value="2nd">2nd Term</option>
+            <option value="3rd">3rd Term</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Next Term Resumes</label>
+          <input
+            type="text"
+            id="printNextTerm"
+            class="form-control"
+            placeholder="e.g. 12th of January, 2026"
+            value="12th of January, 2026"
+          />
+        </div>
+        <div class="flex justify-between" style="margin-top: 20px">
+          <button class="btn btn-outline" onclick="app.closeModals()">
+            Cancel
+          </button>
+          <button class="btn btn-primary" onclick="app.generatePrintReport()">
+            <i class="fas fa-print"></i> Generate Report
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Hidden Printable Area -->
     <div id="printable-area"></div>
 
@@ -1835,51 +2071,59 @@
         ],
       };
       const ALL_CLASSES = ["JSS1", "JSS2", "JSS3", "SSS1", "SSS2", "SSS3"];
-
-      // --- 2. FEE MANAGEMENT SERVICE (Local Storage for Config Only) ---
-      const FeeService = {
-        KEYS: { CONFIG: "ps_fee_config" },
-        init: function () {
-          if (!localStorage.getItem(this.KEYS.CONFIG)) {
-            const defaults = {};
-            ALL_CLASSES.forEach((c) => {
-              defaults[c] = { schoolFee: 50000, regFee: 10000 };
-            });
-            localStorage.setItem(this.KEYS.CONFIG, JSON.stringify(defaults));
-          }
-        },
-        getConfig: function () {
-          return JSON.parse(localStorage.getItem(this.KEYS.CONFIG));
-        },
-        saveConfig: function (newConfig) {
-          localStorage.setItem(this.KEYS.CONFIG, JSON.stringify(newConfig));
-        },
-      };
+      // NEW: Primary School Config
+      const PRY_SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbyoLN0o6qPU7waz6J9-KpNILcXXJtyFMjt_b44l7MoFUFVAaVRYOyLTEoUSWWCnycFW/exec";
+      const PRY_CLASSES = [
+        "Playgroup",
+        "Nursery 1",
+        "Nursery 2",
+        "KG",
+        "Primary 1A",
+        "Primary 1B",
+        "Primary 2A",
+        "Primary 2B",
+        "Primary 3A",
+        "Primary 3B",
+        "Primary 4A",
+        "Primary 4B",
+        "Primary 5A",
+        "Primary 5B",
+      ];
 
       // --- 3. GOOGLE SHEETS SERVICE ---
       // --- 3. GOOGLE SHEET SERVICE (With Cache) ---
+      // --- 3. GOOGLE SHEET SERVICE (With Cache) ---
       const GoogleSheetService = {
-        URL: "https://script.google.com/macros/s/AKfycbw-GHQzYVauehu_C_0NICw8G2SaNnz1Bu7Ho7V4vPilEuwREzAZaidS10VPlOBB_Xyg/exec",
+        URL: "https://script.google.com/macros/s/AKfycbx-nzQ52sZov0tr8nvuir2KBXTZhZTyMshiJX5eeB1i91HUzoAC5n0bb1M33l2CXsGY/exec",
 
         // Simple in-memory cache
         cache: {
           students: {}, // Key: 'JSS1', Value: [Array of students]
+          feeSettings: null, // Cache for fee settings
           lastFetch: {},
         },
 
+        // UPDATED _post to handle two URLs
         _post: async function (action, data = {}) {
           const loader = document.getElementById("loader");
-          // Only show loader if we don't have cached data for this action
-          const cacheKey = data.className || data.adminNo || action;
-          const hasCache =
-            action === "getStudents" && this.cache.students[cacheKey];
+          const school = app.state.feeSchool || "sec"; // Default to Sec
+          const isPry = school === "pry";
+          const url = isPry ? PRY_SCRIPT_URL : this.URL;
 
-          if (!hasCache) loader.style.display = "flex";
+          // Map actions for Primary School if names differ
+          let finalAction = action;
+          if (isPry) {
+            if (action === "getFeeSettings") finalAction = "getFeeConfig";
+            if (action === "saveFeeSettings") finalAction = "saveFeeConfig";
+            if (action === "saveFeeTransaction") finalAction = "addFee";
+          }
 
+          loader.style.display = "flex";
           try {
-            const response = await fetch(this.URL, {
+            const response = await fetch(url, {
               method: "POST",
-              body: JSON.stringify({ action, ...data }),
+              body: JSON.stringify({ action: finalAction, ...data }),
             });
             return await response.json();
           } catch (error) {
@@ -2005,6 +2249,28 @@
             paidAmount: paidAmount, // Send it
           });
         },
+
+        // NEW: Fee Settings API Calls
+        getFeeSettings: async function () {
+          if (this.cache.feeSettings) {
+            return this.cache.feeSettings;
+          }
+          const res = await this._post("getFeeSettings");
+          if (res.status === "success" && res.config) {
+            this.cache.feeSettings = res.config;
+            return res.config;
+          }
+          return {}; // Return empty object on failure
+        },
+        saveFeeSettings: async function (configData) {
+          const res = await this._post("saveFeeSettings", {
+            config: configData,
+          });
+          if (res.status === "success") {
+            this.cache.feeSettings = configData; // Update cache
+          }
+          return res;
+        },
       };
 
       let isInitialLoad = true;
@@ -2033,6 +2299,7 @@
           feeContext: {},
           navHistory: [],
           lowThreshold: 50,
+          feeSchool: "sec", // 'sec' or 'pry'
         },
 
         pushHistory: function (sectionId, title, backAction = null) {
@@ -2062,8 +2329,6 @@
         },
 
         init: function () {
-          FeeService.init();
-
           const remembered = localStorage.getItem("rememberedUser");
           if (remembered) {
             try {
@@ -2100,6 +2365,79 @@
             document.getElementById("view-auth").classList.remove("hidden");
           }
           this.populateSubjects();
+        },
+
+        // ADD THIS FUNCTION:
+        toggleLoader: function (show) {
+          const loader = document.getElementById("loader");
+          loader.style.display = show ? "flex" : "none";
+        },
+
+        // --- AI LOGIC ---
+        loadAiSection: function () {
+          this.showSection("section-ai");
+        },
+
+        generateAiQuestions: async function () {
+          const data = {
+            subject: document.getElementById("aiSubject").value,
+            topic: document.getElementById("aiTopic").value,
+            questionType: document.getElementById("aiType").value,
+            difficulty: document.getElementById("aiDifficulty").value,
+            count: document.getElementById("aiCount").value,
+          };
+
+          if (!data.topic)
+            return this.showToast("Please enter a topic", "warning");
+
+          this.toggleLoader(true);
+          const res = await GoogleSheetService._post(
+            "generateAiQuestions",
+            data,
+          );
+          this.toggleLoader(false);
+
+          if (res.status === "success") {
+            this.renderAiResults(res.questions);
+          } else {
+            this.showToast(res.message || "Failed to generate", "error");
+          }
+        },
+
+        renderAiResults: function (questions) {
+          const container = document.getElementById("ai-results");
+          if (!questions || questions.length === 0) {
+            container.innerHTML = "<p>No questions generated.</p>";
+            return;
+          }
+
+          let html = `<h3 style="margin-bottom:15px;">Generated Questions (${questions.length})</h3>`;
+          html +=
+            '<div class="list-container"><table><thead><tr><th>#</th><th>Question</th><th>Answer</th></tr></thead><tbody>';
+
+          questions.forEach((q, i) => {
+            // Handle MCQ vs Theory
+            let qText = q.q || q.question;
+            let answer = q.ans || q.answer || "-";
+
+            // If MCQ, add options to the question text
+            if (q.opts && q.opts.length > 0) {
+              qText += `<br><small style="color:var(--secondary)">${q.opts.join(" | ")}</small>`;
+            }
+
+            html += `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td>${qText}</td>
+                        <td style="font-weight:bold; color:var(--success)">${answer}</td>
+                    </tr>
+                `;
+          });
+
+          html += "</tbody></table></div>";
+          html += `<button class="btn btn-outline" onclick="window.print()" style="margin-top:15px;"><i class="fas fa-print"></i> Print Questions</button>`;
+
+          container.innerHTML = html;
         },
 
         // --- AUTH ---
@@ -2251,6 +2589,7 @@
           const land = document.getElementById("landing-grid");
           land.innerHTML = "";
 
+          // 1. Admin & Head Specific Cards
           if (r === "Admin" || r === "Head") {
             land.innerHTML += `
                         <div class="card" onclick="app.loadClassSelectionForAdmin('exam')">
@@ -2276,6 +2615,21 @@
                     `;
           }
 
+          // 2. AI CARD - Visible to Teachers, Admins, Heads
+          land.innerHTML += `
+            <div class="card" onclick="app.loadAiSection()">
+                <div class="card-content">
+                  <div class="card-icon">🤖</div>
+                  <div class="card-title">AI Exam Generator</div>
+                  <div class="card-meta">Create questions with AI</div>
+                </div>
+                <div class="card-footer">
+                  <button class="btn btn-primary btn-sm w-full">Open</button>
+                </div>
+            </div>
+          `;
+
+          // 3. General Directories (Visible to everyone)
           land.innerHTML += `
             <div class="card" onclick="app.loadClassList('exam')">
                 <div class="card-content"><div class="card-icon">⌨️</div><div class="card-title">Exam Directory</div><div class="card-meta">Enter Exam Scores</div></div>
@@ -2296,8 +2650,26 @@
           document.getElementById(id).classList.remove("hidden");
 
           const floatingBtn = document.getElementById("floatingSaveBtn");
+
+          // Logic for Floating Button
           if (id === "section-batch-entry") {
             floatingBtn.classList.add("show");
+            floatingBtn.innerHTML =
+              '<i class="fas fa-save"></i> <span>Save All Scores</span>';
+            floatingBtn.setAttribute("onclick", "app.saveBatchScores()");
+          } else if (id === "section-fees") {
+            // Only show if we are on the "Collect Fees" tab
+            const isCollectTab = !document
+              .getElementById("fee-tab-collect")
+              .classList.contains("hidden");
+            if (isCollectTab) {
+              floatingBtn.classList.add("show");
+              floatingBtn.innerHTML =
+                '<i class="fas fa-save"></i> <span>Save</span>';
+              floatingBtn.setAttribute("onclick", "app.saveAllFeePayments()");
+            } else {
+              floatingBtn.classList.remove("show");
+            }
           } else {
             floatingBtn.classList.remove("show");
           }
@@ -2403,53 +2775,51 @@
         loadPerformance: async function () {
           this.showSection("section-performance");
           this.pushHistory("section-performance", "Student Performance");
+
+          this.state.broadsheetMode = "exam"; // Default
+
           const container = document.getElementById("perf-container");
           container.innerHTML = `
-    <div class="list-header">
-      <h2>Student Performance – Broadsheet</h2>
-      <select id="perf-class-select" class="form-control" style="width:220px">
-        <option value="">Select Class</option>
-        ${ALL_CLASSES.map((c) => `<option value="${c}">${c}</option>`).join("")}
-      </select>
-      <button class="btn btn-primary btn-sm" id="perf-switch-type">Switch to Mid-Term</button>
-    </div>
-    <div id="broadsheet-container" style="overflow-x:auto; margin-top:1rem;"></div>
-    <div id="perf-stats" style="margin-top:2rem;"></div>
-  `;
+            <div id="perf-controls" style="margin-bottom: 15px; display:flex; gap:10px; align-items:center;">
+                <select id="perf-class-select" class="form-control" style="width:200px">
+                    <option value="">Select Class</option>
+                    ${ALL_CLASSES.map((c) => `<option value="${c}">${c}</option>`).join("")}
+                </select>
+                <button class="btn btn-primary btn-sm" id="perf-switch-type">Switch to Mid-Term</button>
+            </div>
+            <div id="broadsheet-container" style="overflow-x:auto; margin-top:1rem;"></div>
+            <div id="perf-stats" style="margin-top:2rem;"></div>
+          `;
 
           const select = document.getElementById("perf-class-select");
           const switchBtn = document.getElementById("perf-switch-type");
+          const sessionSel = document.getElementById("perfSessionSelect");
+          const termSel = document.getElementById("perfTermSelect");
 
-          // Handle Class Selection Change
-          select.onchange = (e) => {
-            const cls = e.target.value;
-            if (cls) {
-              // Reset to Exam view and button text when changing class
-              switchBtn.textContent = "Switch to Mid-Term";
-              app.renderBroadsheet(cls, "exam");
-            }
+          // Helper to load data
+          const loadData = () => {
+            const cls = select.value;
+            if (cls) app.renderBroadsheet(cls, this.state.broadsheetMode);
           };
 
-          // Handle Switch Button Click
+          // Event Listeners
+          select.onchange = loadData;
+          sessionSel.onchange = loadData;
+          termSel.onchange = loadData;
+
           switchBtn.onclick = (e) => {
             const cls = select.value;
-            if (!cls) return; // Do nothing if no class is selected
+            if (!cls) return;
 
-            const currentText = e.target.textContent;
-            let targetMode = "";
-
-            // If button says "Switch to Mid-Term", we are currently in Exam. Switch TO Mid-Term.
-            if (currentText.includes("Mid-Term")) {
-              targetMode = "midterm";
+            // Toggle Mode
+            if (this.state.broadsheetMode === "exam") {
+              this.state.broadsheetMode = "midterm";
               e.target.textContent = "Switch to Exam";
-            }
-            // If button says "Switch to Exam", we are currently in Mid-Term. Switch TO Exam.
-            else {
-              targetMode = "exam";
+            } else {
+              this.state.broadsheetMode = "exam";
               e.target.textContent = "Switch to Mid-Term";
             }
-
-            app.renderBroadsheet(cls, targetMode);
+            loadData();
           };
         },
 
@@ -2457,9 +2827,22 @@
           const container = document.getElementById("broadsheet-container");
           const statsContainer = document.getElementById("perf-stats");
           container.innerHTML =
-            '<div class="text-center" style="padding:4rem;"><div class="spinner" style="margin:0 auto;"></div><p>Loading broadsheet...</p></div>';
+            '<div class="text-center" style="padding:4rem;"><div class="spinner" style="margin:0 auto;"></div><p>Loading...</p></div>';
 
-          const data = await GoogleSheetService.getClassScores(className, type);
+          // NEW: Get Session/Term from UI
+          const session = document.getElementById("perfSessionSelect").value;
+          const term = document.getElementById("perfTermSelect").value;
+
+          // Pass to API (Assuming backend supports it. If not, it uses default current)
+          const data = await GoogleSheetService.getClassScores(
+            className,
+            type,
+            session,
+            term,
+          );
+
+          // ... REST OF THE FUNCTION REMAINS THE SAME ...
+          // (No changes needed to the calculation logic, just the data fetch above)
 
           if (!data.students || data.students.length === 0) {
             container.innerHTML =
@@ -2622,19 +3005,179 @@
 
           // 7. Render to DOM
           container.innerHTML = `
-    <div style="margin-bottom:1.5rem;">
-      <h3 style="margin:0;">${className} – ${isMidTerm ? "Mid-Term" : "Exam"} Broadsheet</h3>
-      <small style="color:var(--secondary);">Session: 2025/2026 • Students: ${processedStudents.length} • Subjects: ${subjects.length}</small>
-    </div>
-    <table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
-      <thead style="background:#f1f5f9;">${thead}</thead>
-      <tbody>
-        ${rowsHtml}
-        ${avgRow}
-      </tbody>
-    </table>
-  `;
+            <div style="margin-bottom:1.5rem;">
+              <h3 style="margin:0;">${className} – ${isMidTerm ? "Mid-Term" : "Exam"} Broadsheet</h3>
+              <small style="color:var(--secondary);">Session: 2025/2026 • Students: ${processedStudents.length} • Subjects: ${subjects.length}</small>
+            </div>
+            <table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
+              <thead style="background:#f1f5f9;">${thead}</thead>
+              <tbody>
+                ${rowsHtml}
+                ${avgRow}
+              </tbody>
+            </table>
+          `;
           statsContainer.innerHTML = statsHtml;
+        },
+
+        // NEW: Handle Session/Term change in Fees
+        handleFeeHistoryChange: function () {
+          const cls = document.getElementById("feeClassFilter").value;
+          if (cls) this.renderFeeTable(cls);
+        },
+
+        printBroadsheet: async function () {
+          const cls = document.getElementById("perf-class-select").value;
+          if (!cls)
+            return this.showToast("Please select a class first", "warning");
+
+          const type = this.state.broadsheetMode || "exam";
+          const isMidTerm = type === "midterm";
+
+          this.toggleLoader(true);
+          const data = await GoogleSheetService.getClassScores(cls, type);
+
+          if (!data.students || data.students.length === 0) {
+            this.toggleLoader(false);
+            return this.showToast("No data available to print", "error");
+          }
+
+          const subjects = data.subjects;
+          const isJSS = cls.startsWith("JSS");
+          const session = "2025/2026"; // You can make this dynamic if needed
+          const term = isMidTerm ? "Mid-Term" : "Examination";
+
+          // --- Process Data for Print (Sorting and Calculating) ---
+          let grandTotals = {};
+          subjects.forEach((s) => (grandTotals[s] = 0));
+
+          const processedStudents = data.students.map((student) => {
+            let rowTotal = 0;
+            let subjectCount = 0;
+
+            subjects.forEach((sub) => {
+              const sc = student.scores[sub] || {};
+              const val = isMidTerm
+                ? sc.total || 0
+                : (sc.ca || 0) + (sc.exam || 0);
+              if (val > 0) {
+                rowTotal += val;
+                subjectCount++;
+                grandTotals[sub] += val;
+              }
+            });
+
+            const percentage =
+              subjectCount > 0 ? (rowTotal / subjectCount).toFixed(1) : 0;
+            return {
+              ...student,
+              totalScore: rowTotal,
+              avgPerc: parseFloat(percentage),
+              subjectCount,
+            };
+          });
+
+          // Sort by Average
+          processedStudents.sort((a, b) => b.avgPerc - a.avgPerc);
+
+          // Build Table HTML
+          let headerHtml =
+            '<tr><th style="width:30px;">S/N</th><th style="text-align:left;">NAME</th>';
+          subjects.forEach((sub) => {
+            // Abbreviate long subject names for print
+            const shortSub = sub.length > 10 ? sub.substring(0, 10) + "." : sub;
+            headerHtml += `<th style="writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); height: 120px; width: 25px; padding: 5px 2px; font-size: 0.7rem;">${shortSub}</th>`;
+          });
+          headerHtml += "<th>TT</th><th>%</th><th>POS</th></tr>";
+
+          let bodyHtml = "";
+          let rank = 0;
+
+          processedStudents.forEach((student, index) => {
+            // Handle Ties
+            if (
+              index > 0 &&
+              student.avgPerc === processedStudents[index - 1].avgPerc
+            ) {
+              // Same rank as previous
+            } else {
+              rank = index + 1;
+            }
+
+            bodyHtml += `<tr>
+                    <td>${index + 1}</td>
+                    <td style="text-align:left; font-weight:500; white-space:nowrap;">${student.name}</td>`;
+
+            subjects.forEach((sub) => {
+              const sc = student.scores[sub] || {};
+              const val = isMidTerm
+                ? sc.total || 0
+                : (sc.ca || 0) + (sc.exam || 0);
+              bodyHtml += `<td style="font-size:0.75rem;">${val || "-"}</td>`;
+            });
+
+            bodyHtml += `
+                    <td style="font-weight:bold;">${student.totalScore}</td>
+                    <td style="font-weight:bold;">${student.avgPerc}%</td>
+                    <td style="font-weight:bold;">${app.getOrdinal(rank)}</td>
+                </tr>`;
+          });
+
+          // Class Average Row
+          let avgRowHtml =
+            '<tr style="background:#f1f5f9; font-weight:bold;"><td colspan="2">CLASS AVERAGE</td>';
+          subjects.forEach((sub) => {
+            const avg = data.subjectAverages[sub] || 0;
+            avgRowHtml += `<td style="font-size:0.75rem;">${avg.toFixed(1)}</td>`;
+          });
+          const overallAvg =
+            Object.values(data.subjectAverages).reduce((a, b) => a + b, 0) /
+            (subjects.length || 1);
+          avgRowHtml += `<td>-</td><td>${overallAvg.toFixed(1)}%</td><td>-</td></tr>`;
+
+          // --- RENDER PRINT AREA ---
+          const area = document.getElementById("printable-area");
+          area.innerHTML = `
+                <style>
+                    @media print {
+                        @page { size: A4 landscape; margin: 8mm; }
+                        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        
+                        .bp-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+                        .bp-table th, .bp-table td { border: 1px solid #000; padding: 4px; text-align: center; }
+                        .bp-table th { background-color: #e2e8f0; }
+                        
+                        .bp-header { text-align: center; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+                        .bp-title { font-size: 20px; font-weight: bold; text-transform: uppercase; }
+                        .bp-meta { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-family: 'Times New Roman', serif; }
+                    }
+                </style>
+
+                <div class="report-card" style="font-family: 'Times New Roman', serif; color: #000;">
+                    <div class="bp-header">
+                        <div class="bp-title">Nifty Steps College</div>
+                        <div style="font-size: 14px; font-style: italic;">Broadsheet / Class Performance Analysis</div>
+                    </div>
+
+                    <div class="bp-meta">
+                        <div><strong>Class:</strong> ${cls}</div>
+                        <div><strong>Term:</strong> ${term} Term</div>
+                        <div><strong>Session:</strong> ${session}</div>
+                        <div><strong>Total Students:</strong> ${processedStudents.length}</div>
+                    </div>
+
+                    <table class="bp-table">
+                        <thead>${headerHtml}</thead>
+                        <tbody>
+                            ${bodyHtml}
+                            ${avgRowHtml}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+          this.toggleLoader(false);
+          setTimeout(() => window.print(), 500);
         },
 
         // --- ADMIN MANAGE CLASSES ---
@@ -3057,241 +3600,290 @@
         },
 
         // --- PRINTING LOGIC ---
+
+        // Opens the configuration modal
         printResult: function () {
           const sid = this.state.viewContext.sid;
           if (!sid) {
             this.showToast("No student selected", "error");
             return;
           }
+          document.getElementById("modal-print-config").style.display = "flex";
+        },
 
+        // Main generation logic
+        generatePrintReport: async function () {
+          // 1. Get Config Values
+          const session = document.getElementById("printSession").value;
+          const term = document.getElementById("printTerm").value;
+          const nextTermDate = document.getElementById("printNextTerm").value;
+          const sid = this.state.viewContext.sid;
+
+          this.closeModals();
+          this.toggleLoader(true);
+
+          // 2. Fetch Student Data
+          const res = await GoogleSheetService.getFullResult(sid);
+          if (!res.info) {
+            this.toggleLoader(false);
+            this.showToast("Error loading student data", "error");
+            return;
+          }
+
+          const s = res.info;
+          const scores = res.scores;
+          const isJSS = s.class.startsWith("JSS");
+
+          // Determine Mode (Check context for Mid-Term vs Exam)
           const isMidTerm = this.state.viewContext.resultType === "midterm";
+          const mode = isMidTerm ? "midterm" : "exam";
 
-          GoogleSheetService.getFullResult(sid).then((res) => {
-            if (res.status !== "success") return;
+          // 3. Fetch Class Data for Averages
+          const classData = await GoogleSheetService.getClassScores(
+            s.class,
+            mode,
+          );
+          const subjectAverages = classData.subjectAverages || {};
 
-            const s = res.info;
-            const scores = res.scores;
-            const isJSS = s.class.startsWith("JSS");
+          // 4. Determine Subjects List
+          let subjectsList;
+          if (isJSS) {
+            subjectsList = JSS_SUBJECTS;
+          } else {
+            subjectsList =
+              s.dept && SSS_SUBJECTS[s.dept]
+                ? SSS_SUBJECTS[s.dept]
+                : SSS_SUBJECTS.All;
+          }
 
-            let subjectsList;
+          // 5. Calculate Totals
+          let grandTotalScore = 0;
+          let validSubjectCount = 0;
+          let tableRows = "";
+
+          // Grading Logic
+          const getGradeInfo = (total) => {
             if (isJSS) {
-              subjectsList = JSS_SUBJECTS;
+              if (total >= 80) return { g: "A", remark: "Distinction" };
+              if (total >= 70) return { g: "B", remark: "Excellent" };
+              if (total >= 60) return { g: "BC", remark: "Very Good" };
+              if (total >= 50) return { g: "C", remark: "Good" };
+              if (total >= 40) return { g: "P", remark: "Pass" };
+              return { g: "F", remark: "Fail" };
             } else {
-              if (s.dept && SSS_SUBJECTS[s.dept]) {
-                subjectsList = SSS_SUBJECTS[s.dept];
-              } else {
-                subjectsList = SSS_SUBJECTS.All;
-              }
+              if (total >= 80) return { g: "A1", remark: "Excellent" };
+              if (total >= 75) return { g: "B2", remark: "Very Good" };
+              if (total >= 70) return { g: "B3", remark: "Good" };
+              if (total >= 65) return { g: "C4", remark: "Credit" };
+              if (total >= 60) return { g: "C5", remark: "Credit" };
+              if (total >= 50) return { g: "C6", remark: "Credit" };
+              if (total >= 45) return { g: "D7", remark: "Pass" };
+              if (total >= 40) return { g: "E8", remark: "Pass" };
+              return { g: "F9", remark: "Fail" };
             }
+          };
 
-            const getGradeInfo = (total) => {
-              if (isMidTerm) {
-                if (total >= 80) return { g: "A", c: "Distinction" };
-                if (total >= 70) return { g: "B", c: "Excellent" };
-                if (total >= 60) return { g: "BC", c: "Very Good" };
-                if (total >= 50) return { g: "C", c: "Good" };
-                if (total >= 40) return { g: "P", c: "Pass" };
-                return { g: "F", c: "Fail" };
-              } else {
-                if (total >= 80) return { g: "A1", c: "Excellent" };
-                if (total >= 75) return { g: "B2", c: "Very Good" };
-                if (total >= 70) return { g: "B3", c: "Good" };
-                if (total >= 65) return { g: "C4", c: "Credit" };
-                if (total >= 60) return { g: "C5", c: "Credit" };
-                if (total >= 50) return { g: "C6", c: "Credit" };
-                if (total >= 45) return { g: "D7", c: "Pass" };
-                if (total >= 40) return { g: "E8", c: "Pass" };
-                return { g: "F9", c: "Fail" };
-              }
-            };
-
-            let grandTotalScore = 0;
-            let validSubjectCount = 0;
-
-            subjectsList.forEach((sub) => {
-              const sc = scores[sub] || { ca: "", exam: "", total: "" };
-              const total = isMidTerm
-                ? Number(sc.total) || 0
-                : (Number(sc.ca) || 0) + (Number(sc.exam) || 0);
-
-              if (total > 0 || sc.total !== "" || sc.ca !== "") {
-                grandTotalScore += total;
-                validSubjectCount++;
-              }
-            });
-
-            const overallPercentage =
-              validSubjectCount > 0
-                ? (grandTotalScore / validSubjectCount).toFixed(1)
-                : 0;
-
-            let principalComment = "";
-            if (overallPercentage >= 80)
-              principalComment = "An exceptional performance.";
-            else if (overallPercentage >= 70)
-              principalComment = "A resourceful and hardworking student.";
-            else if (overallPercentage >= 60)
-              principalComment = "Good effort, but room for improvement.";
-            else if (overallPercentage >= 50)
-              principalComment = "Satisfactory performance.";
-            else if (overallPercentage >= 40)
-              principalComment = "Below average, needs serious attention.";
-            else
-              principalComment = "Very poor performance. Needs intervention.";
-
-            const teacherComments = [
-              "has shown great potential this term.",
-              "is attentive and participates actively in class.",
-              "needs to be more consistent with assignments.",
-              "shows a positive attitude towards learning.",
-            ];
-            const randomTeacherComment =
-              teacherComments[
-                Math.floor(Math.random() * teacherComments.length)
-              ];
-
-            const printArea = document.getElementById("printable-area");
-            const session = "2025/2026";
-
-            let tableHeaders = "";
-            let tableBodyRows = "";
+          // Build Table Rows
+          subjectsList.forEach((sub) => {
+            const sc = scores[sub] || { ca: "", exam: "", total: "" };
+            let scoreValue = 0;
+            let caDisplay = "-";
+            let examDisplay = "-";
+            let totalDisplay = "-";
 
             if (isMidTerm) {
-              tableHeaders = `
-                <th>SUBJECTS</th>
-                <th>HIGHEST (100)</th>
-                <th>SCORE OBTAINED</th>
-                <th>GRADE</th>
-                <th>REMARK</th>
-              `;
-
-              subjectsList.forEach((sub) => {
-                const sc = scores[sub] || {};
-                const val = sc.total !== undefined ? sc.total : 0;
-                const gradeInfo = getGradeInfo(val);
-
-                tableBodyRows += `
-                  <tr>
-                    <td>${sub}</td>
-                    <td>-</td>
-                    <td style="text-align:center; font-weight:bold;">${val || "-"}</td>
-                    <td style="text-align:center;">${gradeInfo.g}</td>
-                    <td>${gradeInfo.c}</td>
-                  </tr>
-                `;
-              });
+              scoreValue = parseInt(sc.total) || 0;
+              totalDisplay = scoreValue > 0 ? scoreValue : "-";
             } else {
-              tableHeaders = `
-                <th>SUBJECTS</th>
-                <th>CA (40)</th>
-                <th>EXAM (60)</th>
-                <th>TOTAL (100)</th>
-                <th>GRADE</th>
-                <th>REMARK</th>
-              `;
-
-              subjectsList.forEach((sub) => {
-                const sc = scores[sub] || { ca: "", exam: "" };
-                const ca = sc.ca !== undefined ? sc.ca : 0;
-                const ex = sc.exam !== undefined ? sc.exam : 0;
-                const total = ca + ex;
-                const gradeInfo = getGradeInfo(total);
-
-                tableBodyRows += `
-                  <tr>
-                    <td>${sub}</td>
-                    <td style="text-align:center;">${ca || "-"}</td>
-                    <td style="text-align:center;">${ex || "-"}</td>
-                    <td style="text-align:center; font-weight:bold;">${total || "-"}</td>
-                    <td style="text-align:center;">${gradeInfo.g}</td>
-                    <td>${gradeInfo.c}</td>
-                  </tr>
-                `;
-              });
+              const ca = parseInt(sc.ca) || 0;
+              const exam = parseInt(sc.exam) || 0;
+              caDisplay = ca > 0 ? ca : "-";
+              examDisplay = exam > 0 ? exam : "-";
+              scoreValue = ca + exam;
+              totalDisplay = scoreValue > 0 ? scoreValue : "-";
             }
 
-            printArea.innerHTML = `
-              <style>
-                @media print {
-                  @page { margin: 10mm; size: A4 portrait; }
-                  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: white; }
-                  .rp-container { font-family: 'Times New Roman', serif; font-size: 13px; color: #000; }
-                  .rp-header { text-align: center; margin-bottom: 15px; border-bottom: 3px double #000; padding-bottom: 10px; }
-                  .rp-title { font-size: 18px; font-weight: bold; text-transform: uppercase; margin-top: 5px; }
-                  .rp-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-                  .rp-table th, .rp-table td { border: 1px solid #000; padding: 5px; text-align: center; }
-                  .rp-table th { background-color: #f2f2f2 !important; font-size: 11px; }
-                  .rp-table td { font-size: 12px; }
-                  .rp-signature-section { display: flex; justify-content: space-between; margin-top: 40px; }
-                  .rp-sig-box { text-align: center; width: 200px; }
-                  .rp-sig-line { border-bottom: 1px solid #000; height: 40px; margin-bottom: 5px; }
-                  .comment-box { border: 1px solid #000; padding: 10px; min-height: 40px; margin-bottom: 10px; }
-                }
-              </style>
+            if (scoreValue > 0) {
+              grandTotalScore += scoreValue;
+              validSubjectCount++;
+            }
 
-              <div class="rp-container">
-                <div class="rp-header">
-                  <h2 style="margin:0;">NIFTY STEPS COLLEGE</h2>
-                  <p style="margin:2px 0; font-size:11px;">31 Yinka Ogunfile Street, Igbo Oluwo Estate, Ikorodu, Lagos</p>
-                  <div class="rp-title">${isMidTerm ? "Mid-Term" : "End of Term"} Report Sheet</div>
-                </div>
+            const gradeInfo = getGradeInfo(scoreValue);
+            const classAvg = subjectAverages[sub]
+              ? parseFloat(subjectAverages[sub]).toFixed(1)
+              : "-";
 
-                <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold;">
-                  <div>NAME: ${s.name.toUpperCase()}</div>
-                  <div>CLASS: ${s.class} ${s.dept ? "(" + s.dept + ")" : ""}</div>
-                  <div>ID: ${s.id}</div>
-                  <div>SESSION: ${session}</div>
-                </div>
+            if (isMidTerm) {
+              tableRows += `
+                        <tr>
+                            <td style="text-align:left; padding-left:10px;">${sub}</td>
+                            <td>${scoreValue > 0 ? 100 : "-"}</td>
+                            <td style="font-weight:bold;">${totalDisplay}</td>
+                            <td>-</td>
+                            <td style="font-weight:bold;">${scoreValue > 0 ? gradeInfo.g : "-"}</td>
+                            <td>${scoreValue > 0 ? gradeInfo.remark : "-"}</td>
+                        </tr>
+                    `;
+            } else {
+              tableRows += `
+                        <tr>
+                            <td style="text-align:left; padding-left:10px;">${sub}</td>
+                            <td>${caDisplay}</td>
+                            <td>${examDisplay}</td>
+                            <td style="font-weight:bold;">${totalDisplay}</td>
+                            <td>${classAvg}</td>
+                            <td style="font-weight:bold;">${scoreValue > 0 ? gradeInfo.g : "-"}</td>
+                            <td>${scoreValue > 0 ? gradeInfo.remark : "-"}</td>
+                        </tr>
+                    `;
+            }
+          });
 
-                <table class="rp-table">
-                  <thead>
-                    <tr>
-                      ${tableHeaders}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${tableBodyRows}
-                    <tr style="background-color: #f9f9f9; font-weight: bold;">
-                      <td colspan="${isMidTerm ? 2 : 3}">GRAND TOTAL / PERCENTAGE</td>
-                      <td style="text-align:center;">${grandTotalScore}</td>
-                      <td>-</td>
-                      <td style="text-align:center;">${overallPercentage}%</td>
-                      ${!isMidTerm ? "<td>-</td>" : ""} 
-                    </tr>
-                  </tbody>
-                </table>
+          const overallPercentage =
+            validSubjectCount > 0
+              ? (grandTotalScore / validSubjectCount).toFixed(1)
+              : 0;
 
-                <div style="border: 1px solid #000; padding: 8px; font-size: 11px; margin-bottom: 15px;">
-                  <strong>GRADING KEY:</strong> 
-                  ${
-                    isMidTerm
-                      ? "A: 80-100 (Distinction), B: 70-79 (Excellent), BC: 60-69 (V.Good), C: 50-59 (Good), P: 40-49 (Pass), F: 0-39 (Fail)"
-                      : "A1: 80-100, B2: 75-79, B3: 70-74, C4: 65-69, C5: 60-64, C6: 50-59, D7: 45-49, E8: 40-44, F9: 0-39"
-                  }
-                </div>
+          // Comments
+          let principalComment = "";
+          if (overallPercentage >= 80)
+            principalComment = "This is an exceptional performance";
+          else if (overallPercentage >= 70)
+            principalComment = "This is a resourceful child";
+          else if (overallPercentage >= 60)
+            principalComment = "This is an encouraging performance";
+          else if (overallPercentage >= 50)
+            principalComment = "This is a promising child";
+          else if (overallPercentage >= 40)
+            principalComment = "This result is below average";
+          else principalComment = "This is a very poor performance";
 
-                <div class="comment-box">
-                  <strong>PRINCIPAL'S REMARK:</strong> ${principalComment}
-                </div>
-                <div class="comment-box">
-                  <strong>CLASS TEACHER'S REMARK:</strong> ${s.name} ${randomTeacherComment}
-                </div>
+          const teacherComments = [
+            "is attentive and eager to learn.",
+            "has shown great potential this term.",
+            "needs to be more consistent with assignments.",
+            "shows a positive attitude towards learning.",
+            "is hardworking and dedicated.",
+          ];
+          const randomTeacherComment =
+            teacherComments[Math.floor(Math.random() * teacherComments.length)];
 
-                <div class="rp-signature-section">
-                  <div class="rp-sig-box">
-                    <div class="rp-sig-line"></div>
-                    <div>Class Teacher's Signature</div>
-                  </div>
-                  <div class="rp-sig-box">
-                    <div class="rp-sig-line"></div>
-                    <div>Principal's Signature</div>
-                  </div>
+          // 6. Render HTML
+          const printArea = document.getElementById("printable-area");
+          printArea.innerHTML = `
+                <style>
+                    @media print {
+                        @page { margin: 12mm; size: A4; }
+                        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        .rp-table td, .rp-table th { font-size: 0.8rem !important; }
+                        .report-card { font-size: 0.85rem; font-family: 'Times New Roman', serif; color: #000; background: #fff; }
+                    }
+                </style>
+
+                <div class="report-card">
+                    <!-- HEADER -->
+                    <div class="rp-header" style="display: flex; align-items: center; justify-content: center; margin-bottom: 12px; gap: 20px;">
+                        <img src="https://z-cdn-media.chatglm.cn/files/cc741a52-6dc8-4d89-97cb-fdf1a87aa38a.png?auth_key=1868210321-d7534ff785814de88115631510ed5dbc-0-0d208a01c26657a242308b62449ab19b"
+                             alt="Nifty Steps Logo" style="width: 70px; height: 70px; object-fit: contain;">
+                        <div style="text-align: center;">
+                            <h1 style="color: #1e40af; margin: 0 0 4px 0; line-height: 1.1; font-size: 1.6rem;">NIFTY STEPS COLLEGE</h1>
+                            <p style="font-size: 0.85rem; margin: 0; line-height: 1.3;">31 Yinka Ogunfile Street, Igbo Oluwo Estate, Ikorodu, Lagos State</p>
+                            <p style="font-size: 0.8rem; margin: 0;">www.niftysteps.com.ng | admin@niftysteps.com.ng</p>
+                            <h3 style="margin: 8px 0 0 0; text-decoration: underline; text-transform: uppercase; font-size: 0.95rem;">
+                                ${isJSS ? "Junior" : "Senior"} Secondary School ${term.toUpperCase()} TERM REPORT SHEET
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!-- STUDENT INFO -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #000; padding: 8px; margin-bottom: 15px; font-size: 0.85rem;">
+                        <div style="line-height: 1.5;">
+                            <strong>NAME:</strong> ${s.name.toUpperCase()}<br>
+                            <strong>CLASS:</strong> ${s.class} ${s.dept ? `(${s.dept})` : ""}
+                        </div>
+                        <div style="line-height: 1.5; text-align: right;">
+                            <strong>ADMIN NO:</strong> NSC-${s.id}<br>
+                            <strong>SESSION:</strong> ${session}
+                        </div>
+                    </div>
+
+                    <!-- MAIN TABLE -->
+                    <table class="rp-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 0.8rem; margin-bottom: 15px;">
+                        <thead>
+                            <tr style="background: #e2e8f0;">
+                                ${
+                                  isMidTerm
+                                    ? `<th style="border: 1px solid #000; padding: 5px; text-align: left;">SUBJECTS</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">MAX(100)</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">SCORE</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">CLASS AVG</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">GRADE</th>
+                                     <th style="border: 1px solid #000; padding: 5px; text-align: left;">COMMENT</th>`
+                                    : `<th style="border: 1px solid #000; padding: 5px; text-align: left;">SUBJECTS</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">CA (40)</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">EXAM (60)</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">TOTAL (100)</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">CLASS AVG</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">GRADE</th>
+                                     <th style="border: 1px solid #000; padding: 5px; text-align: left;">COMMENT</th>`
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                            <tr style="background-color: #f1f5f9; font-weight: bold;">
+                                <td style="border: 1px solid #000; padding: 5px;" colspan="${isMidTerm ? 2 : 3}">GRAND TOTAL / PERCENTAGE</td>
+                                <td style="border: 1px solid #000; padding: 5px; text-align: center;">${grandTotalScore}</td>
+                                <td style="border: 1px solid #000; padding: 5px; text-align: center;" colspan="${isMidTerm ? 1 : 2}">${overallPercentage}%</td>
+                                ${!isMidTerm ? '<td style="border: 1px solid #000; padding: 5px;">-</td>' : ""}
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- COMMENTS -->
+                    <div style="margin-top: 20px; display: flex; justify-content: space-between; gap: 20px;">
+                        <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 60%;">
+                            <strong>CLASS TEACHER'S COMMENT:</strong><br>
+                            ${s.name} ${randomTeacherComment}
+                        </div>
+                        <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 38%;">
+                            <strong>PRINCIPAL'S COMMENT:</strong><br>
+                            ${principalComment}
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div style="font-size: 0.75rem; border: 1px solid #000; padding: 10px; width: 55%;">
+                            <strong>GRADING KEY:</strong><br>
+                            ${
+                              isJSS
+                                ? "A: 80-100 (Distinction), B: 70-79 (Excellent), BC: 60-69 (Very Good), C: 50-59 (Good), P: 40-49 (Pass), F: 0-39 (Fail)"
+                                : "A1: 80-100, B2: 75-79, B3: 70-74, C4: 65-69, C5: 60-64, C6: 50-59, D7: 45-49, E8: 40-44, F9: 0-39"
+                            }
+                        </div>
+                        <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 38%;">
+                            <strong>Next Term Resumes:</strong><br>
+                            ${nextTermDate}
+                        </div>
+                    </div>
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 1px solid #000; width: 150px; height: 40px;"></div>
+                            <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Class Teacher's Signature</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 1px solid #000; width: 150px; height: 40px;"></div>
+                            <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Principal's Signature</p>
+                        </div>
+                    </div>
                 </div>
-              </div>
             `;
 
-            setTimeout(() => window.print(), 500);
-          });
+          this.toggleLoader(false);
+          setTimeout(() => window.print(), 500);
         },
 
         getGrade: function (score, isJSS) {
@@ -3326,13 +3918,23 @@
         // FEE MANAGEMENT (UPDATED LOGIC)
         // ==========================================
 
-        // Helper: Calculate fee based on type
-        calculateTotalFee: function (baseFee, regFee, type, customAmount) {
+        // Helper: Calculate fee based on type AND School
+        calculateTotalFee: function (
+          baseFee,
+          regFee,
+          type,
+          customAmount,
+          school,
+          subsidy = 0,
+        ) {
+          const isPry = school === "pry";
+
           switch (type) {
             case "New":
               return baseFee + regFee;
             case "Teacher's Child":
-              return baseFee * 0.5 + regFee; // 50% of school fee
+              // Pry: Base + Reg - Subsidy | Sec: Base*0.5 + Reg
+              return isPry ? baseFee + regFee - subsidy : baseFee * 0.5;
             case "Scholarship":
               return 0;
             case "Custom":
@@ -3342,96 +3944,192 @@
           }
         },
 
+        // NEW: Switch between Sec and Pry
+        switchFeeSchool: function (school) {
+          this.state.feeSchool = school;
+
+          // FIX: Clear the cache so it fetches fresh data for the new school
+          GoogleSheetService.cache.feeSettings = null;
+          GoogleSheetService.clearCache(); // Clear student lists too
+
+          // Update UI Buttons
+          document.getElementById("btn-school-sec").className =
+            school === "sec"
+              ? "btn btn-primary btn-sm"
+              : "btn btn-outline btn-sm";
+          document.getElementById("btn-school-pry").className =
+            school === "pry"
+              ? "btn btn-primary btn-sm"
+              : "btn btn-outline btn-sm";
+
+          // Show/Hide Teacher Subsidy Column in Settings
+          document
+            .getElementById("th-teacher-subsidy")
+            .classList.toggle("hidden", school === "sec");
+
+          // Reload Data
+          this.loadFees();
+        },
+
         loadFees: async function () {
           this.showSection("section-fees");
           this.pushHistory("section-fees", "Fee Management");
+
           const clsFilter = document.getElementById("feeClassFilter");
-          const curVal = clsFilter.value;
+          const classes =
+            this.state.feeSchool === "pry" ? PRY_CLASSES : ALL_CLASSES;
+
+          // Save current value if it exists
+          const currentVal = clsFilter.value;
+
           clsFilter.innerHTML =
             '<option value="" disabled selected>Select Class</option>';
-          ALL_CLASSES.forEach(
+          classes.forEach(
             (c) =>
               (clsFilter.innerHTML += `<option value="${c}">${c}</option>`),
           );
-          if (curVal) clsFilter.value = curVal;
 
-          if (clsFilter.value) {
-            await this.renderFeeTable(clsFilter.value);
+          // If a value was selected before (or if we want to force selection), restore it
+          if (currentVal && classes.includes(currentVal)) {
+            clsFilter.value = currentVal;
+            await this.renderFeeTable(currentVal);
+          }
+        },
+
+        // NEW: Called when user changes dropdown
+        handleFeeClassChange: async function (cls) {
+          if (cls) {
+            await this.renderFeeTable(cls);
           }
         },
 
         renderFeeTable: async function (cls) {
           const allTx = await GoogleSheetService.getFeeTransactions();
-          const config = FeeService.getConfig()[cls];
+          const allSettings = await GoogleSheetService.getFeeSettings();
+          const config = allSettings[cls] || {
+            schoolFee: 0,
+            regFee: 0,
+            teacherSubsidy: 0,
+          };
           const stds = await GoogleSheetService.loadStudents(cls);
+
+          // NEW: Get Filters
+          const session = document.getElementById("feeSessionSelect").value;
+          const term = document.getElementById("feeTermSelect").value;
 
           const tbody = document.getElementById("fee-tbody");
           tbody.innerHTML = "";
 
+          if (!stds || stds.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="8" class="text-center">No students found.</td></tr>';
+            return;
+          }
+
           let stats = { exp: 0, col: 0, out: 0 };
 
           stds.forEach((s) => {
-            const type = s.status || "Old";
+            let currentType = s.status || s.feeType || "Old";
             const customAmt = s.customFee || 0;
-            const schoolFee = config ? config.schoolFee : 0;
-            const regFee = config ? config.regFee : 0;
 
-            const totalFee = this.calculateTotalFee(
-              schoolFee,
-              regFee,
-              type,
+            // 1. Calculate Current Term Fee
+            let termFee = this.calculateTotalFee(
+              config.schoolFee,
+              config.regFee,
+              currentType,
               customAmt,
+              this.state.feeSchool,
+              config.teacherSubsidy,
             );
 
+            // 2. Calculate Arrears/Debt from Previous Terms
+            // We look for a property 'lastBalance' saved in student record, or calculate from transactions
+            // Let's assume we fetch it from student object (You need a backend process to close term and save this)
+            // For now, we simulate it:
+            let arrears = s.arrears || 0;
+
+            // 3. Total Due this term
+            let totalDue = termFee + arrears;
+
+            // 4. Paid THIS TERM (Filter transactions)
+            // Note: Your backend needs to return session/term in transaction object for this to work perfectly.
+            // If not, we use total paid vs total due logic.
+            // Let's assume transactions have 'session' and 'term':
             const myTxs = allTx.filter((t) => t.studentId === s.id);
-            const paid = myTxs.reduce((sum, t) => sum + parseInt(t.amount), 0);
+            const paidThisTerm = myTxs
+              .filter(
+                (t) =>
+                  (t.session === session || !t.session) && // Fallback if no session
+                  (t.term === term || !t.term),
+              )
+              .reduce((sum, t) => sum + parseInt(t.amount), 0);
 
-            stats.exp += totalFee;
-            stats.col += paid;
-            stats.out += totalFee - paid;
+            // 5. Balance
+            let balance = totalDue - paidThisTerm;
+            if (currentType === "Scholarship") {
+              balance = 0;
+              totalDue = 0;
+            }
 
-            const balance = totalFee - paid;
-            const badge =
-              balance <= 0
-                ? "status-paid"
-                : paid > 0
-                  ? "status-partial"
-                  : "status-owing";
+            stats.exp += totalDue;
+            stats.col += paidThisTerm;
+            stats.out += balance;
 
-            let typeBadgeClass = "";
-            if (type === "Teacher's Child")
-              typeBadgeClass = "style='background:#e0f2fe; color:#0369a1;'";
-            if (type === "Scholarship")
-              typeBadgeClass = "style='background:#dcfce7; color:#15803d;'";
-            if (type === "Custom")
-              typeBadgeClass = "style='background:#fef9c3; color:#a16207;'";
+            const isPaid = currentType === "Scholarship" || balance <= 0;
+            const badgeClass = isPaid
+              ? "status-paid"
+              : paidThisTerm > 0
+                ? "status-partial"
+                : "status-owing";
+            const statusText = isPaid
+              ? "Paid"
+              : paidThisTerm > 0
+                ? "Partial"
+                : "Owing";
+            const isSelected = (val) => (currentType === val ? "selected" : "");
+            const inputDisabled = isPaid
+              ? "disabled style='background:#e2e8f0;'"
+              : "";
 
-            // UPDATED: Pass 'paid' to openEditFeeModal
             tbody.innerHTML += `
-                        <tr>
-                            <td><strong>${s.name}</strong><br><small>${s.id}</small></td>
-                            <td><span class="badge" ${typeBadgeClass}>${type}</span></td>
-                            <td>₦${totalFee.toLocaleString()}</td>
-                            <td>₦${paid.toLocaleString()}</td>
-                            <td style="color:var(--danger); font-weight:bold">₦${balance.toLocaleString()}</td>
-                            <td><span class="fee-status-badge ${badge}">${
-                              balance <= 0
-                                ? "Paid"
-                                : paid > 0
-                                  ? "Partial"
-                                  : "Owing"
-                            }</span></td>
-                            <td>
-                                <div class="flex gap-2">
-                                    <button class="btn btn-outline btn-sm" onclick="app.openEditFeeModal('${s.id}', '${s.name}', '${type}', ${customAmt}, ${paid})">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-primary btn-sm" onclick="app.openPayModal('${s.id}', '${s.name}', '${cls}', '${type}')">Pay</button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
+              <tr data-sid="${s.id}" data-base="${config.schoolFee}" data-reg="${config.regFee}" data-subsidy="${config.teacherSubsidy || 0}" data-original-type="${currentType}">
+                <td><strong>${s.name}</strong><br><small>${s.id}</small></td>
+                <td>
+                  <select class="fee-table-select" onchange="app.handleTableTypeChange(this)">
+                    <option value="Old" ${isSelected("Old")}>Old</option>
+                    <option value="New" ${isSelected("New")}>New</option>
+                    <option value="Teacher's Child" ${isSelected("Teacher's Child")}>Teacher's Child</option>
+                    <option value="Scholarship" ${isSelected("Scholarship")}>Scholarship</option>
+                    <option value="Custom" ${isSelected("Custom")}>Custom</option>
+                  </select>
+                  <div class="custom-fee-inline ${currentType === "Custom" ? "show" : ""}">
+                    <input type="number" class="fee-table-input" style="width:80px; margin-top:5px;" placeholder="Amt" value="${currentType === "Custom" ? customAmt : ""}" onchange="app.handleCustomFeeChange(this)">
+                  </div>
+                </td>
+                <td style="color: var(--danger); font-size:0.8rem;">₦${arrears.toLocaleString()}</td>
+                <td class="cell-total" style="font-weight:bold;">₦${totalDue.toLocaleString()}</td>
+                <td class="cell-paid">₦${paidThisTerm.toLocaleString()}</td>
+                <td class="cell-balance" style="color:var(--danger); font-weight:bold;">₦${balance.toLocaleString()}</td>
+                <td><span class="fee-status-badge ${badgeClass}">${statusText}</span></td>
+                <td>
+                  <div class="action-cell">
+                    <input type="number" class="form-control fee-table-input payment-entry" placeholder="0" ${inputDisabled}>
+                    <button class="btn btn-outline btn-sm" onclick="app.openEditFeeModal('${s.id}', '${s.name}', '${currentType}', ${customAmt}, ${paidThisTerm})">
+                       <i class="fas fa-edit"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>`;
           });
+
+          // Update headers to show Arrears
+          const tableHead = document.querySelector("#fee-table thead tr");
+          if (tableHead && tableHead.children.length < 8) {
+            const th = document.createElement("th");
+            th.textContent = "Arrears";
+            th.style.color = "var(--danger)";
+            tableHead.insertBefore(th, tableHead.children[2]);
+          }
 
           document.getElementById("fee-total-expected").textContent =
             `₦${stats.exp.toLocaleString()}`;
@@ -3439,11 +4137,162 @@
             `₦${stats.col.toLocaleString()}`;
           document.getElementById("fee-total-outstanding").textContent =
             `₦${stats.out.toLocaleString()}`;
+
+          const floatBtn = document.getElementById("floatingSaveBtn");
+          floatBtn.classList.add("show");
+          floatBtn.innerHTML = '<i class="fas fa-save"></i> <span>Save</span>';
+          floatBtn.setAttribute("onclick", "app.saveAllFeePayments()");
+        },
+
+        // Handles when user changes the Type dropdown in the table
+        handleTableTypeChange: function (selectElement) {
+          const row = selectElement.closest("tr");
+          const type = selectElement.value;
+          const customDiv = row.querySelector(".custom-fee-inline");
+          const base = parseFloat(row.dataset.base);
+          const reg = parseFloat(row.dataset.reg);
+          const subsidy = parseFloat(row.dataset.subsidy); // Pry specific
+          const school = this.state.feeSchool;
+
+          if (type === "Custom") customDiv.classList.add("show");
+          else {
+            customDiv.classList.remove("show");
+          }
+
+          let newTotal = this.calculateTotalFee(
+            base,
+            reg,
+            type,
+            0,
+            school,
+            subsidy,
+          );
+          row.querySelector(".cell-total").textContent =
+            `₦${newTotal.toLocaleString()}`;
+          this.updateRowBalance(row, newTotal);
+        },
+
+        // Handles when user types a custom amount
+        handleCustomFeeChange: function (inputElement) {
+          const row = inputElement.closest("tr");
+          const customAmt = parseFloat(inputElement.value) || 0;
+
+          // Update Total
+          row.querySelector(".cell-total").textContent =
+            `₦${customAmt.toLocaleString()}`;
+
+          // Trigger Balance Update
+          this.updateRowBalance(row, customAmt);
+        },
+
+        // Updates the Balance and Status based on current Total and Paid
+        updateRowBalance: function (row, newTotal) {
+          const paidText = row.querySelector(".cell-paid").textContent;
+          const paid = parseFloat(paidText.replace(/[₦,]/g, "")) || 0;
+
+          let balance = newTotal - paid;
+          // If Scholarship, force balance 0
+          const typeSelect = row.querySelector(".fee-table-select");
+          if (typeSelect.value === "Scholarship") balance = 0;
+
+          // Update Balance Cell
+          const balCell = row.querySelector(".cell-balance");
+          balCell.textContent = `₦${balance.toLocaleString()}`;
+
+          // Update Status Badge
+          const statusBadge = row.querySelector(".fee-status-badge");
+          if (typeSelect.value === "Scholarship" || balance <= 0) {
+            statusBadge.className = "fee-status-badge status-paid";
+            statusBadge.textContent = "Paid";
+            balCell.style.color = "var(--success)";
+          } else if (paid > 0) {
+            statusBadge.className = "fee-status-badge status-partial";
+            statusBadge.textContent = "Partial";
+            balCell.style.color = "var(--warning)";
+          } else {
+            statusBadge.className = "fee-status-badge status-owing";
+            statusBadge.textContent = "Owing";
+            balCell.style.color = "var(--danger)";
+          }
+        },
+
+        // The main function to save everything
+        saveAllFeePayments: async function () {
+          const loader = document.getElementById("loader");
+          loader.style.display = "flex";
+
+          const rows = document.querySelectorAll("#fee-tbody tr");
+          let updatesCount = 0;
+
+          for (let row of rows) {
+            const studentId = row.dataset.sid;
+            const originalType = row.dataset.originalType;
+
+            // 1. Get Current UI Values
+            const typeSelect = row.querySelector(".fee-table-select");
+            const newType = typeSelect.value;
+            const customInput = row.querySelector(".custom-fee-inline input");
+            const customAmt = parseFloat(customInput.value) || 0;
+
+            const paymentInput = row.querySelector(".payment-entry");
+            const paymentAmount = parseFloat(paymentInput.value) || 0;
+
+            // 2. Check if Profile Type needs updating
+            if (
+              newType !== originalType ||
+              (newType === "Custom" && customAmt > 0)
+            ) {
+              await GoogleSheetService.updateStudentFeeProfile(
+                studentId,
+                newType,
+                newType === "Custom" ? customAmt : 0,
+                null, // Don't change paid amount here
+              );
+              updatesCount++;
+            }
+
+            // 3. Check if Payment needs recording
+            if (paymentAmount > 0) {
+              await GoogleSheetService.saveFeeTransaction({
+                txId: Date.now().toString() + studentId,
+                studentId: studentId,
+                amount: paymentAmount,
+                type: newType,
+                date: new Date().toISOString().split("T")[0],
+              });
+              updatesCount++;
+
+              // Clear input visually so user knows it was processed
+              paymentInput.value = "";
+            }
+          }
+
+          loader.style.display = "none";
+
+          if (updatesCount > 0) {
+            this.showToast(
+              `${updatesCount} updates saved successfully!`,
+              "success",
+            );
+            GoogleSheetService.clearCache();
+            this.renderFeeTable(
+              document.getElementById("feeClassFilter").value,
+            ); // Refresh
+          } else {
+            this.showToast("No changes to save.", "warning");
+          }
         },
 
         // --- PAY MODAL LOGIC ---
-        openPayModal: function (sid, name, cls, currentType) {
-          const config = FeeService.getConfig()[cls];
+        openPayModal: async function (sid, name, cls, currentType) {
+          // FIX: Fetch from GoogleSheetService instead of missing FeeService
+          const allSettings = await GoogleSheetService.getFeeSettings();
+          const config = allSettings[cls] || {
+            schoolFee: 0,
+            regFee: 0,
+            teacherSubsidy: 0,
+          };
+
           document.getElementById("payStudentId").value = sid;
           document.getElementById("payStudentName").value = name;
           document.getElementById("payBaseFee").value =
@@ -3457,6 +4306,8 @@
             cls,
             base: config.schoolFee,
             reg: config.regFee,
+            subsidy: config.teacherSubsidy || 0, // Add subsidy to context
+            currentType: currentType,
           };
 
           // Set the radio button to match current student type
@@ -3468,8 +4319,7 @@
               typeFound = true;
             }
           });
-          // If type is Custom, we need to fetch the amount (simplified here as 0 or passed in context)
-          // For simplicity in Pay Modal, we default to Old if type isn't standard
+
           if (!typeFound) {
             document.querySelector(
               'input[name="stdType"][value="Old"]',
@@ -3489,6 +4339,7 @@
           let total = 0;
           const base = this.state.feeContext.base;
           const reg = this.state.feeContext.reg;
+          const sub = this.state.feeContext.subsidy || 0;
 
           if (selectedType === "Custom") {
             customGroup.classList.add("show");
@@ -3497,7 +4348,15 @@
             total = customVal;
           } else {
             customGroup.classList.remove("show");
-            total = this.calculateTotalFee(base, reg, selectedType, 0);
+            // Pass school and subsidy to calculation
+            total = this.calculateTotalFee(
+              base,
+              reg,
+              selectedType,
+              0,
+              this.state.feeSchool,
+              sub,
+            );
           }
 
           document.getElementById("payTotalDue").textContent =
@@ -3513,11 +4372,40 @@
 
           const totalDue = this.calcModalTotal();
 
-          if (!amount || amount <= 0)
+          // --- VALIDATION LOGIC (From previous fix) ---
+          if (isNaN(amount) || amount < 0) {
             return this.showToast("Invalid Amount", "warning");
+          }
+
+          // Allow 0 amount ONLY if it's a Scholarship
+          if (totalDue > 0 && amount === 0) {
+            return this.showToast("Amount must be greater than 0", "warning");
+          }
+          // -------------------------------------------
+
           if (amount > totalDue && selectedType !== "Custom")
-            // Allow overpayment for custom adjustments? Usually no.
             return this.showToast("Amount exceeds due", "error");
+
+          // --- NEW: AUTO-UPDATE PROFILE TYPE ---
+          // If the user changed the type in the modal (e.g., switched to Scholarship), save it to the sheet
+          if (this.state.feeContext.currentType !== selectedType) {
+            let customAmt = 0;
+            if (selectedType === "Custom") {
+              customAmt =
+                parseInt(document.getElementById("payCustomAmount").value) || 0;
+            }
+
+            // Update profile silently in background
+            await GoogleSheetService.updateStudentFeeProfile(
+              this.state.feeContext.sid,
+              selectedType,
+              customAmt,
+              null, // Do not overwrite paid amount, the transaction below handles the math
+            );
+            // Clear cache so table reloads fresh data
+            GoogleSheetService.clearCache();
+          }
+          // --------------------------------------
 
           // 1. Save Transaction
           const res = await GoogleSheetService.saveFeeTransaction({
@@ -3527,13 +4415,6 @@
             type: selectedType,
             date: new Date().toISOString().split("T")[0],
           });
-
-          // 2. Update Student Profile if type changed (optional, but good for consistency)
-          // The backend handles keeping the type consistent or we can update it here.
-          // For now, we assume the type selected in payment modal is just for calculation reference
-          // OR it updates the student profile permanently.
-          // Ideally, "Edit" is for profile, "Pay" is for transaction.
-          // We will NOT update student profile here to keep concerns separate, unless specifically desired.
 
           if (res.status === "success") {
             this.showToast("Payment Recorded Successfully", "success");
@@ -3616,50 +4497,78 @@
           btns.forEach((b) => b.classList.remove("active"));
           event.target.classList.add("active");
 
+          const floatBtn = document.getElementById("floatingSaveBtn");
+
           if (tab === "collect") {
             document
               .getElementById("fee-tab-collect")
               .classList.remove("hidden");
             document.getElementById("fee-tab-settings").classList.add("hidden");
+            floatBtn.classList.add("show"); // Show button
           } else {
             document.getElementById("fee-tab-collect").classList.add("hidden");
             document
               .getElementById("fee-tab-settings")
               .classList.remove("hidden");
+            floatBtn.classList.remove("show"); // Hide button
+
+            // NEW: Load settings immediately when tab opens
             this.renderFeeSettings();
           }
         },
 
-        renderFeeSettings: function () {
-          const config = FeeService.getConfig();
+        renderFeeSettings: async function () {
           const tbody = document.getElementById("fee-settings-tbody");
+          tbody.innerHTML =
+            '<tr><td colspan="4" class="text-center">Loading...</td></tr>';
+          const config = await GoogleSheetService.getFeeSettings();
+          const classes =
+            this.state.feeSchool === "pry" ? PRY_CLASSES : ALL_CLASSES;
+
           tbody.innerHTML = "";
-          ALL_CLASSES.forEach((cls) => {
-            const fees = config[cls] || { schoolFee: 0, regFee: 0 };
+          const isPry = this.state.feeSchool === "pry";
+
+          classes.forEach((cls) => {
+            const fees = config[cls] || {
+              schoolFee: 0,
+              regFee: 0,
+              teacherSubsidy: 0,
+            };
             tbody.innerHTML += `
-                        <tr>
-                            <td><strong>${cls}</strong></td>
-                            <td><input type="number" class="form-control set-base" data-cls="${cls}" value="${fees.schoolFee}" style="width:120px"></td>
-                            <td><input type="number" class="form-control set-reg" data-cls="${cls}" value="${fees.regFee}" style="width:120px"></td>
-                        </tr>
-                    `;
+              <tr>
+                <td><strong>${cls}</strong></td>
+                <td><input type="number" class="form-control set-base" data-cls="${cls}" value="${fees.schoolFee}" style="width:120px"></td>
+                <td><input type="number" class="form-control set-reg" data-cls="${cls}" value="${fees.regFee}" style="width:120px"></td>
+                ${isPry ? `<td><input type="number" class="form-control set-subsidy" data-cls="${cls}" value="${fees.teacherSubsidy}" style="width:120px"></td>` : ""}
+              </tr>`;
           });
         },
 
-        saveFeeSettings: function () {
+        saveFeeSettings: async function () {
           const newConfig = {};
+          const isPry = this.state.feeSchool === "pry";
+
           document.querySelectorAll(".set-base").forEach((inp) => {
             const cls = inp.dataset.cls;
             const regInp = document.querySelector(
               `.set-reg[data-cls="${cls}"]`,
             );
+            const subInp = document.querySelector(
+              `.set-subsidy[data-cls="${cls}"]`,
+            ); // Pry only
+
             newConfig[cls] = {
               schoolFee: parseInt(inp.value) || 0,
               regFee: parseInt(regInp.value) || 0,
+              // Only add teacherSubsidy if it's Pry
+              ...(isPry && { teacherSubsidy: parseInt(subInp?.value) || 0 }),
             };
           });
-          FeeService.saveConfig(newConfig);
-          this.showToast("Settings Saved", "success");
+
+          const res = await GoogleSheetService.saveFeeSettings(newConfig);
+          if (res.status === "success")
+            this.showToast("Settings Saved", "success");
+          else this.showToast("Error saving settings", "error");
         },
 
         // --- UTILS ---
@@ -3736,19 +4645,22 @@
             students = await GoogleSheetService.loadStudents(cls);
           }
 
-          const config = FeeService.getConfig();
+          // Fetch settings from Google Sheet
+          const config = await GoogleSheetService.getFeeSettings();
           let debtors = [];
 
           for (const s of students) {
             const type = s.status || "Old";
             const customAmt = s.customFee || 0;
-            const fees = config[s.class] || { schoolFee: 0, regFee: 0 };
+            const fees = config[s.class] || { schoolFee: 0, regFee: 0 }; // Use fetched config
 
             const totalDue = this.calculateTotalFee(
               fees.schoolFee,
               fees.regFee,
               type,
               customAmt,
+              this.state.feeSchool, // FIX: Pass current school
+              fees.teacherSubsidy || 0, // FIX: Pass subsidy
             );
 
             const myTxs = allTx.filter((t) => t.studentId === s.id);
@@ -3769,10 +4681,12 @@
             }
           }
 
+          // ... (rest of the HTML generation code remains the same)
           if (debtors.length === 0) {
             this.showToast("No debtors found", "success");
             return;
           }
+          // ... (rest of the print logic)
 
           let html = `
     <div class="rp-header">
