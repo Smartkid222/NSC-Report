@@ -1591,6 +1591,253 @@
             <div id="ai-results" style="margin-top: 30px"></div>
           </div>
         </section>
+        <!-- 8. QUESTION BANK SECTION (UPDATED) -->
+        <section id="section-question-bank" class="hidden">
+          <div class="breadcrumbs">
+            <span onclick="app.goHome()">Home</span> >
+            <span class="font-bold">Question Bank</span>
+          </div>
+
+          <div class="list-container">
+            <div class="list-header">
+              <div>
+                <h2>📚 Question Bank</h2>
+                <p class="text-sm text-secondary">
+                  Select questions to print or copy
+                </p>
+              </div>
+              <div class="flex gap-2" style="flex-wrap: wrap">
+                <select
+                  id="qbFilterSubject"
+                  class="form-control"
+                  style="width: 200px"
+                  onchange="app.loadQuestionBank()"
+                >
+                  <option value="">All Subjects</option>
+                </select>
+                <button
+                  class="btn btn-success btn-sm"
+                  onclick="app.openQuestionModal()"
+                >
+                  + Add Question
+                </button>
+                <button
+                  class="btn btn-primary btn-sm"
+                  onclick="app.viewSelectedQuestions()"
+                >
+                  <i class="fas fa-eye"></i> View Selected (<span
+                    id="selected-count"
+                    >0</span
+                  >)
+                </button>
+              </div>
+            </div>
+            <div style="overflow-x: auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 40px">
+                      <input
+                        type="checkbox"
+                        id="qb-select-all"
+                        onchange="app.toggleSelectAll(this)"
+                      />
+                    </th>
+                    <th>Subject</th>
+                    <th>Class</th>
+                    <th>Type</th>
+                    <th>Author</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="qb-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Question Modal with AI Integration -->
+        <div id="modal-question" class="modal-overlay">
+          <div class="modal" style="max-width: 800px">
+            <h3 id="qb-modal-title">Add Question</h3>
+            <input type="hidden" id="qbId" />
+
+            <!-- Main Question Details -->
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Subject</label>
+                <select id="qbSubject" class="form-control">
+                  <option>English Language</option>
+                  <option>Mathematics</option>
+                  <option>Biology</option>
+                  <option>Chemistry</option>
+                  <option>Physics</option>
+                  <option>Civic Education</option>
+                  <option>Economics</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Class</label>
+                <select id="qbClass" class="form-control">
+                  <option>SSS 1</option>
+                  <option>SSS 2</option>
+                  <option>SSS 3</option>
+                  <option>JSS 1</option>
+                  <option>JSS 2</option>
+                  <option>JSS 3</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Type</label>
+                <select id="qbType" class="form-control">
+                  <option>MCQ</option>
+                  <option>Theory</option>
+                  <option>MCQ/Theory</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Difficulty</label>
+                <select id="qbDifficulty" class="form-control">
+                  <option>Easy</option>
+                  <option selected>Medium</option>
+                  <option>Hard</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- AI GENERATOR SECTION -->
+            <div
+              style="
+                background: #f0f9ff;
+                border: 1px dashed var(--primary);
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+              "
+            >
+              <div class="flex justify-between items-center">
+                <h4 style="margin: 0; color: var(--primary-dark)">
+                  <i class="fas fa-robot"></i> AI Question Generator
+                </h4>
+                <small style="color: var(--secondary)"
+                  >Fill topic below, then generate</small
+                >
+              </div>
+
+              <div class="grid-2" style="margin-top: 10px">
+                <div class="form-group" style="margin-bottom: 0">
+                  <input
+                    type="text"
+                    id="aiGenTopic"
+                    class="form-control"
+                    placeholder="Topic (e.g. Quadratic Eq.)"
+                  />
+                </div>
+                <div class="form-group flex gap-2" style="margin-bottom: 0">
+                  <input
+                    type="number"
+                    id="aiGenCount"
+                    class="form-control"
+                    value="1"
+                    min="1"
+                    max="5"
+                    style="width: 80px"
+                    title="Number of options/variants"
+                  />
+                  <button
+                    class="btn btn-primary btn-sm w-full"
+                    onclick="app.generateAiInModal()"
+                  >
+                    Generate
+                  </button>
+                </div>
+              </div>
+
+              <!-- AI Results Container -->
+              <div
+                id="ai-modal-results"
+                style="margin-top: 10px; max-height: 150px; overflow-y: auto"
+              ></div>
+            </div>
+            <!-- END AI SECTION -->
+
+            <div class="form-group">
+              <label>Question Text</label>
+              <textarea
+                id="qbQuestionText"
+                class="form-control"
+                rows="8"
+                placeholder="Type manually or use AI Generator above..."
+                required
+              ></textarea>
+            </div>
+
+            <div class="flex justify-between" style="margin-top: 20px">
+              <button class="btn btn-outline" onclick="app.closeModals()">
+                Cancel
+              </button>
+              <button class="btn btn-primary" onclick="app.saveQuestion()">
+                Save Question
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEW: Preview Modal -->
+        <div id="modal-preview" class="modal-overlay">
+          <div
+            class="modal"
+            style="max-width: 800px; max-height: 90vh; overflow-y: auto"
+          >
+            <div
+              class="flex justify-between items-center"
+              style="margin-bottom: 20px"
+            >
+              <h3>Selected Questions Preview</h3>
+              <button
+                class="btn btn-sm btn-outline"
+                onclick="app.closeModals()"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+
+            <div
+              id="preview-content"
+              style="
+                background: white;
+                padding: 20px;
+                border: 1px solid #eee;
+                min-height: 300px;
+              "
+            >
+              <!-- Content inserted by JS -->
+            </div>
+
+            <div class="flex gap-2 justify-between" style="margin-top: 20px">
+              <div class="flex gap-2">
+                <button
+                  class="btn btn-primary"
+                  onclick="app.printSelectedQuestions()"
+                >
+                  <i class="fas fa-print"></i> Print
+                </button>
+                <button
+                  class="btn btn-outline"
+                  onclick="app.copySelectedQuestions()"
+                >
+                  <i class="fas fa-copy"></i> Copy to Clipboard
+                </button>
+              </div>
+              <button class="btn btn-outline" onclick="app.closeModals()">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
 
@@ -2271,6 +2518,17 @@
           }
           return res;
         },
+        // Add inside the GoogleSheetService object definition
+        getQuestionBank: async function (subject = "") {
+          const res = await this._post("getQuestionBank", { subject });
+          return res.status === "success" ? res.questions : [];
+        },
+        saveQuestionToBank: async function (q) {
+          return await this._post("saveQuestion", { question: q });
+        },
+        deleteQuestionFromBank: async function (id) {
+          return await this._post("deleteQuestion", { id });
+        },
       };
 
       let isInitialLoad = true;
@@ -2402,6 +2660,86 @@
           } else {
             this.showToast(res.message || "Failed to generate", "error");
           }
+        },
+
+        // ==========================================
+        // AI IN MODAL LOGIC
+        // ==========================================
+
+        generateAiInModal: async function () {
+          const subject = document.getElementById("qbSubject").value;
+          const type = document.getElementById("qbType").value;
+          const difficulty = document.getElementById("qbDifficulty").value;
+          const topic = document.getElementById("aiGenTopic").value;
+          const count = document.getElementById("aiGenCount").value;
+
+          if (!topic)
+            return this.showToast("Please enter a Topic for the AI", "warning");
+
+          const data = {
+            subject: subject,
+            topic: topic,
+            questionType: type.includes("MCQ")
+              ? "Multiple Choice (MCQ)"
+              : "Theory / Essay",
+            difficulty: difficulty,
+            count: count || 1,
+          };
+
+          this.toggleLoader(true);
+          // Use the existing AI API call
+          const res = await GoogleSheetService._post(
+            "generateAiQuestions",
+            data,
+          );
+          this.toggleLoader(false);
+
+          if (res.status === "success" && res.questions) {
+            this.renderAiModalResults(res.questions);
+          } else {
+            this.showToast(res.message || "AI generation failed", "error");
+          }
+        },
+
+        renderAiModalResults: function (questions) {
+          const container = document.getElementById("ai-modal-results");
+          if (!questions || questions.length === 0) {
+            container.innerHTML =
+              "<p style='color:var(--danger)'>No questions generated.</p>";
+            return;
+          }
+
+          let html =
+            "<p style='font-size:0.85rem; color:var(--secondary); margin-bottom:5px;'>Click a question below to use it:</p>";
+
+          questions.forEach((q, i) => {
+            // Construct text. If MCQ, format options nicely.
+            let qText = q.q || q.question;
+            if (q.opts && q.opts.length > 0) {
+              qText += "\n" + q.opts.join("\n");
+            }
+
+            // Escape quotes for the onclick attribute
+            const safeText = qText.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+            html += `
+              <div onclick="app.useAiQuestion('${safeText}')" 
+                   style="background: white; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 5px; cursor: pointer; font-size: 0.9rem;">
+                <strong>Option ${i + 1}:</strong> ${qText.substring(0, 100)}...
+              </div>
+            `;
+          });
+
+          container.innerHTML = html;
+        },
+
+        useAiQuestion: function (text) {
+          // Put the selected AI text into the main text area
+          document.getElementById("qbQuestionText").value = text;
+          // Clear the AI results to clean up UI
+          document.getElementById("ai-modal-results").innerHTML =
+            "<p style='color:var(--success)'>Question loaded! You can edit it above.</p>";
+          this.showToast("Question loaded from AI", "success");
         },
 
         renderAiResults: function (questions) {
@@ -2615,16 +2953,16 @@
                     `;
           }
 
-          // 2. AI CARD - Visible to Teachers, Admins, Heads
+          // 2. AI CARD & QUESTION BANK (Visible to Teachers, Admins, Heads)
           land.innerHTML += `
-            <div class="card" onclick="app.loadAiSection()">
+            <div class="card" onclick="app.loadQuestionBank()">
                 <div class="card-content">
-                  <div class="card-icon">🤖</div>
-                  <div class="card-title">AI Exam Generator</div>
-                  <div class="card-meta">Create questions with AI</div>
+                  <div class="card-icon">📚</div>
+                  <div class="card-title">Question Bank</div>
+                  <div class="card-meta">Create & Store Questions</div>
                 </div>
                 <div class="card-footer">
-                  <button class="btn btn-primary btn-sm w-full">Open</button>
+                  <button class="btn btn-outline btn-sm w-full">Open</button>
                 </div>
             </div>
           `;
@@ -4738,6 +5076,246 @@
           t.textContent = msg;
           t.className = `toast show ${type}`;
           setTimeout(() => t.classList.remove("show"), 3000);
+        },
+        // ==========================================
+        // QUESTION BANK LOGIC (FINAL UPDATE)
+        // ==========================================
+
+        loadQuestionBank: async function () {
+          this.showSection("section-question-bank");
+          this.pushHistory("section-question-bank", "Question Bank");
+
+          const filterSelect = document.getElementById("qbFilterSubject");
+          if (filterSelect.options.length <= 1) {
+            const subjects = [
+              "English Language",
+              "Mathematics",
+              "Biology",
+              "Chemistry",
+              "Physics",
+              "Civic Education",
+              "Economics",
+            ];
+            subjects.forEach(
+              (s) =>
+                (filterSelect.innerHTML += `<option value="${s}">${s}</option>`),
+            );
+          }
+
+          const subjectFilter = filterSelect.value;
+          this.toggleLoader(true);
+          const questions =
+            await GoogleSheetService.getQuestionBank(subjectFilter);
+          this.toggleLoader(false);
+
+          // Store globally for preview
+          this.state.questionBankData = questions;
+          this.renderQuestionTable(questions);
+        },
+
+        renderQuestionTable: function (questions) {
+          const tbody = document.getElementById("qb-tbody");
+          tbody.innerHTML = "";
+
+          if (!questions || questions.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="6" class="text-center">No questions found.</td></tr>';
+            return;
+          }
+
+          questions.forEach((q) => {
+            tbody.innerHTML += `
+              <tr data-id="${q.id}">
+                <td><input type="checkbox" class="qb-checkbox" onchange="app.updateSelectedCount()"></td>
+                <td><span class="badge">${q.subject}</span></td>
+                <td>${q.className || "N/A"}</td>
+                <td>${q.type}</td>
+                <td>${q.author || "N/A"}</td>
+                <td>
+                  <div class="flex gap-1">
+                    <!-- NOTE: We only pass the ID string here, not the whole object -->
+                    <button class="btn btn-outline btn-sm" onclick="app.editQuestion('${q.id}')"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm" onclick="app.deleteQuestion('${q.id}')"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+          this.updateSelectedCount();
+        },
+
+        toggleSelectAll: function (source) {
+          const checkboxes = document.querySelectorAll(".qb-checkbox");
+          checkboxes.forEach((cb) => (cb.checked = source.checked));
+          this.updateSelectedCount();
+        },
+
+        updateSelectedCount: function () {
+          const count = document.querySelectorAll(
+            ".qb-checkbox:checked",
+          ).length;
+          document.getElementById("selected-count").textContent = count;
+        },
+
+        getSelectedQuestionIds: function () {
+          const ids = [];
+          const rows = document.querySelectorAll("#qb-tbody tr");
+          rows.forEach((row) => {
+            const cb = row.querySelector(".qb-checkbox");
+            if (cb && cb.checked) {
+              ids.push(row.dataset.id);
+            }
+          });
+          return ids;
+        },
+
+        openQuestionModal: function (data = null) {
+          document.getElementById("qb-modal-title").textContent = data
+            ? "Edit Question"
+            : "Add Question";
+          document.getElementById("qbId").value = data ? data.id : "";
+          document.getElementById("qbSubject").value = data
+            ? data.subject
+            : "English Language";
+          document.getElementById("qbClass").value = data
+            ? data.className || "SSS 1"
+            : "SSS 1";
+          document.getElementById("qbType").value = data ? data.type : "MCQ";
+          document.getElementById("qbDifficulty").value = data
+            ? data.difficulty
+            : "Medium";
+          document.getElementById("qbQuestionText").value = data
+            ? data.question
+            : "";
+
+          document.getElementById("modal-question").style.display = "flex";
+        },
+        editQuestion: function (id) {
+          // Find the question data from the stored list using the ID
+          const questionData = (this.state.questionBankData || []).find(
+            (q) => q.id === id,
+          );
+
+          if (questionData) {
+            this.openQuestionModal(questionData);
+          } else {
+            this.showToast("Could not load question data", "error");
+          }
+        },
+
+        saveQuestion: async function () {
+          const id = document.getElementById("qbId").value;
+          const subject = document.getElementById("qbSubject").value;
+          const className = document.getElementById("qbClass").value; // New field
+          const type = document.getElementById("qbType").value;
+          const difficulty = document.getElementById("qbDifficulty").value;
+          const questionText = document.getElementById("qbQuestionText").value;
+
+          if (!questionText)
+            return this.showToast("Question text is required", "warning");
+
+          const data = {
+            id: id,
+            subject: subject,
+            class: className, // Send class
+            type: type,
+            difficulty: difficulty,
+            question: questionText,
+            options: [],
+            answer: "",
+            author: this.state.currentUser.name,
+          };
+
+          this.toggleLoader(true);
+          const res = await GoogleSheetService.saveQuestionToBank(data);
+          this.toggleLoader(false);
+
+          if (res.status === "success") {
+            this.showToast("Question Saved!", "success");
+            this.closeModals();
+            this.loadQuestionBank();
+          } else {
+            this.showToast("Error saving question", "error");
+          }
+        },
+
+        viewSelectedQuestions: function () {
+          const ids = this.getSelectedQuestionIds();
+          if (ids.length === 0)
+            return this.showToast("Select at least one question", "warning");
+
+          const allData = this.state.questionBankData || [];
+          const selected = allData.filter((q) => ids.includes(q.id));
+
+          let html = "";
+          selected.forEach((q, i) => {
+            html += `
+                    <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+                        <p><strong>Q${i + 1}.</strong> <span style="white-space: pre-wrap;">${q.question}</span></p>
+                        <small style="color:var(--secondary)">${q.subject} | ${q.className} | ${q.type}</small>
+                    </div>
+                `;
+          });
+
+          document.getElementById("preview-content").innerHTML = html;
+          document.getElementById("modal-preview").style.display = "flex";
+        },
+
+        printSelectedQuestions: function () {
+          const content = document.getElementById("preview-content").innerHTML;
+          const printableArea = document.getElementById("printable-area");
+
+          // PLACEHOLDER FOR LETTERHEAD
+          // Replace the img src below with your actual school logo URL
+          const letterHead = `
+                <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 20px;">
+                    <img src="YOUR_SCHOOL_LOGO_URL_HERE" style="width: 80px; height: 80px; margin-bottom: 10px;">
+                    <h1 style="margin:0; text-transform: uppercase; font-size: 24px;">Nifty Steps College</h1>
+                    <p style="margin:0; font-size: 14px;">31 Yinka Ogunfile Street, Igbo Oluwo Estate, Ikorodu, Lagos State</p>
+                    <h2 style="margin-top: 15px; text-decoration: underline;">Examination Questions</h2>
+                    <p style="font-size: 12px;">Subject: ___________________ &nbsp;&nbsp;&nbsp; Class: ___________</p>
+                    <p style="font-size: 12px;">Time: 1 Hour &nbsp;&nbsp;&nbsp; Instructions: Answer All Questions</p>
+                </div>
+            `;
+
+          printableArea.innerHTML = `
+                <style>
+                    @media print {
+                        body * { visibility: hidden; }
+                        #printable-area, #printable-area * { visibility: visible; }
+                        #printable-area { position: absolute; left: 0; top: 0; width: 100%; padding: 40px; }
+                    }
+                </style>
+                <div style="font-family: 'Times New Roman', serif; color: #000;">
+                    ${letterHead}
+                    ${content}
+                </div>
+            `;
+
+          setTimeout(() => {
+            window.print();
+            printableArea.innerHTML = "";
+          }, 500);
+        },
+
+        copySelectedQuestions: function () {
+          const ids = this.getSelectedQuestionIds();
+          const allData = this.state.questionBankData || [];
+          const selected = allData.filter((q) => ids.includes(q.id));
+
+          let text = "";
+          selected.forEach((q, i) => {
+            text += `Q${i + 1}. ${q.question}\n\n`;
+          });
+
+          navigator.clipboard.writeText(text).then(
+            () => {
+              this.showToast("Questions copied to clipboard!", "success");
+            },
+            (err) => {
+              this.showToast("Failed to copy text", "error");
+            },
+          );
         },
       };
 
