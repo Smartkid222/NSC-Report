@@ -920,6 +920,15 @@
         color: var(--primary);
       }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script>
+      // This tells the browser WHERE the worker script is.
+      // Without this, many browsers will fail to "read" the PDF content.
+      const pdfjsLib = window["pdfjs-dist/build/pdf"];
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+    </script>
   </head>
   <body>
     <!-- GLOBAL LOADER -->
@@ -1345,8 +1354,9 @@
                     style="width: 150px"
                     onchange="app.handleFeeHistoryChange()"
                   >
+                    <option value="2027/2028">2027/2028</option>
+                    <option value="2026/2027">2026/2027</option>
                     <option value="2025/2026">2025/2026</option>
-                    <option value="2024/2025">2024/2025</option>
                   </select>
                   <select
                     id="feeTermSelect"
@@ -1379,7 +1389,9 @@
                     <tr>
                       <th>Student</th>
                       <th>Type</th>
-                      <th>Total Fee</th>
+                      <th>Current Fee</th>
+                      <th>Outstanding</th>
+                      <th>Total Due</th>
                       <th>Paid</th>
                       <th>Balance</th>
                       <th>Status</th>
@@ -1395,7 +1407,7 @@
           <div id="fee-tab-settings" class="hidden">
             <div class="list-container" style="padding: 20px">
               <div class="list-header">
-                <h2>Fee Configuration</h2>
+                <h2>Fee Configuration (Per Term)</h2>
                 <button class="btn btn-primary" onclick="app.saveFeeSettings()">
                   Save Config
                 </button>
@@ -1405,7 +1417,9 @@
                   <thead>
                     <tr>
                       <th>Class</th>
-                      <th>School Fee (₦)</th>
+                      <th>1st Term Fee (₦)</th>
+                      <th>2nd Term Fee (₦)</th>
+                      <th>3rd Term Fee (₦)</th>
                       <th>Reg Fee (₦)</th>
                       <th id="th-teacher-subsidy" class="hidden">
                         Teacher Subsidy (₦)
@@ -1656,13 +1670,12 @@
           </div>
         </section>
 
-        <!-- Question Modal with AI Integration -->
+        <!-- Question Modal with AI & Upload -->
         <div id="modal-question" class="modal-overlay">
-          <div class="modal" style="max-width: 800px">
+          <div class="modal" style="max-width: 850px">
             <h3 id="qb-modal-title">Add Question</h3>
             <input type="hidden" id="qbId" />
 
-            <!-- Main Question Details -->
             <div class="grid-2">
               <div class="form-group">
                 <label>Subject</label>
@@ -1674,6 +1687,24 @@
                   <option>Physics</option>
                   <option>Civic Education</option>
                   <option>Economics</option>
+                  <option>Literature</option>
+                  <option>Geography</option>
+                  <option>Government</option>
+                  <option>Accounting</option>
+                  <option>Commerce</option>
+                  <option>Yoruba</option>
+                  <option>CRS</option>
+                  <option>Data Processing</option>
+                  <option>Further Math</option>
+                  <option>Computer Science</option>
+                  <option>French</option>
+                  <option>Music</option>
+                  <option>Fine Art</option>
+                  <option>Physical Education</option>
+                  <option>Business Studies</option>
+                  <option>Technical Drawing</option>
+                  <option>Agricultural Science</option>
+                  <option>Home Economics</option>
                 </select>
               </div>
               <div class="form-group">
@@ -1722,9 +1753,6 @@
                 <h4 style="margin: 0; color: var(--primary-dark)">
                   <i class="fas fa-robot"></i> AI Question Generator
                 </h4>
-                <small style="color: var(--secondary)"
-                  >Fill topic below, then generate</small
-                >
               </div>
 
               <div class="grid-2" style="margin-top: 10px">
@@ -1743,9 +1771,9 @@
                     class="form-control"
                     value="1"
                     min="1"
-                    max="5"
+                    max="10"
                     style="width: 80px"
-                    title="Number of options/variants"
+                    title="Count"
                   />
                   <button
                     class="btn btn-primary btn-sm w-full"
@@ -1762,15 +1790,54 @@
                 style="margin-top: 10px; max-height: 150px; overflow-y: auto"
               ></div>
             </div>
-            <!-- END AI SECTION -->
 
+            <!-- FILE UPLOAD SECTION -->
+            <div
+              style="
+                background: #fff7ed;
+                border: 1px dashed var(--warning);
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+              "
+            >
+              <h4 style="margin: 0 0 10px 0; color: #9a3412">
+                <i class="fas fa-file-upload"></i> Upload Reference (PDF/Doc)
+              </h4>
+              <div class="flex gap-2 items-center">
+                <input
+                  type="file"
+                  id="qbFileInput"
+                  class="form-control"
+                  accept=".pdf,.doc,.docx,.txt"
+                  style="padding: 5px"
+                />
+                <button
+                  class="btn btn-outline btn-sm"
+                  onclick="app.uploadAndExtractText()"
+                >
+                  <i class="fas fa-magic"></i> Extract Text
+                </button>
+              </div>
+              <small
+                style="color: var(--secondary); display: block; margin-top: 5px"
+                >Upload a file to extract text. You can then edit the text or
+                use AI to generate questions from it.</small
+              >
+              <div
+                id="upload-status"
+                style="margin-top: 5px; font-size: 0.8rem"
+              ></div>
+            </div>
+
+            <!-- Main Text Area -->
             <div class="form-group">
               <label>Question Text</label>
               <textarea
                 id="qbQuestionText"
                 class="form-control"
                 rows="8"
-                placeholder="Type manually or use AI Generator above..."
+                placeholder="Type manually, paste, or use tools above..."
                 required
               ></textarea>
             </div>
@@ -2342,7 +2409,7 @@
       // --- 3. GOOGLE SHEET SERVICE (With Cache) ---
       // --- 3. GOOGLE SHEET SERVICE (With Cache) ---
       const GoogleSheetService = {
-        URL: "https://script.google.com/macros/s/AKfycbx-nzQ52sZov0tr8nvuir2KBXTZhZTyMshiJX5eeB1i91HUzoAC5n0bb1M33l2CXsGY/exec",
+        URL: "https://script.google.com/macros/s/AKfycbzTt8Fnpua38ZnPkj0NcHPCzxVOXJjuju6Kt6mM929MS8pGL325-5o2SeArNtH3PKgV/exec",
 
         // Simple in-memory cache
         cache: {
@@ -2687,7 +2754,6 @@
           };
 
           this.toggleLoader(true);
-          // Use the existing AI API call
           const res = await GoogleSheetService._post(
             "generateAiQuestions",
             data,
@@ -2709,37 +2775,44 @@
             return;
           }
 
-          let html =
-            "<p style='font-size:0.85rem; color:var(--secondary); margin-bottom:5px;'>Click a question below to use it:</p>";
-
+          let html = "";
           questions.forEach((q, i) => {
-            // Construct text. If MCQ, format options nicely.
             let qText = q.q || q.question;
             if (q.opts && q.opts.length > 0) {
               qText += "\n" + q.opts.join("\n");
             }
 
-            // Escape quotes for the onclick attribute
-            const safeText = qText.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+            // Safe encode for button attribute
+            const safeText = encodeURIComponent(qText);
 
             html += `
-              <div onclick="app.useAiQuestion('${safeText}')" 
-                   style="background: white; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 5px; cursor: pointer; font-size: 0.9rem;">
-                <strong>Option ${i + 1}:</strong> ${qText.substring(0, 100)}...
+              <div class="flex justify-between items-center" style="background: white; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 5px;">
+                 <div style="font-size: 0.85rem; flex: 1; margin-right: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    ${qText.substring(0, 60)}...
+                 </div>
+                 <button class="btn btn-success btn-sm" style="padding: 4px 10px; font-size: 0.8rem;" onclick="app.useAiQuestion(decodeURIComponent('${safeText}'))">
+                    <i class="fas fa-plus"></i> Add
+                 </button>
               </div>
             `;
           });
-
           container.innerHTML = html;
         },
 
         useAiQuestion: function (text) {
-          // Put the selected AI text into the main text area
-          document.getElementById("qbQuestionText").value = text;
-          // Clear the AI results to clean up UI
-          document.getElementById("ai-modal-results").innerHTML =
-            "<p style='color:var(--success)'>Question loaded! You can edit it above.</p>";
-          this.showToast("Question loaded from AI", "success");
+          const ta = document.getElementById("qbQuestionText");
+          const current = ta.value.trim();
+
+          if (current === "") {
+            ta.value = text;
+          } else {
+            // Append with line breaks
+            ta.value = current + "\n\n" + text;
+          }
+
+          // Scroll to bottom
+          ta.scrollTop = ta.scrollHeight;
+          this.showToast("Question appended!", "success");
         },
 
         renderAiResults: function (questions) {
@@ -2776,6 +2849,55 @@
           html += `<button class="btn btn-outline" onclick="window.print()" style="margin-top:15px;"><i class="fas fa-print"></i> Print Questions</button>`;
 
           container.innerHTML = html;
+        },
+
+        uploadAndExtractText: async function () {
+          const fileInput = document.getElementById("qbFileInput");
+          if (!fileInput.files || fileInput.files.length === 0) return;
+
+          const file = fileInput.files[0];
+          const fileName = file.name.toLowerCase();
+          const reader = new FileReader();
+
+          reader.onload = async (e) => {
+            const arrayBuffer = e.target.result;
+
+            try {
+              if (fileName.endsWith(".docx")) {
+                // WORD EXTRACTION
+                const result = await mammoth.extractRawText({
+                  arrayBuffer: arrayBuffer,
+                });
+                document.getElementById("qbQuestionText").value = result.value;
+                this.showToast("Word text extracted!", "success");
+              } else if (fileName.endsWith(".pdf")) {
+                // PDF EXTRACTION
+                const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+                const pdf = await loadingTask.promise;
+                let fullText = "";
+
+                for (let i = 1; i <= pdf.numPages; i++) {
+                  const page = await pdf.getPage(i);
+                  const content = await page.getTextContent();
+                  const strings = content.items.map((item) => item.str);
+                  fullText += strings.join(" ") + "\n";
+                }
+
+                document.getElementById("qbQuestionText").value = fullText;
+                this.showToast("PDF text extracted!", "success");
+              } else {
+                this.showToast(
+                  "Unsupported file type. Use .docx or .pdf",
+                  "error",
+                );
+              }
+            } catch (err) {
+              console.error(err);
+              this.showToast("Failed to read file content", "error");
+            }
+          };
+
+          reader.readAsArrayBuffer(file);
         },
 
         // --- AUTH ---
@@ -4334,6 +4456,12 @@
           }
         },
 
+        // NEW: Handle Session/Term change in Fees
+        handleFeeHistoryChange: function () {
+          const cls = document.getElementById("feeClassFilter").value;
+          if (cls) this.renderFeeTable(cls);
+        },
+
         // NEW: Called when user changes dropdown
         handleFeeClassChange: async function (cls) {
           if (cls) {
@@ -4345,75 +4473,118 @@
           const allTx = await GoogleSheetService.getFeeTransactions();
           const allSettings = await GoogleSheetService.getFeeSettings();
           const config = allSettings[cls] || {
-            schoolFee: 0,
+            fee_1st: 0,
+            fee_2nd: 0,
+            fee_3rd: 0,
             regFee: 0,
             teacherSubsidy: 0,
           };
           const stds = await GoogleSheetService.loadStudents(cls);
 
-          // NEW: Get Filters
           const session = document.getElementById("feeSessionSelect").value;
           const term = document.getElementById("feeTermSelect").value;
-
           const tbody = document.getElementById("fee-tbody");
           tbody.innerHTML = "";
 
           if (!stds || stds.length === 0) {
             tbody.innerHTML =
-              '<tr><td colspan="8" class="text-center">No students found.</td></tr>';
+              '<tr><td colspan="9" class="text-center">No students found.</td></tr>';
             return;
           }
 
           let stats = { exp: 0, col: 0, out: 0 };
+          const termIndex = { "1st": 1, "2nd": 2, "3rd": 3 };
+          const currentTermNum = termIndex[term];
 
           stds.forEach((s) => {
-            let currentType = s.status || s.feeType || "Old";
+            // --- 1. TYPE LOGIC ---
+            // Force "Old" for everyone except Custom and Scholarship
+            let rawType = s.status || "Old";
+            let displayType = rawType;
+
+            if (rawType !== "Custom" && rawType !== "Scholarship") {
+              displayType = "Old";
+            }
+
             const customAmt = s.customFee || 0;
 
-            // 1. Calculate Current Term Fee
-            let termFee = this.calculateTotalFee(
-              config.schoolFee,
+            // --- 2. CALCULATE CURRENT TERM FEE ---
+            const termKey = `fee_${term}`;
+            let baseFeeForTerm = config[termKey] || 0;
+
+            let currentTermFee = this.calculateTotalFee(
+              baseFeeForTerm,
               config.regFee,
-              currentType,
+              displayType, // Use enforced type
               customAmt,
               this.state.feeSchool,
               config.teacherSubsidy,
             );
 
-            // 2. Calculate Arrears/Debt from Previous Terms
-            // We look for a property 'lastBalance' saved in student record, or calculate from transactions
-            // Let's assume we fetch it from student object (You need a backend process to close term and save this)
-            // For now, we simulate it:
-            let arrears = s.arrears || 0;
+            // --- 3. CALCULATE OUTSTANDING (Previous Terms) ---
+            // Outstanding = (Fees from previous terms) - (Payments made in previous terms)
+            let outstandingBalance = 0;
 
-            // 3. Total Due this term
-            let totalDue = termFee + arrears;
+            if (currentTermNum > 1) {
+              // Loop through previous terms (1 to current-1)
+              for (let i = 1; i < currentTermNum; i++) {
+                const prevTermName = Object.keys(termIndex).find(
+                  (key) => termIndex[key] === i,
+                );
+                const prevTermKey = `fee_${prevTermName}`;
+                const prevBaseFee = config[prevTermKey] || 0;
 
-            // 4. Paid THIS TERM (Filter transactions)
-            // Note: Your backend needs to return session/term in transaction object for this to work perfectly.
-            // If not, we use total paid vs total due logic.
-            // Let's assume transactions have 'session' and 'term':
-            const myTxs = allTx.filter((t) => t.studentId === s.id);
-            const paidThisTerm = myTxs
-              .filter(
-                (t) =>
-                  (t.session === session || !t.session) && // Fallback if no session
-                  (t.term === term || !t.term),
-              )
-              .reduce((sum, t) => sum + parseInt(t.amount), 0);
+                // Calculate fee for that previous term
+                // Note: Custom students pay their custom fee EVERY term
+                let prevFee = this.calculateTotalFee(
+                  prevBaseFee,
+                  config.regFee,
+                  displayType,
+                  customAmt,
+                  this.state.feeSchool,
+                  config.teacherSubsidy,
+                );
 
-            // 5. Balance
-            let balance = totalDue - paidThisTerm;
-            if (currentType === "Scholarship") {
-              balance = 0;
-              totalDue = 0;
+                // Calculate payments made specifically in that previous term
+                const paidPrev = allTx
+                  .filter(
+                    (t) =>
+                      t.studentId === s.id &&
+                      t.session === session &&
+                      t.term === prevTermName,
+                  )
+                  .reduce((sum, t) => sum + Number(t.amount), 0);
+
+                outstandingBalance += prevFee - paidPrev;
+              }
             }
 
-            stats.exp += totalDue;
+            // Ensure outstanding doesn't go negative (credit) for display simplicity,
+            // or keep it negative to reduce Total Due?
+            // Usually, negative outstanding (credit) reduces Total Due.
+            // We will keep the math: Total Due = Outstanding + Current Fee.
+
+            // --- 4. CALCULATE PAID (THIS TERM) ---
+            // Filter transactions for THIS session and THIS term only
+            const paidThisTerm = allTx
+              .filter(
+                (t) =>
+                  t.studentId === s.id &&
+                  t.session === session &&
+                  t.term === term,
+              )
+              .reduce((sum, t) => sum + Number(t.amount), 0);
+
+            // --- 5. TOTALS ---
+            const totalDue = currentTermFee + outstandingBalance;
+            const balance = totalDue - paidThisTerm;
+
+            // Stats (We only count current term expected fees for the top cards)
+            stats.exp += currentTermFee;
             stats.col += paidThisTerm;
             stats.out += balance;
 
-            const isPaid = currentType === "Scholarship" || balance <= 0;
+            const isPaid = balance <= 0;
             const badgeClass = isPaid
               ? "status-paid"
               : paidThisTerm > 0
@@ -4424,13 +4595,15 @@
               : paidThisTerm > 0
                 ? "Partial"
                 : "Owing";
-            const isSelected = (val) => (currentType === val ? "selected" : "");
-            const inputDisabled = isPaid
-              ? "disabled style='background:#e2e8f0;'"
-              : "";
+
+            const isSelected = (val) => (displayType === val ? "selected" : "");
+            const inputDisabled =
+              isPaid && displayType !== "Custom"
+                ? "disabled style='background:#e2e8f0;'"
+                : "";
 
             tbody.innerHTML += `
-              <tr data-sid="${s.id}" data-base="${config.schoolFee}" data-reg="${config.regFee}" data-subsidy="${config.teacherSubsidy || 0}" data-original-type="${currentType}">
+              <tr data-sid="${s.id}" data-base="${baseFeeForTerm}" data-reg="${config.regFee}" data-subsidy="${config.teacherSubsidy || 0}" data-original-type="${rawType}" data-display-type="${displayType}">
                 <td><strong>${s.name}</strong><br><small>${s.id}</small></td>
                 <td>
                   <select class="fee-table-select" onchange="app.handleTableTypeChange(this)">
@@ -4440,11 +4613,12 @@
                     <option value="Scholarship" ${isSelected("Scholarship")}>Scholarship</option>
                     <option value="Custom" ${isSelected("Custom")}>Custom</option>
                   </select>
-                  <div class="custom-fee-inline ${currentType === "Custom" ? "show" : ""}">
-                    <input type="number" class="fee-table-input" style="width:80px; margin-top:5px;" placeholder="Amt" value="${currentType === "Custom" ? customAmt : ""}" onchange="app.handleCustomFeeChange(this)">
+                  <div class="custom-fee-inline ${displayType === "Custom" ? "show" : ""}">
+                    <input type="number" class="fee-table-input" style="width:80px; margin-top:5px;" placeholder="Amt" value="${displayType === "Custom" ? customAmt : ""}" onchange="app.handleCustomFeeChange(this)">
                   </div>
                 </td>
-                <td style="color: var(--danger); font-size:0.8rem;">₦${arrears.toLocaleString()}</td>
+                <td style="font-weight:bold;">₦${currentTermFee.toLocaleString()}</td>
+                <td style="color: var(--danger); font-size:0.8rem;">₦${outstandingBalance.toLocaleString()}</td>
                 <td class="cell-total" style="font-weight:bold;">₦${totalDue.toLocaleString()}</td>
                 <td class="cell-paid">₦${paidThisTerm.toLocaleString()}</td>
                 <td class="cell-balance" style="color:var(--danger); font-weight:bold;">₦${balance.toLocaleString()}</td>
@@ -4452,22 +4626,13 @@
                 <td>
                   <div class="action-cell">
                     <input type="number" class="form-control fee-table-input payment-entry" placeholder="0" ${inputDisabled}>
-                    <button class="btn btn-outline btn-sm" onclick="app.openEditFeeModal('${s.id}', '${s.name}', '${currentType}', ${customAmt}, ${paidThisTerm})">
+                    <button class="btn btn-outline btn-sm" onclick="app.openEditFeeModal('${s.id}', '${s.name}', '${displayType}', ${customAmt}, ${paidThisTerm})">
                        <i class="fas fa-edit"></i>
                     </button>
                   </div>
                 </td>
               </tr>`;
           });
-
-          // Update headers to show Arrears
-          const tableHead = document.querySelector("#fee-table thead tr");
-          if (tableHead && tableHead.children.length < 8) {
-            const th = document.createElement("th");
-            th.textContent = "Arrears";
-            th.style.color = "var(--danger)";
-            tableHead.insertBefore(th, tableHead.children[2]);
-          }
 
           document.getElementById("fee-total-expected").textContent =
             `₦${stats.exp.toLocaleString()}`;
@@ -4489,15 +4654,14 @@
           const customDiv = row.querySelector(".custom-fee-inline");
           const base = parseFloat(row.dataset.base);
           const reg = parseFloat(row.dataset.reg);
-          const subsidy = parseFloat(row.dataset.subsidy); // Pry specific
+          const subsidy = parseFloat(row.dataset.subsidy);
           const school = this.state.feeSchool;
 
           if (type === "Custom") customDiv.classList.add("show");
-          else {
-            customDiv.classList.remove("show");
-          }
+          else customDiv.classList.remove("show");
 
-          let newTotal = this.calculateTotalFee(
+          // Calculate just the Current Fee for this term
+          let newCurrentFee = this.calculateTotalFee(
             base,
             reg,
             type,
@@ -4505,6 +4669,19 @@
             school,
             subsidy,
           );
+
+          // Update the Current Fee Cell
+          row.querySelector("td:nth-child(3)").textContent =
+            `₦${newCurrentFee.toLocaleString()}`;
+
+          // Update Total Due = Current Fee + Outstanding (Outstanding doesn't change on type switch in this UI view)
+          const outstandingText =
+            row.querySelector("td:nth-child(4)").textContent;
+          const outstandingVal =
+            parseFloat(outstandingText.replace(/[₦,]/g, "")) || 0;
+
+          const newTotal = newCurrentFee + outstandingVal;
+
           row.querySelector(".cell-total").textContent =
             `₦${newTotal.toLocaleString()}`;
           this.updateRowBalance(row, newTotal);
@@ -4558,9 +4735,12 @@
         saveAllFeePayments: async function () {
           const loader = document.getElementById("loader");
           loader.style.display = "flex";
-
           const rows = document.querySelectorAll("#fee-tbody tr");
           let updatesCount = 0;
+
+          // GET GLOBAL SESSION/TERM
+          const session = document.getElementById("feeSessionSelect").value;
+          const term = document.getElementById("feeTermSelect").value;
 
           for (let row of rows) {
             const studentId = row.dataset.sid;
@@ -4597,6 +4777,8 @@
                 amount: paymentAmount,
                 type: newType,
                 date: new Date().toISOString().split("T")[0],
+                session: session, // ADDED
+                term: term, // ADDED
               });
               updatesCount++;
 
@@ -4858,7 +5040,7 @@
         renderFeeSettings: async function () {
           const tbody = document.getElementById("fee-settings-tbody");
           tbody.innerHTML =
-            '<tr><td colspan="4" class="text-center">Loading...</td></tr>';
+            '<tr><td colspan="6" class="text-center">Loading...</td></tr>';
           const config = await GoogleSheetService.getFeeSettings();
           const classes =
             this.state.feeSchool === "pry" ? PRY_CLASSES : ALL_CLASSES;
@@ -4868,17 +5050,21 @@
 
           classes.forEach((cls) => {
             const fees = config[cls] || {
-              schoolFee: 0,
+              fee_1st: 0,
+              fee_2nd: 0,
+              fee_3rd: 0,
               regFee: 0,
               teacherSubsidy: 0,
             };
             tbody.innerHTML += `
-              <tr>
-                <td><strong>${cls}</strong></td>
-                <td><input type="number" class="form-control set-base" data-cls="${cls}" value="${fees.schoolFee}" style="width:120px"></td>
-                <td><input type="number" class="form-control set-reg" data-cls="${cls}" value="${fees.regFee}" style="width:120px"></td>
-                ${isPry ? `<td><input type="number" class="form-control set-subsidy" data-cls="${cls}" value="${fees.teacherSubsidy}" style="width:120px"></td>` : ""}
-              </tr>`;
+                  <tr>
+                    <td><strong>${cls}</strong></td>
+                    <td><input type="number" class="form-control set-1st" data-cls="${cls}" value="${fees.fee_1st || 0}" style="width:100px"></td>
+                    <td><input type="number" class="form-control set-2nd" data-cls="${cls}" value="${fees.fee_2nd || 0}" style="width:100px"></td>
+                    <td><input type="number" class="form-control set-3rd" data-cls="${cls}" value="${fees.fee_3rd || 0}" style="width:100px"></td>
+                    <td><input type="number" class="form-control set-reg" data-cls="${cls}" value="${fees.regFee}" style="width:100px"></td>
+                    ${isPry ? `<td><input type="number" class="form-control set-subsidy" data-cls="${cls}" value="${fees.teacherSubsidy}" style="width:100px"></td>` : ""}
+                  </tr>`;
           });
         },
 
@@ -4886,20 +5072,28 @@
           const newConfig = {};
           const isPry = this.state.feeSchool === "pry";
 
-          document.querySelectorAll(".set-base").forEach((inp) => {
+          document.querySelectorAll(".set-1st").forEach((inp) => {
             const cls = inp.dataset.cls;
+            const fee1 = inp.value;
+            const fee2Inp = document.querySelector(
+              `.set-2nd[data-cls="${cls}"]`,
+            );
+            const fee3Inp = document.querySelector(
+              `.set-3rd[data-cls="${cls}"]`,
+            );
             const regInp = document.querySelector(
               `.set-reg[data-cls="${cls}"]`,
             );
             const subInp = document.querySelector(
               `.set-subsidy[data-cls="${cls}"]`,
-            ); // Pry only
+            );
 
             newConfig[cls] = {
-              schoolFee: parseInt(inp.value) || 0,
+              fee_1st: parseInt(fee1) || 0,
+              fee_2nd: parseInt(fee2Inp.value) || 0,
+              fee_3rd: parseInt(fee3Inp.value) || 0,
               regFee: parseInt(regInp.value) || 0,
-              // Only add teacherSubsidy if it's Pry
-              ...(isPry && { teacherSubsidy: parseInt(subInp?.value) || 0 }),
+              teacherSubsidy: isPry ? parseInt(subInp?.value) || 0 : 0,
             };
           });
 
@@ -5088,13 +5282,38 @@
           const filterSelect = document.getElementById("qbFilterSubject");
           if (filterSelect.options.length <= 1) {
             const subjects = [
-              "English Language",
+              "English",
               "Mathematics",
+              "Basic Science",
+              "Social Studies",
+              "Civic Education",
+              "PHE",
+              "Basic Technology",
+              "Creative Arts",
+              "Yoruba",
+              "French",
+              "Agricultural Science",
+              "Computer Studies",
+              "Home Economics",
+              "CRS/IRS",
+              "Business Studies",
+              "Economics",
               "Biology",
+              "Further Math",
+              "Agric Sci",
+              "Data Processing",
               "Chemistry",
               "Physics",
-              "Civic Education",
-              "Economics",
+              "Geography",
+              "Literature",
+              "Government",
+              "CRS",
+              "Yoruba",
+              "Accounting",
+              "Commerce",
+              "CCA",
+              "Marketing",
+              "T/D",
             ];
             subjects.forEach(
               (s) =>
