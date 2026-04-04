@@ -1,0 +1,3790 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nifty Steps - Student Portal</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* --- MODERN DESIGN SYSTEM --- */
+      :root {
+        --primary: #4f46e5;
+        --primary-light: #e0e7ff;
+        --primary-dark: #3730a3;
+        --secondary: #64748b;
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --text: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow:
+          0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg:
+          0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --radius: 12px;
+        --nav-width: 260px;
+        --bg-dark: #0f172a;
+        --surface-dark: #1e293b;
+        --text-dark: #f1f5f9;
+        --border-dark: #334155;
+      }
+
+      body.dark-mode {
+        --bg: var(--bg-dark);
+        --surface: var(--surface-dark);
+        --text: var(--text-dark);
+        --text-muted: #94a3b8;
+        --border: var(--border-dark);
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        outline: none;
+      }
+
+      body {
+        font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        min-height: 100vh;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+      .flex {
+        display: flex;
+      }
+      .flex-col {
+        flex-direction: column;
+      }
+      .items-center {
+        align-items: center;
+      }
+      .justify-between {
+        justify-content: space-between;
+      }
+      .gap-2 {
+        gap: 0.5rem;
+      }
+      .gap-4 {
+        gap: 1rem;
+      }
+      .text-sm {
+        font-size: 0.875rem;
+      }
+      .font-bold {
+        font-weight: 700;
+      }
+      .w-full {
+        width: 100%;
+      }
+      .text-center {
+        text-align: center;
+      }
+
+      .btn {
+        padding: 0.625rem 1.25rem;
+        border: none;
+        border-radius: var(--radius);
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.1);
+      }
+      .btn-outline {
+        background-color: transparent;
+        border: 2px solid var(--border);
+        color: var(--text);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--text-muted);
+      }
+      .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+      .form-control {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        background: var(--surface);
+        color: var(--text);
+        transition:
+          border 0.2s,
+          box-shadow 0.2s;
+      }
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+      }
+
+      .auth-wrapper {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .auth-container {
+        background: var(--surface);
+        width: 100%;
+        max-width: 420px;
+        border-radius: 20px;
+        box-shadow: var(--shadow-lg);
+        padding: 40px;
+        animation: slideUp 0.5s ease;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .app-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary-dark);
+        margin-bottom: 5px;
+      }
+
+      .dashboard-layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: var(--nav-width);
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        height: 100vh;
+        z-index: 100;
+        transition:
+          transform 0.3s,
+          background 0.3s;
+      }
+      .sidebar-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        color: var(--primary);
+        font-size: 1.1rem;
+      }
+      .sidebar-brand span {
+        background: var(--primary);
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+      }
+
+      .sidebar-nav {
+        flex: 1;
+        padding: 1rem 0;
+        overflow-y: auto;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 1.5rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+        margin-bottom: 2px;
+      }
+      .nav-item:hover {
+        background: var(--bg);
+        color: var(--text);
+      }
+      .nav-item.active {
+        background: var(--primary-light);
+        color: var(--primary);
+        border-left-color: var(--primary);
+        font-weight: 600;
+      }
+      .nav-item.active i {
+        color: var(--primary);
+      }
+      body.dark-mode .nav-item.active {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .nav-section-title {
+        padding: 1rem 1.5rem 0.5rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-left: var(--nav-width);
+        background: var(--bg);
+        min-height: 100vh;
+      }
+
+      .top-header {
+        background: var(--surface);
+        padding: 0.8rem 2rem;
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .header-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .header-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--border);
+      }
+      .header-info div:first-child {
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+      .header-info div:last-child {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: none;
+        background: var(--bg);
+        color: var(--text-muted);
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s;
+      }
+      .icon-btn:hover {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+      .notification-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 8px;
+        height: 8px;
+        background: var(--danger);
+        border-radius: 50%;
+      }
+
+      .container {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--text);
+        cursor: pointer;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+          position: fixed;
+          z-index: 200;
+        }
+        .sidebar.active {
+          transform: translateX(0);
+        }
+        .main-content {
+          margin-left: 0;
+        }
+        .menu-toggle {
+          display: block;
+        }
+        .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 150;
+          display: none;
+        }
+        .overlay.active {
+          display: block;
+        }
+      }
+
+      .card {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border);
+        margin-bottom: 25px;
+        transition: transform 0.2s;
+      }
+      .card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .card-title i {
+        color: var(--primary);
+      }
+
+      .grid-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-bottom: 25px;
+      }
+      .stat-card {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+      .stat-info h4 {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+      .stat-info h2 {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+      }
+      .stat-icon.purple {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+      .stat-icon.green {
+        background: #dcfce7;
+        color: var(--success);
+      }
+      .stat-icon.orange {
+        background: #ffedd5;
+        color: #ea580c;
+      }
+      .stat-icon.blue {
+        background: #dbeafe;
+        color: #2563eb;
+      }
+      body.dark-mode .stat-icon.purple {
+        background: rgba(79, 70, 229, 0.2);
+      }
+      body.dark-mode .stat-icon.green {
+        background: rgba(16, 185, 129, 0.1);
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      @media (max-width: 900px) {
+        .grid-3 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 768px) {
+        .grid-2,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+      .profile-avatar-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--primary-light);
+      }
+      .profile-info h2 {
+        font-size: 1.5rem;
+        font-weight: 800;
+      }
+      .profile-info p {
+        color: var(--text-muted);
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 10px;
+      }
+      .info-item {
+        background: var(--bg);
+        padding: 15px;
+        border-radius: 12px;
+        border-left: 4px solid var(--primary);
+      }
+      .info-label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .info-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-top: 5px;
+      }
+
+      .result-summary {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+      .gpa-circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), #7c3aed);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: white;
+        box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+      }
+      .gpa-value {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .gpa-label {
+        font-size: 0.8rem;
+        opacity: 0.9;
+        margin-top: 5px;
+      }
+
+      .insight-card {
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        padding: 15px;
+        border-radius: 12px;
+        flex: 1;
+      }
+      body.dark-mode .insight-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: none;
+      }
+      .insight-title {
+        font-weight: 700;
+        color: #0369a1;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      th,
+      td {
+        padding: 14px 15px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        background: var(--bg);
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+      }
+      tr:last-child td {
+        border: none;
+      }
+
+      .score-badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+      .score-high {
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .score-mid {
+        background: #fef9c3;
+        color: #a16207;
+      }
+      .score-low {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+
+      .timetable-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin-top: 15px;
+      }
+      @media (max-width: 768px) {
+        .timetable-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .tt-day {
+        background: var(--bg);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .tt-day-header {
+        background: var(--primary);
+        color: white;
+        padding: 12px;
+        font-weight: 700;
+        text-align: center;
+      }
+      .tt-day-header.today {
+        background: var(--primary-dark);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .tt-slot {
+        padding: 10px;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.85rem;
+      }
+      .tt-slot:last-child {
+        border-bottom: none;
+      }
+      .tt-slot strong {
+        display: block;
+        color: var(--primary-dark);
+        margin-bottom: 2px;
+      }
+      .tt-slot.active-period {
+        background: var(--primary-light);
+        border-left: 3px solid var(--primary);
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .filter-btn {
+        padding: 6px 14px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+      }
+      .filter-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .item-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: box-shadow 0.2s;
+      }
+      .item-card:hover {
+        box-shadow: var(--shadow);
+      }
+      .item-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+      }
+      .icon-pdf {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+      .icon-video {
+        background: #dbeafe;
+        color: #2563eb;
+      }
+      .icon-link {
+        background: #dcfce7;
+        color: #16a34a;
+      }
+
+      .badge-status {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-weight: 700;
+        width: fit-content;
+      }
+      .badge-pending {
+        background: #ffedd5;
+        color: #c2410c;
+      }
+      .badge-submitted {
+        background: #dcfce7;
+        color: #15803d;
+      }
+
+      .notification-item {
+        display: flex;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .notification-item:last-child {
+        border: none;
+      }
+      .notif-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        flex-shrink: 0;
+      }
+
+      .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: 400px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .chat-header {
+        padding: 15px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        font-weight: 600;
+      }
+      .chat-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .chat-bubble {
+        padding: 10px 14px;
+        border-radius: 12px;
+        max-width: 80%;
+        font-size: 0.9rem;
+      }
+      .chat-bubble.sent {
+        background: var(--primary);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 2px;
+      }
+      .chat-bubble.received {
+        background: var(--bg);
+        align-self: flex-start;
+        border-bottom-left-radius: 2px;
+      }
+      .chat-input-area {
+        padding: 15px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 10px;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+      }
+      .modal {
+        background: var(--surface);
+        width: 90%;
+        max-width: 500px;
+        border-radius: 20px;
+        padding: 30px;
+        position: relative;
+        animation: slideUp 0.3s ease;
+        box-shadow: var(--shadow-lg);
+      }
+
+      /* Empty state styling */
+      .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: var(--text-muted);
+        grid-column: 1 / -1;
+      }
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.3;
+      }
+      .empty-state p {
+        font-size: 0.95rem;
+      }
+
+      /* Subject color dots for timetable */
+      .subject-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 6px;
+        flex-shrink: 0;
+      }
+
+      /* Spinner */
+      .loading-spinner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        gap: 10px;
+        color: var(--text-muted);
+        grid-column: 1 / -1;
+      }
+      .loading-spinner i {
+        font-size: 1.3rem;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        .print-area,
+        .print-area * {
+          visibility: visible;
+        }
+        .print-area {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+        }
+      }
+      /* Resource Detail Modal */
+      .res-detail-modal .modal {
+        max-width: 700px;
+        max-height: 92vh;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        overflow: hidden;
+      }
+      .res-detail-header {
+        padding: 20px 24px 0;
+        flex-shrink: 0;
+      }
+      .res-tabs {
+        display: flex;
+        border-bottom: 2px solid var(--border);
+        padding: 0 24px;
+        flex-shrink: 0;
+      }
+      .res-tab {
+        padding: 12px 18px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.2s;
+      }
+      .res-tab:hover {
+        color: var(--text);
+      }
+      .res-tab.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+      }
+      .res-tab-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px 24px;
+      }
+      .res-panel {
+        display: none;
+      }
+      .res-panel.active {
+        display: block;
+      }
+
+      /* Notes panel */
+      .notes-content {
+        font-size: 0.95rem;
+        line-height: 1.8;
+        white-space: pre-wrap;
+        word-break: break-word;
+        color: var(--text);
+      }
+
+      /* AI Chat */
+      .ai-chat-box {
+        display: flex;
+        flex-direction: column;
+        height: 380px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      .ai-chat-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .ai-bubble {
+        padding: 12px 16px;
+        border-radius: 12px;
+        max-width: 85%;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .ai-bubble.user {
+        background: var(--primary);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 2px;
+      }
+      .ai-bubble.bot {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        align-self: flex-start;
+        border-bottom-left-radius: 2px;
+      }
+      .ai-bubble.bot strong {
+        color: var(--primary);
+      }
+      .ai-input-row {
+        padding: 12px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 8px;
+        background: var(--surface);
+      }
+      .ai-suggestions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 0 15px 10px;
+      }
+      .ai-suggest-btn {
+        padding: 5px 12px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .ai-suggest-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+
+      /* Quiz */
+      .quiz-progress {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .quiz-bar {
+        flex: 1;
+        height: 8px;
+        background: var(--border);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .quiz-bar-fill {
+        height: 100%;
+        background: var(--primary);
+        border-radius: 4px;
+        transition: width 0.4s ease;
+      }
+      .quiz-question-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+      }
+      .quiz-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+      }
+      .quiz-option:hover {
+        border-color: var(--primary);
+        background: var(--primary-light);
+      }
+      .quiz-option.selected {
+        border-color: var(--primary);
+        background: var(--primary-light);
+        font-weight: 600;
+      }
+      .quiz-option.correct {
+        border-color: var(--success);
+        background: #dcfce7;
+      }
+      .quiz-option.wrong {
+        border-color: var(--danger);
+        background: #fee2e2;
+      }
+      .quiz-option-radio {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 0.7rem;
+        color: transparent;
+        transition: all 0.2s;
+      }
+      .quiz-option.correct .quiz-option-radio {
+        background: var(--success);
+        border-color: var(--success);
+        color: white;
+      }
+      .quiz-option.wrong .quiz-option-radio {
+        background: var(--danger);
+        border-color: var(--danger);
+        color: white;
+      }
+      .quiz-explanation {
+        margin-top: 12px;
+        padding: 12px;
+        background: #f0f9ff;
+        border-left: 3px solid var(--primary);
+        border-radius: 0 8px 8px 0;
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: var(--text);
+      }
+      body.dark-mode .quiz-explanation {
+        background: rgba(79, 70, 229, 0.1);
+      }
+      .quiz-result-card {
+        text-align: center;
+        padding: 30px;
+        background: var(--surface);
+        border: 2px solid var(--border);
+        border-radius: 16px;
+      }
+      .quiz-score-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin: 0 auto 15px;
+        font-weight: 800;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ================= AUTH VIEW ================= -->
+    <div id="view-auth" class="auth-wrapper hidden">
+      <div class="auth-container">
+        <div class="auth-header">
+          <div class="app-title">Student Portal</div>
+          <p style="color: var(--secondary)">Nifty Steps College</p>
+        </div>
+        <form id="loginForm" onsubmit="app.handleLogin(event)">
+          <div class="form-group">
+            <label>Admin ID</label>
+            <input
+              type="text"
+              id="loginId"
+              class="form-control"
+              placeholder="e.g. NSC-001"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              id="loginPass"
+              class="form-control"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary w-full">Login</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= DASHBOARD VIEW ================= -->
+    <div id="view-dashboard" class="dashboard-layout hidden">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-brand"><span>NS</span> Portal</div>
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-item active" onclick="app.showSection('home')">
+            <i class="fas fa-th-large"></i> Dashboard
+          </div>
+          <div class="nav-item" onclick="app.showSection('profile')">
+            <i class="fas fa-user-circle"></i> My Profile
+          </div>
+          <div class="nav-item" onclick="app.showSection('results')">
+            <i class="fas fa-chart-line"></i> Results
+          </div>
+          <div class="nav-item" onclick="app.showSection('timetable')">
+            <i class="fas fa-calendar-alt"></i> Timetable
+          </div>
+          <div class="nav-item" onclick="app.showSection('assignments')">
+            <i class="fas fa-tasks"></i> Assignments
+          </div>
+          <div class="nav-item" onclick="app.showSection('elearning')">
+            <i class="fas fa-book-reader"></i> E-Learning
+          </div>
+
+          <div class="nav-section-title">Communication</div>
+          <div class="nav-item" onclick="app.showSection('notifications')">
+            <i class="fas fa-bell"></i> Notifications
+          </div>
+          <div class="nav-item" onclick="app.showSection('announcements')">
+            <i class="fas fa-bullhorn"></i> Announcements
+          </div>
+          <div class="nav-item" onclick="app.showSection('messages')">
+            <i class="fas fa-envelope"></i> Messages
+          </div>
+
+          <div class="nav-section-title">Account</div>
+          <div class="nav-item" onclick="app.showSection('settings')">
+            <i class="fas fa-cog"></i> Settings
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Overlay for mobile -->
+      <div class="overlay" id="overlay" onclick="app.toggleSidebar()"></div>
+
+      <!-- MAIN AREA -->
+      <main class="main-content">
+        <!-- Top Header -->
+        <div class="top-header">
+          <button class="menu-toggle" onclick="app.toggleSidebar()">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="header-user">
+            <img
+              id="header-avatar"
+              src="https://ui-avatars.com/api/?name=Student&background=4f46e5&color=fff"
+              alt="Avatar"
+              class="header-avatar"
+            />
+            <div class="header-info">
+              <div id="u-name">Student Name</div>
+              <div id="u-class">Class</div>
+            </div>
+          </div>
+          <div class="header-actions">
+            <button
+              onclick="app.showSection('notifications')"
+              class="icon-btn"
+              aria-label="Notifications"
+            >
+              <i class="fas fa-bell"></i>
+              <span class="notification-badge" id="notif-badge"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="container">
+          <!-- SECTION: DASHBOARD HOME -->
+          <section id="sec-home">
+            <h1 class="text-2xl font-bold mb-6" id="welcome-msg">
+              Welcome back! 👋
+            </h1>
+
+            <div class="grid-stats">
+              <div class="stat-card">
+                <div class="stat-info">
+                  <h4>Subjects Enrolled</h4>
+                  <h2 id="stat-subjects">--</h2>
+                </div>
+                <div class="stat-icon purple"><i class="fas fa-book"></i></div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-info">
+                  <h4>Average Score</h4>
+                  <h2 id="stat-avg">--</h2>
+                </div>
+                <div class="stat-icon green">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-info">
+                  <h4>Pending Tasks</h4>
+                  <h2 id="stat-pending">--</h2>
+                </div>
+                <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="card">
+                <div class="card-title">
+                  <i class="fas fa-history"></i> Recent Activity
+                </div>
+                <div id="recent-activity">
+                  <p class="text-muted">Loading...</p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title">
+                  <i class="fas fa-bolt"></i> Quick Actions
+                </div>
+                <div class="grid-2" style="gap: 10px">
+                  <button
+                    onclick="app.showSection('assignments')"
+                    class="btn btn-outline"
+                  >
+                    View Assignments
+                  </button>
+                  <button
+                    onclick="app.showSection('results')"
+                    class="btn btn-outline"
+                  >
+                    Check Results
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION: PROFILE -->
+          <section id="sec-profile" class="hidden">
+            <div class="card">
+              <div class="profile-header">
+                <img
+                  id="profile-avatar"
+                  src="https://ui-avatars.com/api/?name=Student&background=4f46e5&color=fff&size=128"
+                  alt="Profile"
+                  class="profile-avatar-large"
+                />
+                <div class="profile-info">
+                  <h2 id="p-name">Student Name</h2>
+                  <p id="p-role">Student</p>
+                  <button
+                    class="btn btn-sm btn-outline mt-2"
+                    onclick="alert('Edit functionality coming soon!')"
+                  >
+                    <i class="fas fa-edit"></i> Edit Profile
+                  </button>
+                </div>
+              </div>
+              <div class="info-grid" id="profile-content">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION: RESULTS -->
+          <section id="sec-results" class="hidden">
+            <div class="card">
+              <div
+                class="flex justify-between items-center"
+                style="flex-wrap: wrap; gap: 15px; margin-bottom: 20px"
+              >
+                <div class="card-title" style="margin-bottom: 0">
+                  <i class="fas fa-chart-line"></i> Exam Results
+                </div>
+                <div class="flex gap-2">
+                  <select
+                    id="resSession"
+                    class="form-control"
+                    style="width: 140px"
+                  >
+                    <option value="2025/2026">2025/2026</option>
+                    <option value="2024/2025">2024/2025</option>
+                  </select>
+                  <select
+                    id="resTerm"
+                    class="form-control"
+                    style="width: 110px"
+                  >
+                    <option value="1st">1st Term</option>
+                    <option value="2nd">2nd Term</option>
+                    <option value="3rd">3rd Term</option>
+                  </select>
+                  <button class="btn btn-primary" onclick="app.loadResults()">
+                    Load
+                  </button>
+                </div>
+              </div>
+
+              <div id="results-container">
+                <p
+                  class="text-center"
+                  style="padding: 40px; color: var(--secondary)"
+                >
+                  Select filters and click Load.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION: TIMETABLE -->
+          <section id="sec-timetable" class="hidden">
+            <div class="card">
+              <div class="flex justify-between items-center mb-4">
+                <div class="card-title" style="margin: 0">
+                  <i class="fas fa-clock"></i> Class Timetable
+                  <span
+                    id="tt-class-badge"
+                    class="badge-status badge-pending"
+                    style="margin-left: 8px; font-size: 0.75rem"
+                  ></span>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="btn btn-sm btn-outline"
+                    onclick="app.loadTimetable()"
+                  >
+                    <i class="fas fa-sync-alt"></i> Refresh
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline"
+                    onclick="window.print()"
+                  >
+                    <i class="fas fa-download"></i> Download
+                  </button>
+                </div>
+              </div>
+              <div id="timetable-container">
+                <div class="loading-spinner">
+                  <i class="fas fa-spinner fa-spin"></i> Loading timetable...
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION: ASSIGNMENTS -->
+          <section id="sec-assignments" class="hidden">
+            <div class="card">
+              <div class="card-title">
+                <i class="fas fa-pen-alt"></i> Assignments
+                <span
+                  id="assign-class-badge"
+                  class="badge-status badge-pending"
+                  style="margin-left: 8px; font-size: 0.75rem"
+                ></span>
+              </div>
+              <div class="filter-group">
+                <button
+                  class="filter-btn active"
+                  onclick="app.filterAssignments('all', this)"
+                >
+                  All
+                </button>
+                <button
+                  class="filter-btn"
+                  onclick="app.filterAssignments('pending', this)"
+                >
+                  Pending
+                </button>
+                <button
+                  class="filter-btn"
+                  onclick="app.filterAssignments('submitted', this)"
+                >
+                  Submitted
+                </button>
+              </div>
+              <div id="assignments-container" class="grid-3">
+                <div class="loading-spinner">
+                  <i class="fas fa-spinner fa-spin"></i> Loading assignments...
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION: E-LEARNING -->
+          <section id="sec-elearning" class="hidden">
+            <div class="card">
+              <div class="card-title">
+                <i class="fas fa-laptop-code"></i> E-Learning Resources
+                <span
+                  id="el-class-badge"
+                  class="badge-status badge-pending"
+                  style="margin-left: 8px; font-size: 0.75rem"
+                ></span>
+              </div>
+
+              <div class="flex gap-2 mb-4 flex-wrap">
+                <input
+                  type="text"
+                  id="resource-search"
+                  class="form-control"
+                  placeholder="Search resources..."
+                  style="max-width: 300px"
+                  onkeyup="app.filterResources()"
+                />
+                <button
+                  class="btn btn-sm btn-outline active"
+                  onclick="app.filterResourcesType('all', this)"
+                >
+                  All
+                </button>
+                <button
+                  class="btn btn-sm btn-outline"
+                  onclick="app.filterResourcesType('Syllabus', this)"
+                >
+                  Syllabus
+                </button>
+                <button
+                  class="btn btn-sm btn-outline"
+                  onclick="app.filterResourcesType('Lesson Note', this)"
+                >
+                  Notes
+                </button>
+                <button
+                  class="btn btn-sm btn-outline"
+                  onclick="app.filterResourcesType('Video', this)"
+                >
+                  Videos
+                </button>
+                <button
+                  class="btn btn-sm btn-outline"
+                  onclick="app.filterResourcesType('Recommended Site', this)"
+                >
+                  Sites
+                </button>
+              </div>
+
+              <div id="elearning-container" class="grid-2">
+                <div class="loading-spinner">
+                  <i class="fas fa-spinner fa-spin"></i> Loading...
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION: NOTIFICATIONS -->
+          <section id="sec-notifications" class="hidden">
+            <div class="card">
+              <div class="card-title">
+                <i class="fas fa-bell"></i> Notifications
+              </div>
+              <div id="notifications-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION: ANNOUNCEMENTS -->
+          <section id="sec-announcements" class="hidden">
+            <div class="card">
+              <div class="card-title">
+                <i class="fas fa-bullhorn"></i> School Announcements
+              </div>
+              <div id="announcements-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION: MESSAGES -->
+          <section id="sec-messages" class="hidden">
+            <div class="card">
+              <div class="card-title">
+                <i class="fas fa-envelope"></i> Messages
+              </div>
+              <div class="chat-container">
+                <div class="chat-header">Admin Support</div>
+                <div class="chat-messages" id="chat-messages">
+                  <div class="chat-bubble received">
+                    Hello! How can we help you today?
+                  </div>
+                </div>
+                <div class="chat-input-area">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Type a message..."
+                    id="chat-input"
+                  />
+                  <button
+                    class="btn btn-primary"
+                    onclick="app.sendMockMessage()"
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION: SETTINGS -->
+          <section id="sec-settings" class="hidden">
+            <div class="card">
+              <div class="card-title"><i class="fas fa-cog"></i> Settings</div>
+
+              <div
+                class="flex justify-between items-center mb-6 p-4 bg-gray-50 rounded-lg"
+                style="background: var(--bg)"
+              >
+                <div>
+                  <h3 class="font-bold">Dark Mode</h3>
+                  <p
+                    class="text-sm"
+                    style="color: var(--text-muted); border-radius: 12px"
+                  >
+                    Toggle dark theme
+                  </p>
+                </div>
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    id="darkModeToggle"
+                    onchange="app.toggleDarkMode()"
+                  />
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Change Password</div>
+                  <button class="btn btn-sm btn-outline mt-2">Update</button>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Session</div>
+                  <div class="info-value">2025/2026</div>
+                </div>
+              </div>
+
+              <button
+                class="btn btn-primary mt-6"
+                style="background: var(--danger)"
+                onclick="app.logout()"
+              >
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </button>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- SUBMISSION MODAL -->
+    <div id="submitModal" class="modal-overlay">
+      <div class="modal">
+        <h3 class="font-bold mb-4" style="color: var(--text)">
+          Submit Assignment Link
+        </h3>
+        <input type="hidden" id="submitAssignId" />
+        <div class="form-group">
+          <label>Paste Assignment Link (Google Drive, Docs, etc)</label>
+          <input
+            type="url"
+            id="submitLink"
+            class="form-control"
+            placeholder="https://..."
+          />
+        </div>
+        <div class="flex gap-2" style="margin-top: 20px">
+          <button class="btn btn-outline w-full" onclick="app.closeModal()">
+            Cancel
+          </button>
+          <button
+            class="btn btn-primary w-full"
+            onclick="app.confirmSubmission()"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- ASSIGNMENT DETAIL MODAL -->
+    <div
+      id="assignDetailModal"
+      class="modal-overlay"
+      onclick="if (event.target === this) app.closeDetailModal();"
+    >
+      <div class="modal" style="max-width: 560px">
+        <div class="flex justify-between items-center mb-4">
+          <h3
+            class="font-bold"
+            style="color: var(--text); font-size: 1.1rem"
+            id="detail-title"
+          >
+            Assignment Title
+          </h3>
+          <button
+            onclick="app.closeDetailModal()"
+            style="
+              background: none;
+              border: none;
+              font-size: 1.3rem;
+              color: var(--text-muted);
+              cursor: pointer;
+              padding: 4px;
+            "
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div id="detail-subject" style="margin-bottom: 12px"></div>
+
+        <div
+          style="
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+          "
+        >
+          <div
+            style="
+              font-size: 0.75rem;
+              text-transform: uppercase;
+              letter-spacing: 0.05em;
+              color: var(--text-muted);
+              font-weight: 600;
+              margin-bottom: 8px;
+            "
+          >
+            <i class="fas fa-align-left" style="margin-right: 4px"></i>
+            Description
+          </div>
+          <div
+            id="detail-desc"
+            style="
+              font-size: 0.95rem;
+              line-height: 1.7;
+              white-space: pre-wrap;
+              word-break: break-word;
+            "
+          ></div>
+        </div>
+
+        <div class="flex gap-4" style="margin-bottom: 20px; flex-wrap: wrap">
+          <div id="detail-due" class="text-sm"></div>
+          <div id="detail-status"></div>
+        </div>
+
+        <div id="detail-actions" class="flex gap-2"></div>
+      </div>
+    </div>
+    <!-- RESOURCE DETAIL MODAL -->
+    <div
+      id="resDetailModal"
+      class="modal-overlay res-detail-modal"
+      onclick="if (event.target === this) app.closeResDetail();"
+    >
+      <div class="modal">
+        <div class="res-detail-header">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3
+                class="font-bold"
+                style="font-size: 1.15rem; color: var(--text)"
+                id="res-detail-title"
+              >
+                Resource Title
+              </h3>
+              <div
+                id="res-detail-meta"
+                class="flex gap-2"
+                style="margin-top: 6px"
+              ></div>
+            </div>
+            <button
+              onclick="app.closeResDetail()"
+              style="
+                background: none;
+                border: none;
+                font-size: 1.3rem;
+                color: var(--text-muted);
+                cursor: pointer;
+                padding: 4px;
+              "
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="res-tabs">
+          <button
+            class="res-tab active"
+            onclick="app.switchResTab('notes', this)"
+          >
+            <i class="fas fa-file-alt" style="margin-right: 6px"></i>Notes
+          </button>
+          <button class="res-tab" onclick="app.switchResTab('ai', this)">
+            <i class="fas fa-robot" style="margin-right: 6px"></i>AI Tutor
+          </button>
+          <button class="res-tab" onclick="app.switchResTab('quiz', this)">
+            <i class="fas fa-question-circle" style="margin-right: 6px"></i>Quiz
+          </button>
+        </div>
+
+        <div class="res-tab-body">
+          <!-- NOTES PANEL -->
+          <div id="res-panel-notes" class="res-panel active">
+            <div id="res-full-content" class="notes-content"></div>
+            <div
+              id="res-open-link"
+              class="flex gap-2"
+              style="margin-top: 16px"
+            ></div>
+          </div>
+
+          <!-- AI TUTOR PANEL -->
+          <div id="res-panel-ai" class="res-panel">
+            <p
+              class="text-sm"
+              style="color: var(--text-muted); margin-bottom: 12px"
+            >
+              <i
+                class="fas fa-lightbulb"
+                style="color: var(--warning); margin-right: 4px"
+              ></i
+              >Ask questions about this resource. The AI tutor will explain
+              concepts and break them down for you.
+            </p>
+            <div class="ai-chat-box">
+              <div class="ai-chat-messages" id="ai-chat-msgs">
+                <div class="ai-bubble bot">
+                  <strong>Welcome!</strong> I'm your AI tutor. Ask me anything
+                  about this topic and I'll explain it in a simple way you can
+                  understand.
+                </div>
+              </div>
+              <div class="ai-input-row">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ai-chat-input"
+                  placeholder="e.g. Can you explain this topic simply?"
+                  onkeydown="if (event.key === 'Enter') app.sendAiChat();"
+                />
+                <button
+                  class="btn btn-primary btn-sm"
+                  onclick="app.sendAiChat()"
+                  id="ai-send-btn"
+                >
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+            <div class="ai-suggestions" id="ai-suggestions"></div>
+          </div>
+
+          <!-- QUIZ PANEL -->
+          <div id="res-panel-quiz" class="res-panel">
+            <div id="quiz-start" style="text-align: center; padding: 30px 0">
+              <i
+                class="fas fa-brain"
+                style="
+                  font-size: 3rem;
+                  color: var(--primary);
+                  opacity: 0.3;
+                  margin-bottom: 15px;
+                "
+              ></i>
+              <p style="color: var(--text-muted); margin-bottom: 16px">
+                Test your understanding with an AI-generated quiz based on this
+                resource.
+              </p>
+              <div class="flex gap-2 justify-center" style="flex-wrap: wrap">
+                <select
+                  id="quiz-count"
+                  class="form-control"
+                  style="width: 100px"
+                >
+                  <option value="3">3 Questions</option>
+                  <option value="5" selected>5 Questions</option>
+                  <option value="10">10 Questions</option>
+                </select>
+                <select
+                  id="quiz-type"
+                  class="form-control"
+                  style="width: 140px"
+                >
+                  <option value="Multiple Choice (MCQ)">Multiple Choice</option>
+                  <option value="True or False">True / False</option>
+                </select>
+                <button class="btn btn-primary" onclick="app.generateQuiz()">
+                  <i class="fas fa-magic"></i> Generate Quiz
+                </button>
+              </div>
+            </div>
+            <div id="quiz-play" class="hidden"></div>
+            <div id="quiz-result" class="hidden"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toggle Switch CSS -->
+    <style>
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 28px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 28px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: var(--primary);
+      }
+      input:checked + .slider:before {
+        transform: translateX(22px);
+      }
+    </style>
+    <script>
+      const URL =
+        "https://script.google.com/macros/s/AKfycbzTt8Fnpua38ZnPkj0NcHPCzxVOXJjuju6Kt6mM929MS8pGL325-5o2SeArNtH3PKgV/exec";
+
+      /* Color palette for timetable subjects to add visual distinction */
+      const SUBJECT_COLORS = {
+        English: "#4f46e5",
+        Mathematics: "#dc2626",
+        "Basic Science": "#16a34a",
+        "Social Studies": "#ea580c",
+        "Civic Education": "#7c3aed",
+        PHE: "#0891b2",
+        "Basic Technology": "#ca8a04",
+        "Creative Arts": "#db2777",
+        Yoruba: "#059669",
+        French: "#2563eb",
+        "Agricultural Science": "#65a30d",
+        "Computer Studies": "#0d9488",
+        "Home Economics": "#e11d48",
+        "CRS/IRS": "#9333ea",
+        "Business Studies": "#d97706",
+        Economics: "#b45309",
+        Biology: "#15803d",
+        "Further Math": "#be123c",
+        "Data Processing": "#0369a1",
+        Chemistry: "#7c2d12",
+        Physics: "#1d4ed8",
+        Geography: "#047857",
+        Literature: "#a21caf",
+        Government: "#c2410c",
+        CRS: "#7e22ce",
+        Accounting: "#0f766e",
+        Commerce: "#b91c1c",
+        CCA: "#e11d48",
+        Marketing: "#d97706",
+        "T/D": "#78350f",
+      };
+
+      function getSubjectColor(subject) {
+        return SUBJECT_COLORS[subject] || "#64748b";
+      }
+
+      const app = {
+        /* Track what data has been loaded to avoid redundant fetches */
+        state: {
+          student: null,
+          results: null,
+          assignments: [],
+          timetableLoaded: false,
+          assignmentsLoaded: false,
+          resourcesLoaded: false,
+          resourcesData: [],
+        },
+
+        init: function () {
+          if (localStorage.getItem("darkMode") === "true") {
+            document.body.classList.add("dark-mode");
+            const toggle = document.getElementById("darkModeToggle");
+            if (toggle) toggle.checked = true;
+          }
+
+          const storedUser = sessionStorage.getItem("studentUser");
+          if (storedUser) {
+            this.state.student = JSON.parse(storedUser);
+            this.showDashboard();
+          } else {
+            document.getElementById("view-auth").classList.remove("hidden");
+          }
+        },
+
+        toggleSidebar: function () {
+          document.getElementById("sidebar").classList.toggle("active");
+          document.getElementById("overlay").classList.toggle("active");
+        },
+
+        handleLogin: async function (e) {
+          e.preventDefault();
+          const id = document.getElementById("loginId").value;
+          const pass = document.getElementById("loginPass").value;
+          const btn = document.querySelector("#loginForm button");
+          btn.disabled = true;
+          btn.innerHTML = "Verifying...";
+
+          try {
+            const res = await fetch(URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "loginStudent",
+                adminId: id,
+                password: pass,
+              }),
+            });
+            const data = await res.json();
+
+            if (data.status === "success") {
+              this.state.student = data.student;
+              sessionStorage.setItem(
+                "studentUser",
+                JSON.stringify(data.student),
+              );
+              this.showDashboard();
+            } else {
+              alert(data.message || "Login failed.");
+              btn.disabled = false;
+              btn.innerHTML = "Login";
+            }
+          } catch (err) {
+            alert("Network Error.");
+            btn.disabled = false;
+            btn.innerHTML = "Login";
+          }
+        },
+
+        showDashboard: function () {
+          document.getElementById("view-auth").classList.add("hidden");
+          document.getElementById("view-dashboard").classList.remove("hidden");
+          this.showSection("home");
+
+          const s = this.state.student;
+          document.getElementById("u-name").textContent = s.name;
+          document.getElementById("u-class").textContent = s.class;
+
+          const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=4f46e5&color=fff`;
+          document.getElementById("header-avatar").src = avatarUrl;
+          document.getElementById("profile-avatar").src = avatarUrl;
+          document.getElementById("p-name").textContent = s.name;
+
+          /* Set class badges on timetable and assignment section headers */
+          document.getElementById("tt-class-badge").textContent = s.class;
+          document.getElementById("assign-class-badge").textContent = s.class;
+          document.getElementById("el-class-badge").textContent = s.class;
+
+          document.getElementById("profile-content").innerHTML = `
+              <div class="info-item"><div class="info-label">Admin No</div><div class="info-value">${s.id}</div></div>
+              <div class="info-item"><div class="info-label">Class</div><div class="info-value">${s.class}</div></div>
+              <div class="info-item"><div class="info-label">Gender</div><div class="info-value">${s.gender || "N/A"}</div></div>
+              ${s.dept ? `<div class="info-item"><div class="info-label">Department</div><div class="info-value">${s.dept}</div></div>` : ""}
+              <div class="info-item"><div class="info-label">Contact</div><div class="info-value">${s.phone || "Not Provided"}</div></div>
+          `;
+
+          this.loadDashboardStats();
+          this.loadNotifications();
+
+          /* Pre-load assignments in background to get accurate pending count */
+          this.loadAssignments(true);
+        },
+
+        showSection: function (name) {
+          document
+            .querySelectorAll("main section")
+            .forEach((s) => s.classList.add("hidden"));
+          document.getElementById(`sec-${name}`).classList.remove("hidden");
+
+          document
+            .querySelectorAll(".nav-item")
+            .forEach((i) => i.classList.remove("active"));
+          const navItems = document.querySelectorAll(".nav-item");
+          const index = [
+            "home",
+            "profile",
+            "results",
+            "timetable",
+            "assignments",
+            "elearning",
+            "notifications",
+            "announcements",
+            "messages",
+            "settings",
+          ].indexOf(name);
+          if (index >= 0 && navItems[index])
+            navItems[index].classList.add("active");
+
+          document.getElementById("sidebar").classList.remove("active");
+          document.getElementById("overlay").classList.remove("active");
+
+          /* ---- Trigger data loading for sections that need it ---- */
+          if (name === "timetable" && !this.state.timetableLoaded) {
+            this.loadTimetable();
+          }
+          if (name === "assignments" && !this.state.assignmentsLoaded) {
+            this.loadAssignments(false);
+          }
+          if (name === "elearning" && !this.state.resourcesLoaded) {
+            this.loadResources();
+          }
+        },
+
+        loadDashboardStats: async function () {
+          document.getElementById("stat-subjects").textContent = "8";
+          document.getElementById("stat-avg").textContent = "--";
+          document.getElementById("stat-pending").textContent = "--";
+
+          document.getElementById("recent-activity").innerHTML = `
+             <div class="notification-item">
+                <div class="notif-icon"><i class="fas fa-file-alt"></i></div>
+                <div>
+                   <div class="font-bold">New Assignment Posted</div>
+                   <div class="text-sm" style="color:var(--text-muted)">Mathematics - 2 hours ago</div>
+                </div>
+             </div>
+             <div class="notification-item">
+                <div class="notif-icon"><i class="fas fa-check-circle"></i></div>
+                <div>
+                   <div class="font-bold">Result Updated</div>
+                   <div class="text-sm" style="color:var(--text-muted)">1st Term 2025 - Yesterday</div>
+                </div>
+             </div>
+           `;
+        },
+
+        openAssignDetail: function (index) {
+          const a = this.state.assignments[index];
+          if (!a) return;
+
+          document.getElementById("detail-title").textContent =
+            a.title || "Assignment";
+
+          if (a.subject) {
+            document.getElementById("detail-subject").innerHTML =
+              `<span class="text-sm" style="color:var(--primary); font-weight:600;"><i class="fas fa-book" style="margin-right:4px;"></i>${a.subject}</span>`;
+          } else {
+            document.getElementById("detail-subject").innerHTML = "";
+          }
+
+          /* Show the full description — preserves line breaks and formatting */
+          document.getElementById("detail-desc").textContent =
+            a.desc || "No description provided.";
+
+          /* Due date */
+          let dueDisplay = a.due || "No due date";
+          let isOverdue = false;
+          try {
+            const d = new Date(a.due);
+            if (!isNaN(d.getTime())) {
+              dueDisplay = d.toLocaleDateString("en-GB", {
+                weekday: "short",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              });
+            }
+            if (!isNaN(d.getTime()) && d < new Date()) isOverdue = true;
+          } catch (e) {}
+
+          document.getElementById("detail-due").innerHTML = `
+            <span style="color:${isOverdue ? "var(--danger)" : "var(--warning)"}; font-weight:600;">
+              <i class="fas fa-${isOverdue ? "exclamation-circle" : "clock"}"></i>
+              ${isOverdue ? "Overdue — " : ""}Due: ${dueDisplay}
+            </span>`;
+
+          /* Status badge */
+          const isSubmitted =
+            a.submitted === true ||
+            a.submitted === "true" ||
+            a.status === "submitted";
+          const statusClass = isSubmitted ? "badge-submitted" : "badge-pending";
+          const statusText = isSubmitted ? "Submitted" : "Pending";
+          document.getElementById("detail-status").innerHTML =
+            `<span class="badge-status ${statusClass}" style="font-size:0.8rem; padding:4px 12px;">${statusText}</span>`;
+
+          /* Action buttons */
+          let actionsHTML = "";
+          if (a.link) {
+            actionsHTML += `<a href="${a.link}" target="_blank" class="btn btn-outline" style="flex:1;"><i class="fas fa-external-link-alt"></i> Open Link</a>`;
+          }
+          if (!isSubmitted) {
+            actionsHTML += `<button class="btn btn-primary" style="flex:1;" onclick="app.closeDetailModal(); app.openSubmitModal('${a.id || a.title}')"><i class="fas fa-upload"></i> Submit</button>`;
+          }
+          document.getElementById("detail-actions").innerHTML = actionsHTML;
+
+          document.getElementById("assignDetailModal").style.display = "flex";
+        },
+
+        closeDetailModal: function () {
+          document.getElementById("assignDetailModal").style.display = "none";
+        },
+
+        loadNotifications: function () {
+          /* Try fetching real notifications from the sheet.
+             If the endpoint doesn't exist yet, fall back to
+             building notifications from assignment data. */
+          this.loadNotificationsFromSheet();
+        },
+
+        loadNotificationsFromSheet: async function () {
+          const notifsContainer = document.getElementById("notifications-list");
+          notifsContainer.innerHTML =
+            '<div class="loading-spinner" style="grid-column:unset;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+
+          try {
+            const res = await fetch(URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "getNotifications",
+                className: this.state.student.class,
+              }),
+            });
+
+            const contentType = res.headers.get("content-type") || "";
+            if (!res.ok || !contentType.includes("application/json")) {
+              /* Endpoint probably doesn't exist yet — fall back to derived notifications */
+              this.renderDerivedNotifications();
+              return;
+            }
+
+            const data = await res.json();
+
+            if (
+              data.status === "success" &&
+              data.notifications &&
+              data.notifications.length > 0
+            ) {
+              this.renderSheetNotifications(data.notifications);
+            } else {
+              /* No notifications from sheet, fall back */
+              this.renderDerivedNotifications();
+            }
+          } catch (err) {
+            /* Network error or parse error — fall back */
+            this.renderDerivedNotifications();
+          }
+        },
+
+        /* Notifications returned from the Google Sheet.
+           Expected format: array of objects with { title, message, time, type }
+           type can be: "assignment", "result", "general", "timetable", "announcement" */
+        renderSheetNotifications: function (notifications) {
+          const typeIcons = {
+            assignment: "fas fa-file-alt",
+            result: "fas fa-chart-bar",
+            general: "fas fa-info-circle",
+            timetable: "fas fa-calendar-alt",
+            announcement: "fas fa-bullhorn",
+          };
+          const typeColors = {
+            assignment: { bg: "#ffedd5", color: "#c2410c" },
+            result: { bg: "#dcfce7", color: "#15803d" },
+            general: { bg: "var(--primary-light)", color: "var(--primary)" },
+            timetable: { bg: "#dbeafe", color: "#2563eb" },
+            announcement: { bg: "#fef3c7", color: "#92400e" },
+          };
+
+          document.getElementById("notifications-list").innerHTML =
+            notifications
+              .map((n) => {
+                const type = n.type || "general";
+                const icon = typeIcons[type] || typeIcons.general;
+                const colors = typeColors[type] || typeColors.general;
+                return `
+              <div class="notification-item">
+                <div class="notif-icon" style="background:${colors.bg}; color:${colors.color};">
+                  <i class="${icon}"></i>
+                </div>
+                <div style="flex:1;">
+                   <div class="font-bold">${n.title}</div>
+                   <div class="text-sm" style="color:var(--text-muted)">${n.message || n.desc || ""}</div>
+                   <small style="color:var(--secondary);">${n.time || ""}</small>
+                </div>
+              </div>`;
+              })
+              .join("");
+
+          document.getElementById("notif-badge").style.display = "block";
+        },
+
+        /* Fallback: build notifications from the assignments we already fetched,
+           plus static announcements. This runs when the getNotifications
+           endpoint doesn't exist on the backend yet. */
+        renderDerivedNotifications: function () {
+          let notifItems = [];
+
+          /* Derive from loaded assignments */
+          if (this.state.assignments && this.state.assignments.length > 0) {
+            this.state.assignments.slice(0, 5).forEach((a) => {
+              const isSubmitted =
+                a.submitted === true ||
+                a.submitted === "true" ||
+                a.status === "submitted";
+
+              let dueDisplay = a.due || "";
+              try {
+                const d = new Date(a.due);
+                if (!isNaN(d.getTime())) {
+                  dueDisplay = d.toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                  });
+                }
+              } catch (e) {}
+
+              notifItems.push({
+                title: a.subject ? `${a.subject} — ${a.title}` : a.title,
+                message: isSubmitted
+                  ? `You submitted this assignment.`
+                  : `Due: ${dueDisplay}. ${a.desc || ""}`,
+                time: a.due || "Recently",
+                type: "assignment",
+              });
+            });
+          }
+
+          /* Add a static general notification if we have none yet */
+          if (notifItems.length === 0) {
+            notifItems.push({
+              title: "Welcome to the Student Portal",
+              message:
+                "Notifications will appear here when your teachers post new assignments, update results, or make announcements.",
+              time: "Now",
+              type: "general",
+            });
+          }
+
+          /* Always add announcements at the bottom */
+          const allItems = [
+            ...notifItems,
+            {
+              title: "General Assembly",
+              message:
+                "All students are required to attend the assembly on Monday morning by 8:00 AM. Proper uniforms are mandatory.",
+              time: "School-wide",
+              type: "announcement",
+            },
+          ];
+
+          this.renderSheetNotifications(allItems);
+
+          /* Also populate the announcements section */
+          document.getElementById("announcements-list").innerHTML = `
+            <div class="notification-item">
+              <div class="notif-icon" style="background:#dbeafe; color:#2563eb">
+                <i class="fas fa-bullhorn"></i>
+              </div>
+              <div>
+                <div class="font-bold">General Assembly</div>
+                <div class="text-sm" style="color:var(--text-muted)">All students are required to attend the assembly on Monday morning by 8:00 AM. Proper uniforms are mandatory.</div>
+              </div>
+            </div>`;
+        },
+
+        /* ================================================================
+           RESULTS
+        ================================================================ */
+        loadResults: async function () {
+          const container = document.getElementById("results-container");
+          container.innerHTML =
+            '<p class="text-center" style="padding:40px;"><i class="fas fa-spinner fa-spin"></i> Loading...</p>';
+          const session = document.getElementById("resSession").value;
+          const term = document.getElementById("resTerm").value;
+
+          try {
+            const res = await fetch(URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "getFullResult",
+                adminNo: this.state.student.id,
+                session: session,
+                term: term,
+              }),
+            });
+            const data = await res.json();
+
+            if (data.status === "success" && data.scores) {
+              this.renderResults(data.scores, data.student);
+            } else {
+              container.innerHTML =
+                '<p class="text-center" style="padding:40px; color:var(--danger);">No results found for this period.</p>';
+            }
+          } catch (err) {
+            container.innerHTML =
+              '<p class="text-center" style="padding:40px; color:var(--danger);">Network error. Please try again.</p>';
+          }
+        },
+
+        /* ================================================================
+           TIMETABLE  — fetched by student.class from the database
+        ================================================================ */
+        loadTimetable: async function () {
+          const container = document.getElementById("timetable-container");
+          container.innerHTML =
+            '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading timetable for ' +
+            this.state.student.class +
+            "...</div>";
+
+          try {
+            const res = await fetch(URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "getTimetable",
+                className: this.state.student.class,
+              }),
+            });
+
+            const contentType = res.headers.get("content-type") || "";
+            if (!res.ok || !contentType.includes("application/json")) {
+              const errorText = await res.text();
+              console.error("Timetable fetch failed:", errorText);
+              container.innerHTML = `
+                <div class="empty-state">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <p>Server error. Check console (F12) for details.</p>
+                </div>`;
+              return;
+            }
+
+            const data = await res.json();
+            console.log("Timetable raw response:", data);
+
+            /* ==============================================
+               HANDLE TEACHER FORMAT: { Mon: [...], Tue: [...] }
+               The saveTimetable GAS function stores JSON arrays
+               that get parsed back by getTimetable into objects
+               with day keys and string arrays as values.
+               ============================================== */
+            if (
+              data.status === "success" &&
+              data.schedule &&
+              typeof data.schedule === "object" &&
+              !Array.isArray(data.schedule)
+            ) {
+              const dayMap = {
+                Mon: "Monday",
+                Tue: "Tuesday",
+                Wed: "Wednesday",
+                Thu: "Thursday",
+                Fri: "Friday",
+              };
+              const schedule = [];
+
+              for (const [dayKey, dayFull] of Object.entries(dayMap)) {
+                const items = data.schedule[dayKey];
+                if (Array.isArray(items)) {
+                  items.forEach((itemStr) => {
+                    const parsed = this.parseTimetableLine(
+                      String(itemStr).trim(),
+                    );
+                    if (parsed) {
+                      parsed.day = dayFull;
+                      schedule.push(parsed);
+                    }
+                  });
+                }
+              }
+
+              console.log("Parsed from teacher format:", schedule);
+
+              if (schedule.length > 0) {
+                this.state.timetableLoaded = true;
+                this.renderTimetable(schedule);
+              } else {
+                this.state.timetableLoaded = false;
+                container.innerHTML = `
+                  <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <p>The timetable row for <strong>${this.state.student.class}</strong> appears to be empty.</p>
+                  </div>`;
+              }
+              return;
+            }
+
+            /* ==============================================
+               FALLBACK: raw 2D array from sheet.getValues()
+               ============================================== */
+            let raw =
+              data.schedule ||
+              data.data ||
+              data.timetable ||
+              data.results ||
+              [];
+
+            if (Array.isArray(raw) && raw.length > 0 && Array.isArray(raw[0])) {
+              const headers = raw[0].map((h) =>
+                (h || "").toString().trim().toLowerCase(),
+              );
+              const className = this.state.student.class.toLowerCase();
+              const dayMap = {
+                mon: "Monday",
+                tue: "Tuesday",
+                wed: "Wednesday",
+                thu: "Thursday",
+                fri: "Friday",
+              };
+
+              let classRow = null;
+              for (let i = 1; i < raw.length; i++) {
+                const rowClass = (raw[i][0] || "")
+                  .toString()
+                  .trim()
+                  .toLowerCase();
+                if (rowClass === className) {
+                  classRow = raw[i];
+                  break;
+                }
+              }
+
+              if (!classRow) {
+                this.state.timetableLoaded = false;
+                container.innerHTML = `
+                  <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <p>No timetable row found for <strong>${this.state.student.class}</strong>.</p>
+                    <p class="text-sm" style="margin-top:8px; opacity:0.7;">Check that the Class column matches exactly: "${this.state.student.class}".</p>
+                  </div>`;
+                return;
+              }
+
+              const schedule = [];
+              headers.forEach((header, colIdx) => {
+                if (colIdx === 0) return;
+                const fullDay =
+                  dayMap[header] ||
+                  header.charAt(0).toUpperCase() + header.slice(1);
+                let cellContent = (classRow[colIdx] || "").toString().trim();
+                if (!cellContent) return;
+
+                let items = [];
+                if (cellContent.startsWith("[")) {
+                  try {
+                    items = JSON.parse(cellContent);
+                  } catch (e) {
+                    items = [];
+                  }
+                } else {
+                  items = cellContent.split("\n").filter((l) => l.trim());
+                }
+
+                items.forEach((itemStr) => {
+                  const parsed = this.parseTimetableLine(
+                    itemStr.toString().trim(),
+                  );
+                  if (parsed) {
+                    parsed.day = fullDay;
+                    schedule.push(parsed);
+                  }
+                });
+              });
+
+              if (schedule.length > 0) {
+                this.state.timetableLoaded = true;
+                this.renderTimetable(schedule);
+              } else {
+                this.state.timetableLoaded = false;
+                container.innerHTML = `
+                  <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <p>The timetable row for <strong>${this.state.student.class}</strong> is empty.</p>
+                  </div>`;
+              }
+            } else {
+              let arr = Array.isArray(raw) ? raw : [];
+              if (arr.length > 0 && typeof arr[0] === "object") {
+                arr = arr.filter(
+                  (r) =>
+                    (r.class || r.Class || "").toString().trim() ===
+                    this.state.student.class,
+                );
+              }
+              if (arr.length > 0) {
+                this.state.timetableLoaded = true;
+                this.renderTimetable(arr);
+              } else {
+                this.state.timetableLoaded = false;
+                container.innerHTML = `
+                  <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <p>No timetable found for <strong>${this.state.student.class}</strong>.</p>
+                  </div>`;
+              }
+            }
+          } catch (err) {
+            console.error("Timetable error:", err);
+            container.innerHTML = `
+              <div class="empty-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Error: ${err.message}</p>
+              </div>`;
+          }
+        },
+
+        /* Parse formats from your sheet cells:
+           "maths (8am)"       → subject: "Maths", time: "8:00 AM"
+           "english (9am)"     → subject: "English", time: "9:00 AM"
+           "break"             → subject: "Break",  time: ""
+           "home econs (11am)" → subject: "Home Econs", time: "11:00 AM" */
+        parseTimetableLine: function (line) {
+          line = line.trim();
+          if (!line) return null;
+
+          /* Handle "break" or similar non-subject entries */
+          const breakWords = [
+            "break",
+            "lunch",
+            "recess",
+            "assembly",
+            "devotion",
+          ];
+          if (breakWords.includes(line.toLowerCase())) {
+            return {
+              time: "",
+              subject:
+                line.charAt(0).toUpperCase() + line.slice(1).toLowerCase(),
+              isBreak: true,
+            };
+          }
+
+          /* Match "subject (time)" — e.g. "maths (8am)", "home econs (11am)" */
+          const match = line.match(
+            /^(.+?)\s*\(\s*(\d{1,2})\s*(am|pm|AM|PM)\s*\)$/,
+          );
+          if (match) {
+            let subject = match[1].trim();
+            /* Capitalize first letter of each word */
+            subject = subject.replace(/\b\w/g, (c) => c.toUpperCase());
+            let hour = parseInt(match[2]);
+            const ampm = match[3].toLowerCase();
+            /* Convert 12-hour to clean display */
+            if (ampm === "pm" && hour !== 12) hour += 12;
+            if (ampm === "am" && hour === 12) hour = 0;
+            const time =
+              hour.toString().padStart(2, "0") + ":00 " + ampm.toUpperCase();
+            return { time: time, subject: subject, isBreak: false };
+          }
+
+          /* No time pattern found — treat as plain subject */
+          return {
+            time: "",
+            subject: line.replace(/\b\w/g, (c) => c.toUpperCase()),
+            isBreak: false,
+          };
+        },
+
+        renderTimetable: function (schedule) {
+          const container = document.getElementById("timetable-container");
+          const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+          const today = new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+          });
+          const now = new Date();
+          const currentHour = now.getHours();
+
+          let html = '<div class="timetable-grid">';
+
+          days.forEach((day) => {
+            const slots = schedule.filter((s) => s.day === day);
+            const isToday = day === today;
+
+            html += `<div class="tt-day">
+                <div class="tt-day-header ${isToday ? "today" : ""}">${day}${isToday ? " <small>(Today)</small>" : ""}</div>`;
+
+            if (slots.length === 0) {
+              html += `<div class="tt-slot" style="color:var(--text-muted); text-align:center; padding:20px;">No classes</div>`;
+            } else {
+              slots.forEach((s) => {
+                if (s.isBreak) {
+                  /* Style break/lunch/assembly differently */
+                  html += `
+                    <div class="tt-slot" style="text-align:center; color:var(--text-muted); font-style:italic; background:var(--bg); font-size:0.8rem; padding:8px 10px;">
+                      <i class="fas fa-coffee" style="margin-right:4px; opacity:0.5;"></i>${s.subject}
+                    </div>`;
+                  return;
+                }
+
+                const color = getSubjectColor(s.subject);
+                let isActiveClass = "";
+
+                /* Highlight if this is the current hour today */
+                if (isToday && s.time) {
+                  const hourMatch = s.time.match(/(\d{1,2}):/);
+                  if (hourMatch) {
+                    const slotHour = parseInt(hourMatch[1]);
+                    if (slotHour === currentHour) {
+                      isActiveClass = "active-period";
+                    }
+                  }
+                }
+
+                html += `
+                  <div class="tt-slot ${isActiveClass}">
+                    <strong style="display:flex; align-items:center;">
+                      <span class="subject-dot" style="background:${color};"></span>
+                      ${s.subject}
+                    </strong>
+                    ${s.time ? `<div style="color:var(--text-muted); font-size:0.8rem; margin-top:3px;"><i class="fas fa-clock" style="font-size:0.65rem; margin-right:4px;"></i>${s.time}</div>` : ""}
+                    ${isActiveClass ? '<div style="color:var(--primary); font-size:0.72rem; font-weight:700; margin-top:4px;"><i class="fas fa-circle" style="font-size:0.45rem; vertical-align:middle; margin-right:4px;"></i>Ongoing</div>' : ""}
+                  </div>`;
+              });
+            }
+
+            html += `</div>`;
+          });
+
+          html += "</div>";
+          container.innerHTML = html;
+        },
+
+        /* ================================================================
+           ASSIGNMENTS — fetched by student.class from the database
+        ================================================================ */
+        loadAssignments: async function (silent) {
+          const container = document.getElementById("assignments-container");
+
+          if (!silent) {
+            container.innerHTML =
+              '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading assignments for ' +
+              this.state.student.class +
+              "...</div>";
+          }
+
+          try {
+            const res = await fetch(URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "getAssignments",
+                className: this.state.student.class,
+              }),
+            });
+            const data = await res.json();
+            console.log("Assignments raw response:", data);
+
+            let assignments =
+              data.assignments || data.data || data.results || [];
+
+            /* ==============================================
+               If backend returns a 2D array from sheet.getValues()
+               ============================================== */
+            if (
+              Array.isArray(assignments) &&
+              assignments.length > 0 &&
+              Array.isArray(assignments[0])
+            ) {
+              const headers = assignments[0].map((h) =>
+                (h || "").toString().trim().toLowerCase(),
+              );
+              const className = this.state.student.class.toLowerCase();
+
+              const titleIdx = headers.findIndex(
+                (h) =>
+                  h.includes("title") ||
+                  h.includes("name") ||
+                  h.includes("assignment") ||
+                  h.includes("subject"),
+              );
+              const subjectIdx = headers.findIndex((h) =>
+                h.includes("subject"),
+              );
+              const classIdx = headers.findIndex((h) => h.includes("class"));
+              const dueIdx = headers.findIndex(
+                (h) =>
+                  h.includes("due") ||
+                  h.includes("date") ||
+                  h.includes("deadline"),
+              );
+              const linkIdx = headers.findIndex(
+                (h) => h.includes("link") || h.includes("url"),
+              );
+              const statusIdx = headers.findIndex(
+                (h) => h.includes("status") || h.includes("submitted"),
+              );
+              const descHeaderIdx = headers.findIndex(
+                (h) =>
+                  h.includes("desc") ||
+                  h.includes("detail") ||
+                  h.includes("note") ||
+                  h.includes("instruction") ||
+                  h.includes("body"),
+              );
+              const descIdx = descHeaderIdx !== -1 ? descHeaderIdx : 4;
+
+              const objects = [];
+              assignments.slice(1).forEach((row) => {
+                if (classIdx >= 0) {
+                  const rowClass = (row[classIdx] || "")
+                    .toString()
+                    .trim()
+                    .toLowerCase();
+                  if (rowClass !== className) return;
+                }
+
+                const obj = {
+                  id: row[0] || "",
+                  title:
+                    titleIdx >= 0
+                      ? (row[titleIdx] || "").toString().trim()
+                      : (row[0] || "").toString().trim(),
+                  subject:
+                    subjectIdx >= 0
+                      ? (row[subjectIdx] || "").toString().trim()
+                      : "",
+                  desc:
+                    descIdx >= 0 ? (row[descIdx] || "").toString().trim() : "",
+                  due: dueIdx >= 0 ? (row[dueIdx] || "").toString().trim() : "",
+                  link:
+                    linkIdx >= 0 ? (row[linkIdx] || "").toString().trim() : "",
+                  submitted:
+                    statusIdx >= 0
+                      ? (row[statusIdx] || "").toString().trim()
+                      : "",
+                };
+
+                if (obj.title) objects.push(obj);
+              });
+
+              assignments = objects;
+            }
+
+            /* ==============================================
+               NORMALIZE: backend uses different field names.
+               getAssignments GAS returns:
+                 description (not desc)
+                 dueDate (not due)
+                 class (not className)
+               Map them all so the rest of the code only uses
+               desc, due, subject.
+               ============================================== */
+            assignments = assignments.map((a) => ({
+              id: a.id || "",
+              title: a.title || "",
+              subject: a.subject || "",
+              desc: a.desc || a.description || "",
+              due: a.due || a.dueDate || "",
+              link: a.link || a.url || "",
+              submitted: a.submitted || a.status || "",
+            }));
+
+            console.log("Normalized assignments:", assignments);
+
+            if (assignments.length > 0) {
+              this.state.assignmentsLoaded = true;
+              this.state.assignments = assignments;
+              this.renderAssignments(assignments);
+
+              const pendingCount = assignments.filter(
+                (a) =>
+                  !(
+                    a.submitted === true ||
+                    a.submitted === "true" ||
+                    a.status === "submitted"
+                  ),
+              ).length;
+              document.getElementById("stat-pending").textContent =
+                pendingCount;
+            } else {
+              this.state.assignmentsLoaded = true;
+              if (!silent) {
+                container.innerHTML = `
+                  <div class="empty-state">
+                    <i class="fas fa-clipboard-check"></i>
+                    <p>No assignments posted for <strong>${this.state.student.class}</strong> yet.</p>
+                  </div>`;
+              }
+              document.getElementById("stat-pending").textContent = "0";
+            }
+          } catch (err) {
+            this.state.assignmentsLoaded = false;
+            if (!silent) {
+              container.innerHTML = `
+                <div class="empty-state">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <p>Failed to load assignments: ${err.message}</p>
+                </div>`;
+            }
+          }
+        },
+
+        renderAssignments: function (data) {
+          const container = document.getElementById("assignments-container");
+
+          container.innerHTML = data
+            .map((a, index) => {
+              const isSubmitted =
+                a.submitted === true ||
+                a.submitted === "true" ||
+                a.status === "submitted";
+
+              const statusClass = isSubmitted
+                ? "badge-submitted"
+                : "badge-pending";
+              const statusText = isSubmitted ? "Submitted" : "Pending";
+
+              let dueDisplay = a.due || "No due date";
+              try {
+                const d = new Date(a.due);
+                if (!isNaN(d.getTime())) {
+                  dueDisplay = d.toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  });
+                }
+              } catch (e) {}
+
+              let isOverdue = false;
+              try {
+                const dueDate = new Date(a.due);
+                if (
+                  !isNaN(dueDate.getTime()) &&
+                  !isSubmitted &&
+                  dueDate < new Date()
+                ) {
+                  isOverdue = true;
+                }
+              } catch (e) {}
+
+              /* Show a short preview of the description */
+              const shortDesc =
+                (a.desc || "").length > 80
+                  ? (a.desc || "").substring(0, 80) + "..."
+                  : a.desc || "No description provided";
+
+              return `
+              <div class="item-card" data-status="${statusText.toLowerCase()}" 
+                   style="cursor:pointer;" 
+                   onclick="app.openAssignDetail(${index})"
+                   title="Click to view full details">
+                <div class="flex justify-between items-start">
+                   <h3 class="font-bold">${a.title}</h3>
+                   <span class="badge-status ${statusClass}">${statusText}</span>
+                </div>
+                ${a.subject ? `<div class="text-sm" style="color:var(--primary); font-weight:600;"><i class="fas fa-book" style="margin-right:4px;"></i>${a.subject}</div>` : ""}
+                <p class="text-sm" style="color:var(--text-muted)">${shortDesc}</p>
+                <div class="text-sm" style="color: ${isOverdue ? "var(--danger)" : "var(--warning)"}; font-weight: ${isOverdue ? "700" : "400"};">
+                   <i class="fas fa-${isOverdue ? "exclamation-circle" : "clock"}"></i> ${isOverdue ? "Overdue — " : ""}Due: ${dueDisplay}
+                </div>
+                <div class="text-sm" style="color:var(--text-muted); opacity:0.6; margin-top:4px;">
+                   <i class="fas fa-hand-pointer" style="margin-right:4px;"></i>Click to view details
+                </div>
+              </div>`;
+            })
+            .join("");
+        },
+
+        filterAssignments: function (type, btn) {
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const items = document.querySelectorAll(
+            "#assignments-container .item-card",
+          );
+          items.forEach((item) => {
+            if (type === "all") item.style.display = "";
+            else {
+              item.style.display = item.dataset.status === type ? "" : "none";
+            }
+          });
+        },
+
+        /* ================================================================
+           E-LEARNING RESOURCES
+        ================================================================ */
+        loadResources: async function () {
+          const container = document.getElementById("elearning-container");
+          container.innerHTML =
+            '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading resources for ' +
+            this.state.student.class +
+            "...</div>";
+
+          try {
+            const res = await fetch(URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "getResources",
+                className: this.state.student.class,
+              }),
+            });
+            const data = await res.json();
+            console.log("Resources raw response:", data);
+
+            if (
+              data.status === "success" &&
+              data.resources &&
+              data.resources.length > 0
+            ) {
+              this.state.resourcesLoaded = true;
+              this.state.resourcesData = data.resources; // <--- ADD THIS LINE
+              this.renderResources(data.resources);
+            } else {
+              this.state.resourcesLoaded = true;
+              this.state.resourcesData = []; // <--- ADD THIS LINE
+              container.innerHTML =
+                '<div class="empty-state"><i class="fas fa-book-open"></i><p>No resources have been uploaded for <strong>' +
+                this.state.student.class +
+                '</strong> yet.</p><p class="text-sm" style="margin-top:8px; opacity:0.7;">Your teachers will post syllabi, lesson notes, and helpful links here.</p></div>';
+            }
+          } catch (err) {
+            this.state.resourcesLoaded = false;
+            container.innerHTML =
+              '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load resources.</p></div>';
+          }
+        },
+
+        renderResources: function (data) {
+          const container = document.getElementById("elearning-container");
+
+          const typeConfig = {
+            Syllabus: {
+              icon: "fa-file-alt",
+              iconClass: "icon-syllabus",
+              bg: "#f3e8ff",
+              color: "#7c3aed",
+              badgeBg: "#ede9fe",
+              badgeColor: "#6d28d9",
+            },
+            "Lesson Note": {
+              icon: "fa-sticky-note",
+              iconClass: "icon-note",
+              bg: "#fffbeb",
+              color: "#d97706",
+              badgeBg: "#fef3c7",
+              badgeColor: "#92400e",
+            },
+            Video: {
+              icon: "fa-play-circle",
+              iconClass: "icon-video",
+              bg: "#fef2f2",
+              color: "#dc2626",
+              badgeBg: "#fee2e2",
+              badgeColor: "#b91c1c",
+            },
+            "Recommended Site": {
+              icon: "fa-globe",
+              iconClass: "icon-link",
+              bg: "#ecfdf5",
+              color: "#059669",
+              badgeBg: "#d1fae5",
+              badgeColor: "#047857",
+            },
+          };
+
+          container.innerHTML = data
+            .map((r, index) => {
+              const cfg = typeConfig[r.type] || typeConfig["Lesson Note"];
+              const hasLink = r.url && r.url.trim();
+              const descPreview = (r.description || "")
+                .replace(/<[^>]*>/g, "")
+                .trim();
+              const shortDesc =
+                descPreview.length > 100
+                  ? descPreview.substring(0, 100) + "..."
+                  : descPreview;
+
+              return `
+              <div class="item-card" style="cursor:pointer;" onclick="app.openResourceDetail(${index})" title="Click to open">
+                <div class="flex justify-between items-start">
+                   <div class="flex items-center gap-3">
+                      <div class="item-icon ${cfg.iconClass}"><i class="fas ${cfg.icon}"></i></div>
+                      <div>
+                         <div class="font-bold" style="font-size:0.95rem;">${r.title}</div>
+                         ${r.subject ? `<div class="text-sm" style="color:var(--primary); font-weight:600; margin-top:2px;">${r.subject}</div>` : ""}
+                      </div>
+                   </div>
+                   <span class="badge-status" style="background:${cfg.badgeBg}; color:${cfg.badgeColor}; font-size:0.7rem;">${r.type}</span>
+                </div>
+                ${shortDesc ? `<p class="text-sm" style="color:var(--text-muted); margin-top:4px; line-height:1.5;">${shortDesc}</p>` : ""}
+                <div class="text-sm" style="color:var(--text-muted); opacity:0.6; margin-top:4px;">
+                   <i class="fas fa-hand-pointer" style="margin-right:4px;"></i>Click to view
+                   ${hasLink ? ' &bull; <i class="fas fa-external-link-alt" style="font-size:0.7rem;"></i> Has link' : ""}
+                </div>
+              </div>`;
+            })
+            .join("");
+        },
+
+        filterResources: function () {
+          const term = document
+            .getElementById("resource-search")
+            .value.toLowerCase();
+          const items = document.querySelectorAll(
+            "#elearning-container .item-card",
+          );
+          items.forEach((item) => {
+            const title = item
+              .querySelector(".font-bold")
+              .innerText.toLowerCase();
+            item.style.display = title.includes(term) ? "" : "none";
+          });
+        },
+
+        filterResourcesType: function (type, btn) {
+          document
+            .querySelectorAll("#sec-elearning .btn-outline")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const items = document.querySelectorAll(
+            "#elearning-container .item-card",
+          );
+          items.forEach((item) => {
+            if (type === "all") item.style.display = "";
+            else item.style.display = item.dataset.type === type ? "" : "none";
+          });
+        },
+
+        /* ================================================================
+           RESOURCE DETAIL MODAL
+        ================================================================ */
+        openResourceDetail: function (index) {
+          const r = this.state.resourcesData[index];
+          if (!r) return;
+          this.state.currentResource = r;
+
+          document.getElementById("res-detail-title").textContent =
+            r.title || "Resource";
+
+          const typeConfig = {
+            Syllabus: { bg: "#ede9fe", color: "#6d28d9" },
+            "Lesson Note": { bg: "#fef3c7", color: "#92400e" },
+            Video: { bg: "#fee2e2", color: "#b91c1c" },
+            "Recommended Site": { bg: "#d1fae5", color: "#047857" },
+          };
+          const cfg = typeConfig[r.type] || typeConfig["Lesson Note"];
+
+          let metaHTML = `<span class="badge-status" style="background:${cfg.bg}; color:${cfg.color};">${r.type}</span>`;
+          if (r.subject)
+            metaHTML += `<span class="text-sm" style="color:var(--primary); font-weight:600;"><i class="fas fa-book" style="margin-right:4px;"></i>${r.subject}</span>`;
+          if (r.author)
+            metaHTML += `<span class="text-sm" style="color:var(--text-muted);">by ${r.author}</span>`;
+          document.getElementById("res-detail-meta").innerHTML = metaHTML;
+
+          /* Notes panel */
+          const content = r.description || "No content provided.";
+          document.getElementById("res-full-content").textContent = content;
+
+          let linkHTML = "";
+          if (r.url && r.url.trim()) {
+            linkHTML = `<a href="${r.url}" target="_blank" class="btn btn-primary" style="flex:1;"><i class="fas fa-external-link-alt"></i> Open Link</a>`;
+          }
+          document.getElementById("res-open-link").innerHTML = linkHTML;
+
+          /* Reset AI chat */
+          document.getElementById("ai-chat-msgs").innerHTML =
+            "<div class=\"ai-bubble bot\"><strong>Welcome!</strong> I'm your AI tutor. Ask me anything about this topic and I'll explain it simply.</div>";
+
+          /* Generate AI suggestions based on resource type */
+          const suggestions =
+            r.type === "Syllabus"
+              ? [
+                  "Break down the topics for me",
+                  "What should I focus on most?",
+                  "Explain the hardest topic",
+                ]
+              : r.type === "Video"
+                ? [
+                    "Summarize the key points",
+                    "What are the main concepts?",
+                    "Explain any part I didn't understand",
+                  ]
+                : [
+                    "Explain this in simple terms",
+                    "Give me examples",
+                    "What are the key points to remember?",
+                  ];
+          document.getElementById("ai-suggestions").innerHTML = suggestions
+            .map(
+              (s) =>
+                `<button class="ai-suggest-btn" onclick="app.askAiSuggestion('${s.replace(/'/g, "\\'")}')">${s}</button>`,
+            )
+            .join("");
+
+          /* Reset quiz */
+          document.getElementById("quiz-start").classList.remove("hidden");
+          document.getElementById("quiz-play").classList.add("hidden");
+          document.getElementById("quiz-result").classList.add("hidden");
+
+          /* Switch to notes tab */
+          this.switchResTab("notes", document.querySelector(".res-tab"));
+
+          document.getElementById("resDetailModal").style.display = "flex";
+        },
+
+        closeResDetail: function () {
+          document.getElementById("resDetailModal").style.display = "none";
+        },
+
+        switchResTab: function (tab, btn) {
+          document
+            .querySelectorAll(".res-tab")
+            .forEach((t) => t.classList.remove("active"));
+          document
+            .querySelectorAll(".res-panel")
+            .forEach((p) => p.classList.remove("active"));
+          btn.classList.add("active");
+          document.getElementById(`res-panel-${tab}`).classList.add("active");
+        },
+
+        /* ================================================================
+           AI TUTOR CHAT
+        ================================================================ */
+        sendAiChat: async function () {
+          const input = document.getElementById("ai-chat-input");
+          const msg = input.value.trim();
+          if (!msg) return;
+
+          const container = document.getElementById("ai-chat-msgs");
+          container.innerHTML += `<div class="ai-bubble user">${this.escapeHtml(msg)}</div>`;
+          input.value = "";
+          container.scrollTop = container.scrollHeight;
+
+          const btn = document.getElementById("ai-send-btn");
+          btn.disabled = true;
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+          /* Show typing indicator */
+          const typingId = "typing-" + Date.now();
+          container.innerHTML += `<div class="ai-bubble bot" id="${typingId}" style="opacity:0.6;"><i class="fas fa-ellipsis-h fa-beat-fade"></i> Thinking...</div>`;
+          container.scrollTop = container.scrollHeight;
+
+          try {
+            const res = await fetch(URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "explainResource",
+                content:
+                  this.state.currentResource.description ||
+                  this.state.currentResource.title ||
+                  "",
+                resourceTitle: this.state.currentResource.title || "",
+                resourceType: this.state.currentResource.type || "",
+                question: msg,
+              }),
+            });
+            const data = await res.json();
+
+            const typingEl = document.getElementById(typingId);
+            if (typingEl) typingEl.remove();
+
+            if (data.status === "success" && data.explanation) {
+              container.innerHTML += `<div class="ai-bubble bot">${this.formatAiResponse(data.explanation)}</div>`;
+            } else {
+              container.innerHTML += `<div class="ai-bubble bot" style="color:var(--danger);">Sorry, I couldn't process that. Please try again.</div>`;
+            }
+          } catch (err) {
+            const typingEl = document.getElementById(typingId);
+            if (typingEl) typingEl.remove();
+            container.innerHTML += `<div class="ai-bubble bot" style="color:var(--danger);">Network error. Please try again.</div>`;
+          }
+
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+          container.scrollTop = container.scrollHeight;
+        },
+
+        askAiSuggestion: function (text) {
+          document.getElementById("ai-chat-input").value = text;
+          this.sendAiChat();
+        },
+
+        formatAiResponse: function (text) {
+          /* Convert markdown-like formatting to readable HTML */
+          return text
+            .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+            .replace(/\n\n/g, "<br><br>")
+            .replace(/\n/g, "<br>")
+            .replace(
+              /^### (.+)$/gm,
+              "<strong style='display:block; margin-bottom:4px; font-size:0.95rem;'>$1</strong>",
+            )
+            .replace(
+              /^## (.+)$/gm,
+              "<strong style='display:block; margin-bottom:4px; font-size:1rem;'>$1</strong>",
+            )
+            .replace(
+              /^# (.+)$/gm,
+              "<strong style='display:block; margin-bottom:6px; font-size:1.05rem;'>$1</strong>",
+            )
+            .replace(/^\* (.+)$/gm, "<strong>$1</strong>")
+            .replace(
+              /^\d+\.\s/g,
+              (m) =>
+                `<span style="color:var(--primary); font-weight:600;">${m}</span>`,
+            );
+        },
+
+        escapeHtml: function (text) {
+          const d = document.createElement("div");
+          d.textContent = text;
+          return d.innerHTML;
+        },
+
+        /* ================================================================
+           QUIZ SYSTEM
+        ================================================================ */
+        generateQuiz: async function () {
+          const count = document.getElementById("quiz-count").value;
+          const type = document.getElementById("quiz-type").value;
+          const content =
+            this.state.currentResource.description ||
+            this.state.currentResource.title ||
+            "";
+          const subject = this.state.currentResource.subject || "";
+
+          if (!content.trim()) {
+            return alert(
+              "This resource has no content to generate a quiz from.",
+            );
+          }
+
+          document.getElementById("quiz-start").innerHTML =
+            '<div style="padding:20px;"><i class="fas fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><p style="color:var(--text-muted); margin-top:12px;">Generating quiz questions...</p></div>';
+
+          try {
+            const res = await fetch(URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "generateAiQuestions",
+                subject: subject || "General",
+                topic: content.substring(0, 1500),
+                questionType: type,
+                difficulty: "Medium",
+                count: count,
+              }),
+            });
+            const data = await res.json();
+
+            if (
+              data.status === "success" &&
+              data.questions &&
+              data.questions.length > 0
+            ) {
+              this.state.quizQuestions = data.questions;
+              this.state.quizIndex = 0;
+              this.state.quizScore = 0;
+              this.state.quizAnswered = [];
+              this.renderQuizQuestion();
+            } else {
+              document.getElementById("quiz-start").innerHTML =
+                "<p style=\"color:var(--danger); padding:20px;\">Could not generate quiz. Please try again.</p><button class=\"btn btn-outline btn-sm\" style=\"margin-top:10px;\" onclick=\"document.getElementById('quiz-start').classList.remove('hidden'); document.getElementById('quiz-start').innerHTML = document.getElementById('quiz-start').getAttribute('data-original');\"><i class=\"fas fa-redo\"></i> Retry</button>";
+              document
+                .getElementById("quiz-start")
+                .querySelector(".btn")
+                .setAttribute(
+                  "data-original",
+                  document
+                    .getElementById("quiz-start")
+                    .getAttribute("data-original"),
+                );
+            }
+          } catch (err) {
+            document.getElementById("quiz-start").innerHTML =
+              '<p style="color:var(--danger); padding:20px;">Network error. Please try again.</p>';
+          }
+        },
+
+        renderQuizQuestion: function () {
+          const playPanel = document.getElementById("quiz-play");
+          const q = this.state.quizQuestions[this.state.quizIndex];
+          const total = this.state.quizQuestions.length;
+          const current = this.state.quizIndex + 1;
+          const pct = (((current - 1) / total) * 100).toFixed(0);
+
+          let optionsHTML = "";
+          if (q.opts && q.opts.length > 0) {
+            const labels = ["A", "B", "C", "D", "E", "F", "G", "H"];
+            q.opts.forEach((opt, i) => {
+              const cleanOpt = opt.replace(/^[A-D][\.\)]\s*/i, "");
+              optionsHTML += `
+                <div class="quiz-option" onclick="app.selectQuizOption(${i}, this)" data-idx="${i}">
+                  <div class="quiz-option-radio">${labels[i] || i + 1}</div>
+                  <div>${this.escapeHtml(cleanOpt)}</div>
+                </div>`;
+            });
+          } else {
+            /* Theory question — show textarea */
+            optionsHTML = `
+              <textarea id="quiz-theory-input" class="form-control" rows="3" placeholder="Type your answer here..." style="margin-bottom:10px;"></textarea>`;
+          }
+
+          playPanel.innerHTML = `
+            <div class="quiz-progress">
+              <span class="text-sm font-bold" style="color:var(--primary);">Q${current}/${total}</span>
+              <div class="quiz-bar"><div class="quiz-bar-fill" style="width:${pct}%"></div></div>
+              <span class="text-sm" style="color:var(--text-muted);">Score: ${this.state.quizScore}/${this.state.quizAnswered.length}</span>
+            </div>
+            <div class="quiz-question-card">
+              <p class="font-bold" style="font-size:1rem; margin-bottom:16px; line-height:1.5;">${this.escapeHtml(q.q || q.question)}</p>
+              ${optionsHTML}
+              <div id="quiz-feedback"></div>
+              <div id="quiz-next-btn" class="hidden flex justify-between" style="margin-top:16px;">
+                <button class="btn btn-outline btn-sm" onclick="app.skipQuizQuestion()"><i class="fas fa-forward"></i> Skip</button>
+                <button class="btn btn-primary btn-sm" onclick="app.nextQuizQuestion()"><i class="fas fa-arrow-right"></i> ${current < total ? "Next" : "See Results"}</button>
+              </div>
+            </div>`;
+
+          playPanel.classList.remove("hidden");
+          document.getElementById("quiz-start").classList.add("hidden");
+          document.getElementById("quiz-result").classList.add("hidden");
+        },
+
+        selectQuizOption: function (idx, el) {
+          /* Prevent re-selecting */
+          if (document.querySelector(".quiz-option.selected")) return;
+
+          document
+            .querySelectorAll(".quiz-option")
+            .forEach((o) => (o.style.pointerEvents = "none"));
+          el.classList.add("selected");
+          this.checkQuizAnswer(idx);
+        },
+
+        submitTheoryAnswer: function () {
+          const input = document.getElementById("quiz-theory-input");
+          if (!input) return;
+          const answer = input.value.trim();
+          if (!answer) return alert("Please type an answer.");
+          input.disabled = true;
+          /* For theory, we can't auto-check, so we show the model answer */
+          this.checkQuizAnswer(answer);
+        },
+
+        checkQuizAnswer: function (userAnswer) {
+          const q = this.state.quizQuestions[this.state.quizIndex];
+          const correctAns = (q.ans || q.answer || "")
+            .toString()
+            .trim()
+            .toLowerCase();
+          const isMcq = q.opts && q.opts.length > 0;
+          let isCorrect = false;
+
+          if (isMcq) {
+            const selectedOpt = q.opts[userAnswer] || "";
+            const cleanSelected = selectedOpt
+              .replace(/^[A-D][\.\)]\s*/i, "")
+              .trim()
+              .toLowerCase();
+            const cleanCorrect = correctAns
+              .replace(/^[A-D][\.\)]\s*/i, "")
+              .trim()
+              .toLowerCase();
+            isCorrect =
+              cleanSelected === cleanCorrect ||
+              userAnswer.toString() === correctAns;
+
+            /* Highlight options */
+            document.querySelectorAll(".quiz-option").forEach((o, i) => {
+              const cleanOpt = (q.opts[i] || "")
+                .replace(/^[A-D][\.\)]\s*/i, "")
+                .trim()
+                .toLowerCase();
+              const cleanCor = correctAns
+                .replace(/^[A-D][\.\)]\s*/i, "")
+                .trim()
+                .toLowerCase();
+              if (cleanOpt === cleanCor) o.classList.add("correct");
+              else if (i === userAnswer && !isCorrect) o.classList.add("wrong");
+            });
+          } else {
+            /* Theory: show model answer, mark as "submitted" */
+            isCorrect = null;
+          }
+
+          if (isCorrect === true) this.state.quizScore++;
+          this.state.quizAnswered.push(isCorrect);
+
+          /* Show feedback */
+          let feedbackHTML = "";
+          if (isCorrect === true) {
+            feedbackHTML = `<div class="quiz-explanation" style="border-left-color:var(--success); background:#f0fdf4;"><i class="fas fa-check-circle" style="color:var(--success); margin-right:6px;"></i><strong>Correct!</strong></div>`;
+          } else if (isCorrect === false) {
+            const displayAns = isMcq
+              ? correctAns.charAt(0).toUpperCase() +
+                ". " +
+                correctAns.replace(/^[A-D][\.\)]\s*/i, "").trim()
+              : correctAns;
+            feedbackHTML = `<div class="quiz-explanation" style="border-left-color:var(--danger); background:#fef2f2;"><i class="fas fa-times-circle" style="color:var(--danger); margin-right:6px;"></i><strong>Incorrect.</strong> Answer: ${this.escapeHtml(displayAns)}</div>`;
+          } else {
+            const displayAns = correctAns;
+            feedbackHTML = `<div class="quiz-explanation" style="border-left-color:var(--warning); background:#fffbeb;"><i class="fas fa-lightbulb" style="color:var(--warning); margin-right:6px;"></i><strong>Model Answer:</strong> ${this.escapeHtml(displayAns)}</div>`;
+          }
+          document.getElementById("quiz-feedback").innerHTML = feedbackHTML;
+          document.getElementById("quiz-next-btn").classList.remove("hidden");
+
+          /* If theory, show the submit button replacement as next */
+          if (!isMcq) {
+            document.getElementById("quiz-next-btn").innerHTML =
+              `<button class="btn btn-primary btn-sm" onclick="app.nextQuizQuestion()"><i class="fas fa-arrow-right"></i> Next</button>`;
+          }
+        },
+
+        skipQuizQuestion: function () {
+          this.state.quizAnswered.push(null);
+          this.nextQuizQuestion();
+        },
+
+        nextQuizQuestion: function () {
+          this.state.quizIndex++;
+          if (this.state.quizIndex >= this.state.quizQuestions.length) {
+            this.showQuizResults();
+          } else {
+            this.renderQuizQuestion();
+          }
+        },
+
+        showQuizResults: function () {
+          const playPanel = document.getElementById("quiz-play");
+          const resultPanel = document.getElementById("quiz-result");
+          playPanel.classList.add("hidden");
+          resultPanel.classList.remove("hidden");
+
+          const total = this.state.quizQuestions.length;
+          const score = this.state.quizScore;
+          const skipped = this.state.quizAnswered.filter(
+            (a) => a === null,
+          ).length;
+          const attempted = total - skipped;
+          const pct = attempted > 0 ? Math.round((score / attempted) * 100) : 0;
+
+          let grade, gradeColor, gradeBg;
+          if (pct >= 80) {
+            grade = "Excellent";
+            gradeColor = "#15803d";
+            gradeBg = "#dcfce7";
+          } else if (pct >= 60) {
+            grade = "Good Job";
+            gradeColor = "#0369a1";
+            gradeBg = "#dbeafe";
+          } else if (pct >= 40) {
+            grade = "Keep Trying";
+            gradeColor = "#92400e";
+            gradeBg = "#fef3c7";
+          } else {
+            grade = "Needs Work";
+            gradeColor = "#b91c1c";
+            gradeBg = "#fee2e2";
+          }
+
+          resultPanel.innerHTML = `
+            <div class="quiz-result-card">
+              <div class="quiz-score-circle" style="background:${gradeBg}; color:${gradeColor}; box-shadow:0 8px 25px ${gradeBg};">
+                <div style="font-size:2.2rem; line-height:1;">${score}/${attempted}</div>
+                <div style="font-size:0.85rem; opacity:0.8; margin-top:4px;">${pct}%</div>
+              </div>
+              <p style="font-size:1.3rem; font-weight:800; color:${gradeColor}; margin-bottom:4px;">${grade}!</p>
+              <p class="text-sm" style="color:var(--text-muted);">${skipped > 0 ? skipped + " skipped, " : ""}${total} questions total</p>
+            </div>
+            <div class="flex gap-2 justify-center" style="margin-top:20px;">
+              <button class="btn btn-outline" onclick="app.generateQuiz()"><i class="fas fa-redo"></i> Try Again</button>
+              <button class="btn btn-primary" onclick="app.switchResTab('notes', document.querySelectorAll('.res-tab')[0])"><i class="fas fa-book"></i> Review Notes</button>
+            </div>`;
+        },
+
+        /* ================================================================
+           RESULT RENDERER
+        ================================================================ */
+        renderResults: function (scores, info) {
+          const container = document.getElementById("results-container");
+          const isJSS = info.class.startsWith("JSS");
+          let subjects = isJSS
+            ? [
+                "English",
+                "Mathematics",
+                "Basic Science",
+                "Social Studies",
+                "Civic Education",
+                "PHE",
+                "Basic Technology",
+                "Creative Arts",
+                "Yoruba",
+                "French",
+                "Agricultural Science",
+                "Computer Studies",
+                "Home Economics",
+                "CRS/IRS",
+                "Business Studies",
+              ]
+            : [
+                "English",
+                "Mathematics",
+                "Civic Education",
+                "Economics",
+                "Biology",
+                "Further Math",
+                "Agric Sci",
+                "Data Processing",
+                "Chemistry",
+                "Physics",
+                "Geography",
+                "Literature",
+                "Government",
+                "CRS",
+                "Yoruba",
+                "Accounting",
+                "Commerce",
+                "CCA",
+                "Marketing",
+                "T/D",
+              ];
+
+          let totalScore = 0,
+            count = 0;
+          let tableHTML = `<div class="print-area"><table><thead><tr><th>Subject</th><th>CA (40)</th><th>Exam (60)</th><th>Total (100)</th><th>Grade</th></tr></thead><tbody>`;
+
+          subjects.forEach((sub) => {
+            const sc = scores[sub] || {};
+            const ca = parseInt(sc.ca) || 0;
+            const exam = parseInt(sc.exam) || 0;
+            const total = ca + exam;
+            if (total > 0) {
+              totalScore += total;
+              count++;
+            }
+
+            const grade = this.getGrade(total, isJSS);
+            const gradeClass =
+              total >= 75
+                ? "score-high"
+                : total >= 50
+                  ? "score-mid"
+                  : "score-low";
+            tableHTML += `<tr>
+              <td style="font-weight:600;">${sub}</td>
+              <td>${ca || "-"}</td>
+              <td>${exam || "-"}</td>
+              <td style="font-weight:bold;">${total || "-"}</td>
+              <td><span class="score-badge ${gradeClass}">${grade}</span></td>
+            </tr>`;
+          });
+
+          const avg = count > 0 ? (totalScore / count).toFixed(1) : 0;
+
+          document.getElementById("stat-avg").textContent = avg + "%";
+
+          tableHTML += `<tr style="background: var(--bg); font-weight: bold;">
+            <td colspan="3">Average Score</td>
+            <td colspan="2" style="color: var(--primary);">${avg}%</td>
+          </tr></tbody></table></div>`;
+
+          const insight =
+            avg >= 70
+              ? "Excellent performance! Keep it up."
+              : avg >= 50
+                ? "Good effort. Aim higher next term."
+                : "You need to study harder. Focus on weak subjects.";
+
+          container.innerHTML = `
+            <div class="result-summary">
+                <div class="gpa-circle">
+                   <div class="gpa-value">${avg}%</div>
+                   <div class="gpa-label">Average</div>
+                </div>
+                <div class="insight-card">
+                   <div class="insight-title"><i class="fas fa-lightbulb"></i> Performance Insight</div>
+                   <p style="font-size:0.9rem">${insight}</p>
+                </div>
+                <button class="btn btn-outline" onclick="window.print()"><i class="fas fa-download"></i> Download PDF</button>
+            </div>
+            ${tableHTML}
+          `;
+        },
+
+        /* ================================================================
+           HELPERS
+        ================================================================ */
+        getGrade: function (score, isJSS) {
+          const s = parseFloat(score) || 0;
+          if (isJSS) {
+            if (s >= 80) return "A";
+            if (s >= 70) return "B";
+            if (s >= 60) return "BC";
+            if (s >= 50) return "C";
+            if (s >= 40) return "P";
+            return "F";
+          } else {
+            if (s >= 80) return "A1";
+            if (s >= 75) return "B2";
+            if (s >= 70) return "B3";
+            if (s >= 65) return "C4";
+            if (s >= 60) return "C5";
+            if (s >= 50) return "C6";
+            if (s >= 45) return "D7";
+            if (s >= 40) return "E8";
+            return "F9";
+          }
+        },
+
+        openSubmitModal: function (id) {
+          document.getElementById("submitAssignId").value = id;
+          document.getElementById("submitLink").value = "";
+          document.getElementById("submitModal").style.display = "flex";
+        },
+        closeModal: function () {
+          document.getElementById("submitModal").style.display = "none";
+        },
+
+        confirmSubmission: async function () {
+          const link = document.getElementById("submitLink").value;
+          const assignId = document.getElementById("submitAssignId").value;
+          if (!link) return alert("Please enter a link");
+
+          const btn = document.querySelector("#submitModal .btn-primary");
+          btn.disabled = true;
+          btn.innerHTML = "Submitting...";
+
+          try {
+            const res = await fetch(URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "submitAssignment",
+                studentId: this.state.student.id,
+                assignmentId: assignId,
+                link: link,
+              }),
+            });
+            const data = await res.json();
+            if (data.status === "success") {
+              alert("Submitted successfully!");
+              this.closeModal();
+              /* Force re-fetch so status updates from backend */
+              this.state.assignmentsLoaded = false;
+              this.loadAssignments(false);
+            } else {
+              alert(data.message || "Error submitting.");
+            }
+          } catch (err) {
+            alert("Network error. Please try again.");
+          }
+
+          btn.disabled = false;
+          btn.innerHTML = "Submit";
+        },
+
+        toggleDarkMode: function () {
+          document.body.classList.toggle("dark-mode");
+          const isDark = document.body.classList.contains("dark-mode");
+          localStorage.setItem("darkMode", isDark);
+        },
+
+        sendMockMessage: function () {
+          const input = document.getElementById("chat-input");
+          if (!input.value.trim()) return;
+
+          const container = document.getElementById("chat-messages");
+          container.innerHTML += `<div class="chat-bubble sent">${input.value}</div>`;
+          input.value = "";
+          container.scrollTop = container.scrollHeight;
+
+          setTimeout(() => {
+            container.innerHTML += `<div class="chat-bubble received">Thanks for your message. An admin will get back to you shortly.</div>`;
+            container.scrollTop = container.scrollHeight;
+          }, 1000);
+        },
+
+        logout: function () {
+          sessionStorage.removeItem("studentUser");
+          window.location.reload();
+        },
+      };
+
+      document.addEventListener("DOMContentLoaded", () => app.init());
+    </script>
+  </body>
+</html>
