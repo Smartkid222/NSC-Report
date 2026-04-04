@@ -919,6 +919,55 @@
         font-weight: bold;
         color: var(--primary);
       }
+      /* --- NEW SECTION STYLES --- */
+      .resource-type-card {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.2s;
+      }
+      .resource-type-card:hover {
+        border-color: var(--primary);
+        box-shadow: var(--shadow);
+      }
+      .resource-icon-lg {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+      }
+      .bg-video {
+        background: #ef4444;
+      }
+      .bg-pdf {
+        background: #3b82f6;
+      }
+      .bg-link {
+        background: #10b981;
+      }
+
+      .upload-zone {
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: #f8fafc;
+      }
+      .upload-zone:hover {
+        border-color: var(--primary);
+        background: #f0f9ff;
+      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -1669,6 +1718,213 @@
             </div>
           </div>
         </section>
+        <!-- TIMETABLE SECTION -->
+        <section id="section-timetable" class="hidden">
+          <div class="breadcrumbs">
+            <span onclick="app.goHome()">Home</span> >
+            <span class="font-bold">Timetable Manager</span>
+          </div>
+          <div class="list-container" style="padding: 20px">
+            <div
+              class="list-header"
+              style="padding: 0; border: none; margin-bottom: 20px"
+            >
+              <h2>📅 Class Timetable</h2>
+              <div class="flex gap-2">
+                <select
+                  id="ttClassSelect"
+                  class="form-control"
+                  onchange="app.loadTimetableEditor(this.value)"
+                >
+                  <option value="" disabled selected>Select Class</option>
+                </select>
+                <button class="btn btn-primary" onclick="app.saveTimetable()">
+                  Save Timetable
+                </button>
+              </div>
+            </div>
+
+            <div id="tt-editor" class="hidden">
+              <p
+                style="
+                  font-size: 0.9rem;
+                  color: var(--secondary);
+                  margin-bottom: 15px;
+                "
+              >
+                Enter periods for each day (one per line). Format:
+                <strong>Subject (Time)</strong> or just
+                <strong>Subject</strong>.
+              </p>
+              <div class="grid-2">
+                <!-- We generate 5 textareas for Mon-Fri via JS -->
+              </div>
+              <div
+                id="tt-grid"
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(5, 1fr);
+                  gap: 15px;
+                "
+              ></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ASSIGNMENTS SECTION -->
+        <section id="section-assignments" class="hidden">
+          <div class="breadcrumbs">
+            <span onclick="app.goHome()">Home</span> >
+            <span class="font-bold">Assignments</span>
+          </div>
+          <div class="list-container">
+            <div class="list-header">
+              <div><h2>📝 Assignments & Homework</h2></div>
+              <div class="flex gap-2">
+                <select
+                  id="assignClassFilter"
+                  class="form-control"
+                  onchange="app.loadAssignments()"
+                >
+                  <option value="">All Classes</option>
+                </select>
+                <button
+                  class="btn btn-primary btn-sm"
+                  onclick="app.openAssignmentModal()"
+                >
+                  + Add Assignment
+                </button>
+              </div>
+            </div>
+            <div style="overflow-x: auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Class</th>
+                    <th>Subject</th>
+                    <th>Title</th>
+                    <th>Due Date</th>
+                    <th>Author</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="assign-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <!-- E-LEARNING RESOURCES SECTION -->
+        <section id="section-elearning" class="hidden">
+          <div class="breadcrumbs">
+            <span onclick="app.goHome()">Home</span> >
+            <span class="font-bold">E-Learning Resources</span>
+          </div>
+          <div class="list-container">
+            <div class="list-header">
+              <div>
+                <h2>📖 E-Learning Resources</h2>
+                <p class="text-sm text-secondary">
+                  Syllabus, Lesson Notes, Videos & Recommended Sites
+                </p>
+              </div>
+              <div class="flex gap-2" style="flex-wrap: wrap">
+                <select
+                  id="resClassFilter"
+                  class="form-control"
+                  style="width: 180px"
+                  onchange="app.loadResources()"
+                >
+                  <option value="">All Classes</option>
+                </select>
+                <select
+                  id="resTypeFilter"
+                  class="form-control"
+                  style="width: 180px"
+                  onchange="app.loadResources()"
+                >
+                  <option value="">All Types</option>
+                  <option value="Syllabus">Syllabus</option>
+                  <option value="Lesson Note">Lesson Note</option>
+                  <option value="Video">Video</option>
+                  <option value="Recommended Site">Recommended Site</option>
+                </select>
+                <button
+                  class="btn btn-primary btn-sm"
+                  onclick="app.openResourceModal()"
+                >
+                  + Add Resource
+                </button>
+              </div>
+            </div>
+            <div style="overflow-x: auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Class</th>
+                    <th>Subject</th>
+                    <th>Type</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="res-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ASSIGNMENT MODAL -->
+        <div id="modal-assignment" class="modal-overlay">
+          <div class="modal">
+            <h3 id="assign-modal-title">Add Assignment</h3>
+            <input type="hidden" id="assignId" />
+            <div class="form-group">
+              <label>Class</label>
+              <select
+                id="assignClass"
+                class="form-control"
+                onchange="app.updateAssignSubjects()"
+              ></select>
+            </div>
+            <div class="form-group">
+              <label>Subject</label>
+              <select id="assignSubject" class="form-control">
+                <option value="">Select class first</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Title / Topic</label>
+              <input
+                type="text"
+                id="assignTitle"
+                class="form-control"
+                placeholder="e.g. Quadratic Equations Exercise"
+              />
+            </div>
+            <div class="form-group">
+              <label>Due Date</label>
+              <input type="date" id="assignDue" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Description / Instructions</label>
+              <textarea
+                id="assignDesc"
+                class="form-control"
+                rows="4"
+                placeholder="Detailed instructions for students..."
+              ></textarea>
+            </div>
+            <div class="flex justify-between" style="margin-top: 20px">
+              <button class="btn btn-outline" onclick="app.closeModals()">
+                Cancel
+              </button>
+              <button class="btn btn-primary" onclick="app.saveAssignment()">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
 
         <!-- Question Modal with AI & Upload -->
         <div id="modal-question" class="modal-overlay">
@@ -1906,6 +2162,69 @@
           </div>
         </div>
       </main>
+    </div>
+    <!-- E-LEARNING RESOURCE MODAL -->
+    <div id="modal-resource" class="modal-overlay">
+      <div class="modal" style="max-width: 550px">
+        <h3 id="res-modal-title">Add Resource</h3>
+        <input type="hidden" id="resId" />
+        <div class="form-group">
+          <label>Class</label>
+          <select
+            id="resClass"
+            class="form-control"
+            onchange="app.updateResSubjects()"
+          ></select>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <select id="resSubject" class="form-control"></select>
+        </div>
+        <div class="form-group">
+          <label>Resource Type</label>
+          <select id="resType" class="form-control">
+            <option value="Syllabus">📄 Syllabus</option>
+            <option value="Lesson Note">📝 Lesson Note</option>
+            <option value="Video">🎬 Video Link (YouTube)</option>
+            <option value="Recommended Site">🔗 Recommended Site</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Title</label>
+          <input
+            type="text"
+            id="resTitle"
+            class="form-control"
+            placeholder="e.g. Term 1 Syllabus for JSS1"
+          />
+        </div>
+        <div class="form-group" id="resUrlGroup">
+          <label id="resUrlLabel">Link (URL)</label>
+          <input
+            type="url"
+            id="resUrl"
+            class="form-control"
+            placeholder="https://youtube.com/watch?v=... or https://docs.google.com/..."
+          />
+        </div>
+        <div class="form-group">
+          <label>Description / Notes</label>
+          <textarea
+            id="resDesc"
+            class="form-control"
+            rows="4"
+            placeholder="Additional instructions or context for students..."
+          ></textarea>
+        </div>
+        <div class="flex justify-between" style="margin-top: 20px">
+          <button class="btn btn-outline" onclick="app.closeModals()">
+            Cancel
+          </button>
+          <button class="btn btn-primary" onclick="app.saveResource()">
+            Save
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- ================= MODALS ================= -->
@@ -2596,6 +2915,37 @@
         deleteQuestionFromBank: async function (id) {
           return await this._post("deleteQuestion", { id });
         },
+        // --- NEW API CALLS ---
+        getTimetable: async function (className) {
+          const res = await this._post("getTimetable", { className });
+          return res;
+        },
+        saveTimetable: async function (className, schedule) {
+          return await this._post("saveTimetable", { className, schedule });
+        },
+        getAssignments: async function (className) {
+          const res = await this._post("getAssignments", { className });
+          return res.status === "success" ? res.assignments : [];
+        },
+        saveAssignment: async function (data) {
+          return await this._post("saveAssignment", data);
+        },
+        deleteAssignment: async function (id) {
+          return await this._post("deleteAssignment", { id });
+        },
+        getResources: async function (className, type) {
+          const res = await this._post("getResources", {
+            className: className || "",
+            type: type || "",
+          });
+          return res.status === "success" ? res.resources : [];
+        },
+        saveResource: async function (data) {
+          return await this._post("saveResource", data);
+        },
+        deleteResource: async function (id) {
+          return await this._post("deleteResource", { id });
+        },
       };
 
       let isInitialLoad = true;
@@ -2727,6 +3077,468 @@
           } else {
             this.showToast(res.message || "Failed to generate", "error");
           }
+        },
+
+        // ==========================================
+        // TIMETABLE LOGIC
+        // ==========================================
+        loadTimetableSection: function () {
+          this.showSection("section-timetable");
+          this.pushHistory("section-timetable", "Timetables");
+
+          // Populate Class Select
+          const select = document.getElementById("ttClassSelect");
+          const secClasses = ALL_CLASSES;
+          const pryClasses = PRY_CLASSES; // Assuming PRY_CLASSES is defined or add it manually
+
+          select.innerHTML =
+            '<option value="" disabled selected>Select Class</option>';
+
+          // Add OptGroups
+          let secGroup = '<optgroup label="Secondary School">';
+          secClasses.forEach(
+            (c) => (secGroup += `<option value="${c}">${c}</option>`),
+          );
+          secGroup += "</optgroup>";
+
+          let pryGroup = '<optgroup label="Primary School">';
+          pryClasses.forEach(
+            (c) => (pryGroup += `<option value="${c}">${c}</option>`),
+          );
+          pryGroup += "</optgroup>";
+
+          select.innerHTML += secGroup + pryGroup;
+
+          document.getElementById("tt-editor").classList.add("hidden");
+        },
+
+        loadTimetableEditor: async function (className) {
+          if (!className) return;
+          this.toggleLoader(true);
+          const res = await GoogleSheetService.getTimetable(className);
+          this.toggleLoader(false);
+
+          const schedule = res.schedule || {
+            Mon: [],
+            Tue: [],
+            Wed: [],
+            Thu: [],
+            Fri: [],
+          };
+          const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+          const container = document.getElementById("tt-grid");
+
+          let html = "";
+          days.forEach((day) => {
+            // Convert array to newline-separated string for the textarea
+            const content = Array.isArray(schedule[day])
+              ? schedule[day].join("\n")
+              : "";
+            html += `
+                <div class="form-group" style="margin-bottom:0">
+                    <label style="font-weight:bold; margin-bottom:5px; display:block;">${day}</label>
+                    <textarea class="form-control" id="tt-${day}" rows="10" style="font-size:0.85rem; resize:vertical;" placeholder="Maths (8am)\nEnglish (9am)\nBreak\n...">${content}</textarea>
+                </div>
+            `;
+          });
+
+          container.innerHTML = html;
+          document.getElementById("tt-editor").classList.remove("hidden");
+        },
+
+        saveTimetable: async function () {
+          const className = document.getElementById("ttClassSelect").value;
+          if (!className)
+            return this.showToast("Select a class first", "warning");
+
+          const schedule = {
+            Mon: document
+              .getElementById("tt-Mon")
+              .value.split("\n")
+              .filter((x) => x.trim()),
+            Tue: document
+              .getElementById("tt-Tue")
+              .value.split("\n")
+              .filter((x) => x.trim()),
+            Wed: document
+              .getElementById("tt-Wed")
+              .value.split("\n")
+              .filter((x) => x.trim()),
+            Thu: document
+              .getElementById("tt-Thu")
+              .value.split("\n")
+              .filter((x) => x.trim()),
+            Fri: document
+              .getElementById("tt-Fri")
+              .value.split("\n")
+              .filter((x) => x.trim()),
+          };
+
+          this.toggleLoader(true);
+          const res = await GoogleSheetService.saveTimetable(
+            className,
+            schedule,
+          );
+          this.toggleLoader(false);
+
+          if (res.status === "success") {
+            this.showToast("Timetable saved!", "success");
+          } else {
+            this.showToast("Error saving timetable", "error");
+          }
+        },
+
+        // ==========================================
+        // ASSIGNMENTS LOGIC
+        // ==========================================
+        loadAssignmentSection: function () {
+          this.showSection("section-assignments");
+          this.pushHistory("section-assignments", "Assignments");
+
+          const r = this.state.currentUser.role;
+          const subjects = this.state.currentUser.subjects || [];
+
+          // Build list of classes this user can manage
+          let allowedClasses = [];
+          if (r === "Admin" || r === "Head") {
+            allowedClasses = [...ALL_CLASSES, ...PRY_CLASSES];
+          } else {
+            // Teacher: only their assigned classes
+            subjects.forEach((s) => {
+              if (s.class === "ALL JSS")
+                allowedClasses.push("JSS1", "JSS2", "JSS3");
+              else if (s.class === "ALL SSS")
+                allowedClasses.push("SSS1", "SSS2", "SSS3");
+              else if (!allowedClasses.includes(s.class))
+                allowedClasses.push(s.class);
+            });
+          }
+          allowedClasses = [...new Set(allowedClasses)].sort();
+
+          // Populate class filter and modal class select
+          let opts = "";
+          allowedClasses.forEach(
+            (c) => (opts += `<option value="${c}">${c}</option>`),
+          );
+          document.getElementById("assignClassFilter").innerHTML =
+            '<option value="">My Classes</option>' + opts;
+          document.getElementById("assignClass").innerHTML = opts;
+
+          // Clear subject select until a class is chosen
+          document.getElementById("assignSubject").innerHTML =
+            '<option value="">Select class first</option>';
+
+          this.loadAssignments();
+        },
+
+        loadAssignments: async function () {
+          const cls = document.getElementById("assignClassFilter").value;
+          this.toggleLoader(true);
+          const data = await GoogleSheetService.getAssignments(cls);
+          this.toggleLoader(false);
+
+          const tbody = document.getElementById("assign-tbody");
+          tbody.innerHTML = "";
+
+          if (data.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="6" class="text-center">No assignments found.</td></tr>';
+            return;
+          }
+
+          data.forEach((a) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td><span class="badge">${a.class}</span></td>
+                    <td>${a.subject}</td>
+                    <td><strong>${a.title}</strong><br><small style="color:var(--secondary)">${(a.description || "").substring(0, 50)}...</small></td>
+                    <td>${a.dueDate}</td>
+                    <td>${a.author || "N/A"}</td>
+                    <td>
+                        <div class="flex gap-1">
+                            <button class="btn btn-outline btn-sm" onclick="app.openAssignmentModal('${JSON.stringify(a).replace(/'/g, "\\'")}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="app.deleteAssignment('${a.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+          });
+        },
+
+        openAssignmentModal: function (dataStr = null) {
+          const data = dataStr ? JSON.parse(dataStr) : null;
+
+          document.getElementById("assign-modal-title").textContent = data
+            ? "Edit Assignment"
+            : "Add Assignment";
+          document.getElementById("assignId").value = data ? data.id : "";
+          document.getElementById("assignClass").value = data ? data.class : "";
+          document.getElementById("assignTitle").value = data ? data.title : "";
+          document.getElementById("assignDue").value = data ? data.dueDate : "";
+          document.getElementById("assignDesc").value = data
+            ? data.description
+            : "";
+
+          // Populate subject dropdown based on class
+          this.updateAssignSubjects();
+          if (data && data.subject) {
+            document.getElementById("assignSubject").value = data.subject;
+          }
+
+          document.getElementById("modal-assignment").style.display = "flex";
+        },
+
+        saveAssignment: async function () {
+          const payload = {
+            id: document.getElementById("assignId").value,
+            className: document.getElementById("assignClass").value,
+            subject: document.getElementById("assignSubject").value,
+            title: document.getElementById("assignTitle").value,
+            dueDate: document.getElementById("assignDue").value,
+            description: document.getElementById("assignDesc").value,
+            author: this.state.currentUser.name,
+          };
+
+          if (!payload.className || !payload.title) {
+            return this.showToast("Class and Title are required", "warning");
+          }
+
+          this.toggleLoader(true);
+          const res = await GoogleSheetService.saveAssignment(payload);
+          this.toggleLoader(false);
+
+          if (res.status === "success") {
+            this.showToast("Assignment Saved!", "success");
+            this.closeModals();
+            this.loadAssignments();
+          } else {
+            this.showToast("Error saving", "error");
+          }
+        },
+
+        deleteAssignment: async function (id) {
+          if (!confirm("Delete this assignment?")) return;
+
+          this.toggleLoader(true);
+          await GoogleSheetService.deleteAssignment(id);
+          this.toggleLoader(false);
+          this.showToast("Deleted", "success");
+          this.loadAssignments();
+        },
+
+        updateAssignSubjects: function () {
+          const cls = document.getElementById("assignClass").value;
+          const r = this.state.currentUser.role;
+          const select = document.getElementById("assignSubject");
+          select.innerHTML = '<option value="">Select Subject</option>';
+
+          if (!cls) return;
+
+          let subjectList = [];
+          if (r === "Admin" || r === "Head") {
+            subjectList = cls.startsWith("JSS")
+              ? JSS_SUBJECTS
+              : SSS_SUBJECTS.All;
+          } else {
+            // Teacher: only subjects they teach for this class
+            const isJSS = cls.startsWith("JSS");
+            this.state.currentUser.subjects.forEach((s) => {
+              if (
+                s.class === cls ||
+                (s.class === "ALL JSS" && isJSS) ||
+                (s.class === "ALL SSS" && !isJSS)
+              ) {
+                if (!subjectList.includes(s.subject))
+                  subjectList.push(s.subject);
+              }
+            });
+          }
+
+          subjectList.forEach((sub) => {
+            select.innerHTML += `<option value="${sub}">${sub}</option>`;
+          });
+        },
+
+        // ==========================================
+        // E-LEARNING RESOURCES LOGIC
+        // ==========================================
+        loadElearningSection: function () {
+          this.showSection("section-elearning");
+          this.pushHistory("section-elearning", "E-Learning Resources");
+
+          const r = this.state.currentUser.role;
+          const subjects = this.state.currentUser.subjects || [];
+
+          // Build allowed classes (same logic as assignments)
+          let allowedClasses = [];
+          if (r === "Admin" || r === "Head") {
+            allowedClasses = [...ALL_CLASSES, ...PRY_CLASSES];
+          } else {
+            subjects.forEach((s) => {
+              if (s.class === "ALL JSS")
+                allowedClasses.push("JSS1", "JSS2", "JSS3");
+              else if (s.class === "ALL SSS")
+                allowedClasses.push("SSS1", "SSS2", "SSS3");
+              else if (!allowedClasses.includes(s.class))
+                allowedClasses.push(s.class);
+            });
+          }
+          allowedClasses = [...new Set(allowedClasses)].sort();
+
+          let opts = "";
+          allowedClasses.forEach(
+            (c) => (opts += `<option value="${c}">${c}</option>`),
+          );
+          document.getElementById("resClassFilter").innerHTML =
+            '<option value="">My Classes</option>' + opts;
+          document.getElementById("resClass").innerHTML = opts;
+
+          // Clear subject until class chosen
+          document.getElementById("resSubject").innerHTML =
+            '<option value="">Select class first</option>';
+
+          this.loadResources();
+        },
+
+        updateResSubjects: function () {
+          const cls = document.getElementById("resClass").value;
+          const r = this.state.currentUser.role;
+          const select = document.getElementById("resSubject");
+          select.innerHTML = '<option value="">Select Subject</option>';
+          if (!cls) return;
+
+          let subjectList = [];
+          if (r === "Admin" || r === "Head") {
+            subjectList = cls.startsWith("JSS")
+              ? JSS_SUBJECTS
+              : SSS_SUBJECTS.All;
+          } else {
+            const isJSS = cls.startsWith("JSS");
+            this.state.currentUser.subjects.forEach((s) => {
+              if (
+                s.class === cls ||
+                (s.class === "ALL JSS" && isJSS) ||
+                (s.class === "ALL SSS" && !isJSS)
+              ) {
+                if (!subjectList.includes(s.subject))
+                  subjectList.push(s.subject);
+              }
+            });
+          }
+          subjectList.forEach((sub) => {
+            select.innerHTML += `<option value="${sub}">${sub}</option>`;
+          });
+        },
+
+        loadResources: async function () {
+          const cls = document.getElementById("resClassFilter").value;
+          const type = document.getElementById("resTypeFilter").value;
+          this.toggleLoader(true);
+          const data = await GoogleSheetService.getResources(cls, type);
+          this.toggleLoader(false);
+
+          const tbody = document.getElementById("res-tbody");
+          tbody.innerHTML = "";
+
+          if (data.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="6" class="text-center">No resources found.</td></tr>';
+            return;
+          }
+
+          const typeIcons = {
+            Syllabus: '<i class="fas fa-file-alt" style="color:#8b5cf6;"></i>',
+            "Lesson Note":
+              '<i class="fas fa-sticky-note" style="color:#f59e0b;"></i>',
+            Video: '<i class="fas fa-play-circle" style="color:#ef4444;"></i>',
+            "Recommended Site":
+              '<i class="fas fa-globe" style="color:#10b981;"></i>',
+          };
+
+          data.forEach((res) => {
+            const icon = typeIcons[res.type] || '<i class="fas fa-file"></i>';
+            tbody.innerHTML += `
+              <tr>
+                <td><span class="badge">${res.class}</span></td>
+                <td>${res.subject}</td>
+                <td>${icon} ${res.type}</td>
+                <td><strong>${res.title}</strong>${res.url ? `<br><small style="color:var(--primary);">${res.url.substring(0, 50)}...</small>` : ""}</td>
+                <td>${res.author || "N/A"}</td>
+                <td>
+                  <div class="flex gap-1">
+                    ${res.url ? `<a href="${res.url}" target="_blank" class="btn btn-outline btn-sm" title="Open link"><i class="fas fa-external-link-alt"></i></a>` : ""}
+                    <button class="btn btn-outline btn-sm" onclick='app.openResourceModal(${JSON.stringify(res).replace(/'/g, "&#39;")})'><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm" onclick="app.deleteResource('${res.id}')"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>`;
+          });
+        },
+
+        openResourceModal: function (dataStr = null) {
+          const data = dataStr || null;
+          document.getElementById("res-modal-title").textContent = data
+            ? "Edit Resource"
+            : "Add Resource";
+          document.getElementById("resId").value = data ? data.id : "";
+          document.getElementById("resClass").value = data ? data.class : "";
+          document.getElementById("resTitle").value = data ? data.title : "";
+          document.getElementById("resType").value = data
+            ? data.type
+            : "Syllabus";
+          document.getElementById("resUrl").value = data ? data.url || "" : "";
+          document.getElementById("resDesc").value = data
+            ? data.description || ""
+            : "";
+
+          // Populate subjects
+          this.updateResSubjects();
+          if (data && data.subject) {
+            document.getElementById("resSubject").value = data.subject;
+          }
+
+          document.getElementById("modal-resource").style.display = "flex";
+        },
+
+        saveResource: async function () {
+          const payload = {
+            id: document.getElementById("resId").value,
+            className: document.getElementById("resClass").value,
+            subject: document.getElementById("resSubject").value,
+            type: document.getElementById("resType").value,
+            title: document.getElementById("resTitle").value,
+            url: document.getElementById("resUrl").value,
+            description: document.getElementById("resDesc").value,
+            author: this.state.currentUser.name,
+          };
+
+          if (!payload.className || !payload.subject || !payload.title) {
+            return this.showToast(
+              "Class, Subject and Title are required",
+              "warning",
+            );
+          }
+
+          this.toggleLoader(true);
+          const res = await GoogleSheetService.saveResource(payload);
+          this.toggleLoader(false);
+
+          if (res.status === "success") {
+            this.showToast("Resource Saved!", "success");
+            this.closeModals();
+            this.loadResources();
+          } else {
+            this.showToast("Error saving resource", "error");
+          }
+        },
+
+        deleteResource: async function (id) {
+          if (!confirm("Delete this resource?")) return;
+          this.toggleLoader(true);
+          await GoogleSheetService.deleteResource(id);
+          this.toggleLoader(false);
+          this.showToast("Deleted", "success");
+          this.loadResources();
         },
 
         // ==========================================
@@ -3100,6 +3912,29 @@
                 <div class="card-footer"><button class="btn btn-outline btn-sm w-full">Open</button></div>
             </div>
           `;
+          // --- NEW CARDS ---
+          // --- TIMETABLE (Admin/Head ONLY) ---
+          if (r === "Admin" || r === "Head") {
+            land.innerHTML += `
+        <div class="card" onclick="app.loadTimetableSection()">
+            <div class="card-content"><div class="card-icon">📅</div><div class="card-title">Timetable</div><div class="card-meta">Upload/Edit Schedules</div></div>
+            <div class="card-footer"><button class="btn btn-primary btn-sm w-full">Open</button></div>
+        </div>`;
+          }
+
+          // Assignments Card (all roles)
+          land.innerHTML += `
+        <div class="card" onclick="app.loadAssignmentSection()">
+            <div class="card-content"><div class="card-icon">📝</div><div class="card-title">Assignments</div><div class="card-meta">Upload Homework</div></div>
+            <div class="card-footer"><button class="btn btn-outline btn-sm w-full">Open</button></div>
+        </div>`;
+
+          // E-Learning Resources Card (all roles)
+          land.innerHTML += `
+        <div class="card" onclick="app.loadElearningSection()">
+            <div class="card-content"><div class="card-icon">📖</div><div class="card-title">E-Learning</div><div class="card-meta">Syllabus, Notes, Videos & Links</div></div>
+            <div class="card-footer"><button class="btn btn-outline btn-sm w-full">Open</button></div>
+        </div>`;
         },
 
         // --- NAVIGATION ---
