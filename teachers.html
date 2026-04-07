@@ -968,6 +968,85 @@
         border-color: var(--primary);
         background: #f0f9ff;
       }
+      /* =========================================
+     CBT QUESTION MANAGER STYLES
+     ========================================= */
+      .cbt-option-preview {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        margin: 2px;
+        font-weight: 500;
+      }
+      .cbt-option-a {
+        background: #dbeafe;
+        color: #1d4ed8;
+      }
+      .cbt-option-b {
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .cbt-option-c {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .cbt-option-d {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .cbt-option-e {
+        background: #f3e8ff;
+        color: #7c3aed;
+      }
+      .cbt-correct-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .cbt-diff-easy {
+        color: #22c55e;
+        font-weight: 600;
+      }
+      .cbt-diff-medium {
+        color: #3b82f6;
+        font-weight: 600;
+      }
+      .cbt-diff-hard {
+        color: #ef4444;
+        font-weight: 600;
+      }
+      .cbt-diff-mixed {
+        color: #f59e0b;
+        font-weight: 600;
+      }
+
+      .cbt-page-btn {
+        padding: 6px 12px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: white;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+      }
+      .cbt-page-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+      .cbt-page-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+      .cbt-page-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -1873,6 +1952,858 @@
             </div>
           </div>
         </section>
+
+        <!-- CBT QUESTION UPLOAD SECTION (Admin Only) -->
+        <section id="section-cbt-upload" class="hidden">
+          <div class="breadcrumbs">
+            <span onclick="app.goHome()">Home</span> >
+            <span class="font-bold">CBT Question Manager</span>
+          </div>
+
+          <div class="list-container">
+            <div class="list-header">
+              <div>
+                <h2>📋 CBT Question Manager</h2>
+                <p class="text-sm text-secondary">
+                  Upload MCQ questions for student Computer Based Tests.
+                  Questions are pulled from the Question Bank where Type =
+                  "MCQ".
+                </p>
+              </div>
+              <div class="flex gap-2" style="flex-wrap: wrap">
+                <select
+                  id="cbtFilterSubject"
+                  class="form-control"
+                  style="width: 180px"
+                  onchange="app.loadCBTQuestions()"
+                >
+                  <option value="">All Subjects</option>
+                </select>
+                <select
+                  id="cbtFilterClass"
+                  class="form-control"
+                  style="width: 140px"
+                  onchange="app.loadCBTQuestions()"
+                >
+                  <option value="">All Classes</option>
+                  <option value="">General</option>
+                  <option>JSS1</option>
+                  <option>JSS2</option>
+                  <option>JSS3</option>
+                  <option>SSS1</option>
+                  <option>SSS2</option>
+                  <option>SSS3</option>
+                </select>
+                <select
+                  id="cbtFilterDifficulty"
+                  class="form-control"
+                  style="width: 130px"
+                  onchange="app.loadCBTQuestions()"
+                >
+                  <option value="">All Levels</option>
+                  <option>Easy</option>
+                  <option>Medium</option>
+                  <option>Hard</option>
+                  <option>Mixed</option>
+                </select>
+                <button
+                  class="btn btn-success btn-sm"
+                  onclick="app.openCBTQuestionModal()"
+                >
+                  <i class="fas fa-plus"></i> Add Question
+                </button>
+                <button
+                  class="btn btn-primary btn-sm"
+                  onclick="app.openCBTBulkAddModal()"
+                >
+                  <i class="fas fa-layer-group"></i> Bulk Add
+                </button>
+                <button
+                  class="btn btn-outline btn-sm"
+                  onclick="app.openCBTAIGenerateModal()"
+                >
+                  <i class="fas fa-robot"></i> AI Generate
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  onclick="app.deleteSelectedCBTQuestions()"
+                >
+                  <i class="fas fa-trash"></i> Delete Selected (<span
+                    id="cbt-selected-count"
+                    >0</span
+                  >)
+                </button>
+              </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 12px;
+                padding: 15px 20px;
+                background: #f8fafc;
+                border-bottom: 1px solid var(--border);
+              "
+            >
+              <div style="text-align: center">
+                <div
+                  style="
+                    font-size: 1.5rem;
+                    font-weight: 800;
+                    color: var(--primary);
+                  "
+                  id="cbt-stat-total"
+                >
+                  0
+                </div>
+                <div
+                  style="
+                    font-size: 0.75rem;
+                    color: var(--secondary);
+                    text-transform: uppercase;
+                    font-weight: 600;
+                  "
+                >
+                  Total Questions
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div
+                  style="font-size: 1.5rem; font-weight: 800; color: #22c55e"
+                  id="cbt-stat-subjects"
+                >
+                  0
+                </div>
+                <div
+                  style="
+                    font-size: 0.75rem;
+                    color: var(--secondary);
+                    text-transform: uppercase;
+                    font-weight: 600;
+                  "
+                >
+                  Subjects Covered
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div
+                  style="font-size: 1.5rem; font-weight: 800; color: #f59e0b"
+                  id="cbt-stat-easy"
+                >
+                  0
+                </div>
+                <div
+                  style="
+                    font-size: 0.75rem;
+                    color: var(--secondary);
+                    text-transform: uppercase;
+                    font-weight: 600;
+                  "
+                >
+                  Easy
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div
+                  style="font-size: 1.5rem; font-weight: 800; color: #3b82f6"
+                  id="cbt-stat-medium"
+                >
+                  0
+                </div>
+                <div
+                  style="
+                    font-size: 0.75rem;
+                    color: var(--secondary);
+                    text-transform: uppercase;
+                    font-weight: 600;
+                  "
+                >
+                  Medium
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div
+                  style="font-size: 1.5rem; font-weight: 800; color: #ef4444"
+                  id="cbt-stat-hard"
+                >
+                  0
+                </div>
+                <div
+                  style="
+                    font-size: 0.75rem;
+                    color: var(--secondary);
+                    text-transform: uppercase;
+                    font-weight: 600;
+                  "
+                >
+                  Hard
+                </div>
+              </div>
+            </div>
+
+            <!-- Questions Table -->
+            <div style="overflow-x: auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 40px">
+                      <input
+                        type="checkbox"
+                        id="cbt-select-all"
+                        onchange="app.cbtToggleSelectAll(this)"
+                      />
+                    </th>
+                    <th style="width: 40px">#</th>
+                    <th>Subject</th>
+                    <th>Class</th>
+                    <th style="min-width: 300px">Question</th>
+                    <th style="min-width: 200px">Options</th>
+                    <th>Answer</th>
+                    <th>Difficulty</th>
+                    <th>Author</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="cbt-tbody">
+                  <tr>
+                    <td colspan="10" class="text-center" style="padding: 2rem">
+                      Loading questions...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div
+              id="cbt-pagination"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 8px;
+                padding: 15px;
+                border-top: 1px solid var(--border);
+              "
+            ></div>
+          </div>
+        </section>
+
+        <!-- CBT SINGLE QUESTION MODAL -->
+        <div id="modal-cbt-question" class="modal-overlay">
+          <div class="modal" style="max-width: 700px">
+            <h3 id="cbt-modal-title">Add CBT Question</h3>
+            <input type="hidden" id="cbtEditId" />
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label
+                  >Subject <span style="color: var(--danger)">*</span></label
+                >
+                <select id="cbtSubject" class="form-control">
+                  <option value="">Select Subject</option>
+                  <option>English</option>
+                  <option>Mathematics</option>
+                  <option>Basic Science</option>
+                  <option>Social Studies</option>
+                  <option>Civic Education</option>
+                  <option>PHE</option>
+                  <option>Basic Technology</option>
+                  <option>Creative Arts</option>
+                  <option>Yoruba</option>
+                  <option>French</option>
+                  <option>Agricultural Science</option>
+                  <option>Computer Studies</option>
+                  <option>Home Economics</option>
+                  <option>CRS/IRS</option>
+                  <option>Business Studies</option>
+                  <option>Economics</option>
+                  <option>Biology</option>
+                  <option>Further Math</option>
+                  <option>Agric Sci</option>
+                  <option>Data Processing</option>
+                  <option>Chemistry</option>
+                  <option>Physics</option>
+                  <option>Geography</option>
+                  <option>Literature</option>
+                  <option>Government</option>
+                  <option>CRS</option>
+                  <option>Accounting</option>
+                  <option>Commerce</option>
+                  <option>CCA</option>
+                  <option>Marketing</option>
+                  <option>T/D</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Class</label>
+                <select id="cbtClass" class="form-control">
+                  <option value="">General (All Classes)</option>
+                  <option>JSS1</option>
+                  <option>JSS2</option>
+                  <option>JSS3</option>
+                  <option>SSS1</option>
+                  <option>SSS2</option>
+                  <option>SSS3</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Difficulty</label>
+              <div style="display: flex; gap: 10px">
+                <label
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    font-weight: normal;
+                    cursor: pointer;
+                  "
+                >
+                  <input type="radio" name="cbtDifficulty" value="Easy" /> Easy
+                </label>
+                <label
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    font-weight: normal;
+                    cursor: pointer;
+                  "
+                >
+                  <input
+                    type="radio"
+                    name="cbtDifficulty"
+                    value="Medium"
+                    checked
+                  />
+                  Medium
+                </label>
+                <label
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    font-weight: normal;
+                    cursor: pointer;
+                  "
+                >
+                  <input type="radio" name="cbtDifficulty" value="Hard" /> Hard
+                </label>
+                <label
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    font-weight: normal;
+                    cursor: pointer;
+                  "
+                >
+                  <input type="radio" name="cbtDifficulty" value="Mixed" />
+                  Mixed
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label
+                >Question Text
+                <span style="color: var(--danger)">*</span></label
+              >
+              <textarea
+                id="cbtQuestion"
+                class="form-control"
+                rows="3"
+                placeholder="Type the full question here..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label
+                >Options <span style="color: var(--danger)">*</span>
+                <small style="color: var(--secondary)"
+                  >(one per line — the first letter is treated as the option
+                  label)</small
+                ></label
+              >
+              <div class="grid-2" style="gap: 10px">
+                <div>
+                  <label
+                    style="
+                      font-size: 0.8rem;
+                      color: var(--secondary);
+                      margin-bottom: 4px;
+                      display: block;
+                    "
+                    >Option A</label
+                  >
+                  <input
+                    type="text"
+                    id="cbtOptA"
+                    class="form-control"
+                    placeholder="e.g. The first option"
+                  />
+                </div>
+                <div>
+                  <label
+                    style="
+                      font-size: 0.8rem;
+                      color: var(--secondary);
+                      margin-bottom: 4px;
+                      display: block;
+                    "
+                    >Option B</label
+                  >
+                  <input
+                    type="text"
+                    id="cbtOptB"
+                    class="form-control"
+                    placeholder="e.g. The second option"
+                  />
+                </div>
+                <div>
+                  <label
+                    style="
+                      font-size: 0.8rem;
+                      color: var(--secondary);
+                      margin-bottom: 4px;
+                      display: block;
+                    "
+                    >Option C</label
+                  >
+                  <input
+                    type="text"
+                    id="cbtOptC"
+                    class="form-control"
+                    placeholder="e.g. The third option"
+                  />
+                </div>
+                <div>
+                  <label
+                    style="
+                      font-size: 0.8rem;
+                      color: var(--secondary);
+                      margin-bottom: 4px;
+                      display: block;
+                    "
+                    >Option D</label
+                  >
+                  <input
+                    type="text"
+                    id="cbtOptD"
+                    class="form-control"
+                    placeholder="e.g. The fourth option"
+                  />
+                </div>
+              </div>
+              <div style="margin-top: 8px">
+                <label
+                  style="
+                    font-size: 0.8rem;
+                    color: var(--secondary);
+                    margin-bottom: 4px;
+                    display: block;
+                  "
+                  >Option E <small>(optional)</small></label
+                >
+                <input
+                  type="text"
+                  id="cbtOptE"
+                  class="form-control"
+                  style="max-width: 50%"
+                  placeholder="e.g. None of the above"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label
+                >Correct Answer
+                <span style="color: var(--danger)">*</span></label
+              >
+              <select
+                id="cbtAnswer"
+                class="form-control"
+                style="max-width: 300px"
+              >
+                <option value="">Select correct answer</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+              </select>
+            </div>
+
+            <div
+              id="cbt-answer-preview"
+              style="
+                display: none;
+                padding: 12px;
+                background: #f0fdf4;
+                border: 1px solid #86efac;
+                border-radius: 8px;
+                margin-bottom: 15px;
+              "
+            >
+              <small style="color: #15803d; font-weight: 600"
+                ><i class="fas fa-check-circle"></i> Answer Preview:
+                <span id="cbt-answer-preview-text"></span
+              ></small>
+            </div>
+
+            <div class="flex justify-between" style="margin-top: 20px">
+              <button class="btn btn-outline" onclick="app.closeModals()">
+                Cancel
+              </button>
+              <div class="flex gap-2">
+                <button
+                  class="btn btn-outline"
+                  onclick="app.saveCBTQuestionAndNew()"
+                >
+                  <i class="fas fa-plus"></i> Save & Add Another
+                </button>
+                <button class="btn btn-primary" onclick="app.saveCBTQuestion()">
+                  <i class="fas fa-save"></i> Save Question
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CBT BULK ADD MODAL -->
+        <div id="modal-cbt-bulk" class="modal-overlay">
+          <div
+            class="modal"
+            style="max-width: 800px; max-height: 90vh; overflow-y: auto"
+          >
+            <h3>Bulk Add CBT Questions</h3>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label
+                  >Subject <span style="color: var(--danger)">*</span></label
+                >
+                <select id="bulkCbtSubject" class="form-control">
+                  <option value="">Select Subject</option>
+                  <option>English</option>
+                  <option>Mathematics</option>
+                  <option>Basic Science</option>
+                  <option>Social Studies</option>
+                  <option>Civic Education</option>
+                  <option>Biology</option>
+                  <option>Chemistry</option>
+                  <option>Physics</option>
+                  <option>Economics</option>
+                  <option>Government</option>
+                  <option>CRS</option>
+                  <option>Geography</option>
+                  <option>Literature</option>
+                  <option>Agricultural Science</option>
+                  <option>Data Processing</option>
+                  <option>Further Math</option>
+                  <option>Accounting</option>
+                  <option>Commerce</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Class</label>
+                <select id="bulkCbtClass" class="form-control">
+                  <option value="">General (All Classes)</option>
+                  <option>JSS1</option>
+                  <option>JSS2</option>
+                  <option>JSS3</option>
+                  <option>SSS1</option>
+                  <option>SSS2</option>
+                  <option>SSS3</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Difficulty</label>
+              <select
+                id="bulkCbtDifficulty"
+                class="form-control"
+                style="max-width: 200px"
+              >
+                <option>Easy</option>
+                <option selected>Medium</option>
+                <option>Hard</option>
+                <option>Mixed</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label
+                >Paste Questions (Bulk Format)
+                <span style="color: var(--danger)">*</span></label
+              >
+              <div
+                style="
+                  background: #f0f9ff;
+                  border: 1px solid #bae6fd;
+                  border-radius: 8px;
+                  padding: 12px;
+                  margin-bottom: 10px;
+                  font-size: 0.85rem;
+                  line-height: 1.6;
+                "
+              >
+                <strong>Format:</strong> Each question block separated by a
+                blank line.<br />
+                <strong>Line 1:</strong> Question text<br />
+                <strong>Line 2:</strong> A. First option<br />
+                <strong>Line 3:</strong> B. Second option<br />
+                <strong>Line 4:</strong> C. Third option<br />
+                <strong>Line 5:</strong> D. Fourth option<br />
+                <strong>Line 6:</strong> ANSWER: B
+                <small>(the correct letter)</small><br /><br />
+                <strong>Example:</strong><br />
+                <pre
+                  style="
+                    background: white;
+                    padding: 8px;
+                    border-radius: 4px;
+                    margin: 0;
+                    white-space: pre-wrap;
+                    font-size: 0.8rem;
+                  "
+                >
+What is 5 + 3?
+A. 6
+B. 7
+C. 8
+D. 9
+ANSWER: C
+
+The capital of Nigeria is?
+A. Lagos
+B. Abuja
+C. Kano
+D. Port Harcourt
+ANSWER: B</pre
+                >
+              </div>
+              <textarea
+                id="bulkCbtText"
+                class="form-control"
+                rows="15"
+                placeholder="Paste questions here using the format above..."
+              ></textarea>
+            </div>
+
+            <div class="flex justify-between" style="margin-top: 20px">
+              <button class="btn btn-outline" onclick="app.closeModals()">
+                Cancel
+              </button>
+              <button
+                class="btn btn-primary"
+                onclick="app.parseAndSaveBulkCBT()"
+              >
+                <i class="fas fa-save"></i> Parse & Save All
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CBT AI GENERATE MODAL -->
+        <div id="modal-cbt-ai" class="modal-overlay">
+          <div class="modal" style="max-width: 600px">
+            <h3>
+              <i class="fas fa-robot" style="color: var(--primary)"></i> AI CBT
+              Question Generator
+            </h3>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label
+                  >Subject <span style="color: var(--danger)">*</span></label
+                >
+                <select id="aiCbtSubject" class="form-control">
+                  <option value="">Select Subject</option>
+                  <option>English</option>
+                  <option>Mathematics</option>
+                  <option>Basic Science</option>
+                  <option>Biology</option>
+                  <option>Chemistry</option>
+                  <option>Physics</option>
+                  <option>Civic Education</option>
+                  <option>Economics</option>
+                  <option>Government</option>
+                  <option>Geography</option>
+                  <option>Literature</option>
+                  <option>CRS</option>
+                  <option>Accounting</option>
+                  <option>Commerce</option>
+                  <option>Data Processing</option>
+                  <option>Agricultural Science</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Class</label>
+                <select id="aiCbtClass" class="form-control">
+                  <option value="">General (All Classes)</option>
+                  <option>JSS1</option>
+                  <option>JSS2</option>
+                  <option>JSS3</option>
+                  <option>SSS1</option>
+                  <option>SSS2</option>
+                  <option>SSS3</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label
+                >Topic / Syllabus Area
+                <span style="color: var(--danger)">*</span></label
+              >
+              <input
+                type="text"
+                id="aiCbtTopic"
+                class="form-control"
+                placeholder="e.g. Quadratic Equations, Photosynthesis, Nigerian Constitution..."
+              />
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Number of Questions</label>
+                <input
+                  type="number"
+                  id="aiCbtCount"
+                  class="form-control"
+                  value="10"
+                  min="1"
+                  max="50"
+                />
+              </div>
+              <div class="form-group">
+                <label>Difficulty</label>
+                <select id="aiCbtDifficulty" class="form-control">
+                  <option>Easy</option>
+                  <option selected>Medium</option>
+                  <option>Hard</option>
+                  <option>Mixed</option>
+                </select>
+              </div>
+            </div>
+
+            <div
+              style="
+                background: #fef3c7;
+                border: 1px solid #fcd34d;
+                border-radius: 8px;
+                padding: 12px;
+                margin-bottom: 15px;
+                font-size: 0.85rem;
+              "
+            >
+              <i class="fas fa-info-circle" style="color: #92400e"></i>
+              <strong>Tip:</strong> Be specific with the topic for better
+              questions. E.g. "Solving quadratic equations using factorization"
+              is better than just "Algebra". The AI will generate properly
+              formatted MCQ questions with 4 options each.
+            </div>
+
+            <div id="ai-cbt-results" style="display: none; margin-bottom: 15px">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 10px;
+                "
+              >
+                <strong id="ai-cbt-result-count">0 questions generated</strong>
+                <div class="flex gap-2">
+                  <button
+                    class="btn btn-sm btn-outline"
+                    onclick="app.previewAICBTQuestions()"
+                  >
+                    <i class="fas fa-eye"></i> Preview
+                  </button>
+                </div>
+              </div>
+              <div
+                id="ai-cbt-questions-list"
+                style="
+                  max-height: 200px;
+                  overflow-y: auto;
+                  border: 1px solid var(--border);
+                  border-radius: 8px;
+                  padding: 10px;
+                  background: #f8fafc;
+                "
+              ></div>
+            </div>
+
+            <div class="flex justify-between" style="margin-top: 20px">
+              <button class="btn btn-outline" onclick="app.closeModals()">
+                Cancel
+              </button>
+              <div class="flex gap-2">
+                <button
+                  class="btn btn-primary"
+                  id="ai-cbt-generate-btn"
+                  onclick="app.generateCBTWithAI()"
+                >
+                  <i class="fas fa-magic"></i> Generate
+                </button>
+                <button
+                  class="btn btn-success"
+                  id="ai-cbt-save-btn"
+                  onclick="app.saveAICBTQuestions()"
+                  style="display: none"
+                >
+                  <i class="fas fa-save"></i> Save All to Bank
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CBT PREVIEW MODAL -->
+        <div id="modal-cbt-preview" class="modal-overlay">
+          <div
+            class="modal"
+            style="max-width: 750px; max-height: 90vh; overflow-y: auto"
+          >
+            <div
+              class="flex justify-between items-center"
+              style="margin-bottom: 20px"
+            >
+              <h3>CBT Questions Preview</h3>
+              <button
+                class="btn btn-sm btn-outline"
+                onclick="app.closeModals()"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div
+              id="cbt-preview-content"
+              style="
+                background: white;
+                padding: 20px;
+                border: 1px solid #eee;
+                border-radius: 8px;
+              "
+            ></div>
+            <div class="flex gap-2 justify-between" style="margin-top: 20px">
+              <button class="btn btn-outline" onclick="app.printCBTPreview()">
+                <i class="fas fa-print"></i> Print
+              </button>
+              <button class="btn btn-outline" onclick="app.closeModals()">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
 
         <!-- ASSIGNMENT MODAL -->
         <div id="modal-assignment" class="modal-overlay">
@@ -2975,6 +3906,11 @@
           navHistory: [],
           lowThreshold: 50,
           feeSchool: "sec", // 'sec' or 'pry'
+          cbtQuestions: [], // All loaded CBT questions
+          cbtFilteredQuestions: [], // After filtering
+          cbtCurrentPage: 1,
+          cbtPageSize: 15,
+          cbtAiGenerated: [], // Temp storage for AI-generated questions
         },
 
         pushHistory: function (sectionId, title, backAction = null) {
@@ -3542,6 +4478,927 @@
         },
 
         // ==========================================
+        // CBT QUESTION MANAGER (Admin Only)
+        // ==========================================
+        loadCBTUploadSection: function () {
+          // Security check — only Admin/Head
+          const r = this.state.currentUser.role;
+          if (r !== "Admin" && r !== "Head") {
+            return this.showToast("Access denied. Admin only.", "error");
+          }
+
+          this.showSection("section-cbt-upload");
+          this.pushHistory("section-cbt-upload", "CBT Questions");
+
+          // Populate subject filter
+          const subjectSelect = document.getElementById("cbtFilterSubject");
+          if (subjectSelect.options.length <= 1) {
+            const subjects = [
+              "English",
+              "Mathematics",
+              "Basic Science",
+              "Social Studies",
+              "Civic Education",
+              "PHE",
+              "Basic Technology",
+              "Creative Arts",
+              "Yoruba",
+              "French",
+              "Agricultural Science",
+              "Computer Studies",
+              "Home Economics",
+              "CRS/IRS",
+              "Business Studies",
+              "Economics",
+              "Biology",
+              "Further Math",
+              "Agric Sci",
+              "Data Processing",
+              "Chemistry",
+              "Physics",
+              "Geography",
+              "Literature",
+              "Government",
+              "CRS",
+              "Accounting",
+              "Commerce",
+              "CCA",
+              "Marketing",
+              "T/D",
+            ];
+            subjects.forEach((s) => {
+              subjectSelect.innerHTML += `<option value="${s}">${s}</option>`;
+            });
+          }
+
+          this.state.cbtCurrentPage = 1;
+          this.loadCBTQuestions();
+        },
+
+        loadCBTQuestions: async function () {
+          const subjectFilter =
+            document.getElementById("cbtFilterSubject").value;
+          const classFilter = document.getElementById("cbtFilterClass").value;
+          const diffFilter = document.getElementById(
+            "cbtFilterDifficulty",
+          ).value;
+
+          this.toggleLoader(true);
+
+          // Fetch ALL questions (not just MCQ) then filter client-side
+          const allQuestions = await GoogleSheetService.getQuestionBank("");
+
+          this.toggleLoader(false);
+
+          // Filter: only MCQ type questions
+          let mcqQuestions = allQuestions.filter((q) => {
+            const type = String(q.type || "").toLowerCase();
+            return type.indexOf("mcq") !== -1 || type === "";
+          });
+
+          // Apply filters
+          if (subjectFilter) {
+            mcqQuestions = mcqQuestions.filter(
+              (q) => q.subject === subjectFilter,
+            );
+          }
+          if (classFilter) {
+            mcqQuestions = mcqQuestions.filter((q) => {
+              const c = String(q.className || "")
+                .trim()
+                .toLowerCase();
+              return (
+                c === classFilter.toLowerCase() || c === "" || c === "general"
+              );
+            });
+          }
+          if (diffFilter) {
+            mcqQuestions = mcqQuestions.filter(
+              (q) => q.difficulty === diffFilter,
+            );
+          }
+
+          this.state.cbtQuestions = mcqQuestions;
+          this.state.cbtFilteredQuestions = mcqQuestions;
+          this.state.cbtCurrentPage = 1;
+
+          this.renderCBTStats(mcqQuestions);
+          this.renderCBTTable();
+        },
+
+        renderCBTStats: function (questions) {
+          document.getElementById("cbt-stat-total").textContent =
+            questions.length;
+
+          const subjects = new Set(
+            questions.map((q) => q.subject).filter(Boolean),
+          );
+          document.getElementById("cbt-stat-subjects").textContent =
+            subjects.size;
+
+          document.getElementById("cbt-stat-easy").textContent =
+            questions.filter((q) => q.difficulty === "Easy").length;
+          document.getElementById("cbt-stat-medium").textContent =
+            questions.filter((q) => q.difficulty === "Medium").length;
+          document.getElementById("cbt-stat-hard").textContent =
+            questions.filter((q) => q.difficulty === "Hard").length;
+        },
+
+        renderCBTTable: function () {
+          const questions = this.state.cbtFilteredQuestions;
+          const page = this.state.cbtCurrentPage;
+          const pageSize = this.state.cbtPageSize;
+          const totalPages = Math.ceil(questions.length / pageSize) || 1;
+
+          if (page > totalPages) this.state.cbtCurrentPage = totalPages;
+
+          const startIdx = (this.state.cbtCurrentPage - 1) * pageSize;
+          const endIdx = startIdx + pageSize;
+          const pageQuestions = questions.slice(startIdx, endIdx);
+
+          const tbody = document.getElementById("cbt-tbody");
+          tbody.innerHTML = "";
+
+          if (pageQuestions.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="10" class="text-center" style="padding:3rem; color:var(--secondary);">
+              <i class="fas fa-inbox" style="font-size:2rem; opacity:0.3; display:block; margin-bottom:10px;"></i>
+              No CBT questions found. Add questions or generate with AI.
+            </td></tr>`;
+            document.getElementById("cbt-pagination").innerHTML = "";
+            return;
+          }
+
+          pageQuestions.forEach((q, i) => {
+            const globalIdx = startIdx + i + 1;
+
+            // Parse options for display
+            let options = [];
+            try {
+              options = JSON.parse(q.options || "[]");
+            } catch (e) {}
+            if (!Array.isArray(options)) options = [];
+
+            const optionColors = [
+              "cbt-option-a",
+              "cbt-option-b",
+              "cbt-option-c",
+              "cbt-option-d",
+              "cbt-option-e",
+            ];
+            const optionsHTML = options
+              .slice(0, 5)
+              .map((opt, oi) => {
+                const shortOpt =
+                  String(opt).length > 35
+                    ? String(opt).substring(0, 35) + "..."
+                    : opt;
+                return `<span class="cbt-option-preview ${optionColors[oi] || ""}">${this.escapeHtml(shortOpt)}</span>`;
+              })
+              .join(" ");
+
+            // Determine correct answer display
+            let correctDisplay = String(q.answer || "-").trim();
+            // If answer is just a letter like "A", show it as a badge
+            if (/^[A-E]$/i.test(correctDisplay)) {
+              correctDisplay = `<span class="cbt-correct-badge">${correctDisplay.toUpperCase()}</span>`;
+            }
+
+            // Difficulty styling
+            const diffClass =
+              {
+                Easy: "cbt-diff-easy",
+                Medium: "cbt-diff-medium",
+                Hard: "cbt-diff-hard",
+                Mixed: "cbt-diff-mixed",
+              }[q.difficulty] || "";
+
+            // Truncate question
+            const qText =
+              String(q.question || "").length > 120
+                ? String(q.question).substring(0, 120) + "..."
+                : q.question;
+
+            tbody.innerHTML += `
+              <tr data-id="${q.id}">
+                <td><input type="checkbox" class="cbt-checkbox" onchange="app.updateCBTSelectedCount()"></td>
+                <td style="color:var(--secondary); font-size:0.85rem;">${globalIdx}</td>
+                <td><span class="badge">${q.subject || "N/A"}</span></td>
+                <td style="font-size:0.85rem;">${q.className || "General"}</td>
+                <td style="font-size:0.85rem; line-height:1.4;" title="${this.escapeHtml(q.question || "")}">${this.escapeHtml(qText)}</td>
+                <td>${optionsHTML}</td>
+                <td>${correctDisplay}</td>
+                <td><span class="${diffClass}">${q.difficulty || "N/A"}</span></td>
+                <td style="font-size:0.8rem; color:var(--secondary);">${q.author || "N/A"}</td>
+                <td>
+                  <div class="flex gap-1">
+                    <button class="btn btn-outline btn-sm" onclick="app.editCBTQuestion('${q.id}')" title="Edit">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="app.deleteCBTQuestion('${q.id}')" title="Delete">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+
+          // Pagination
+          this.renderCBTPagination(totalPages);
+          this.updateCBTSelectedCount();
+        },
+
+        renderCBTPagination: function (totalPages) {
+          const container = document.getElementById("cbt-pagination");
+          if (totalPages <= 1) {
+            container.innerHTML = "";
+            return;
+          }
+
+          const current = this.state.cbtCurrentPage;
+          let html = "";
+
+          html += `<button class="cbt-page-btn" onclick="app.cbtGoToPage(${current - 1})" ${current === 1 ? "disabled" : ""}><i class="fas fa-chevron-left"></i></button>`;
+
+          // Show max 7 page buttons
+          let startPage = Math.max(1, current - 3);
+          let endPage = Math.min(totalPages, startPage + 6);
+          if (endPage - startPage < 6) startPage = Math.max(1, endPage - 6);
+
+          if (startPage > 1) {
+            html += `<button class="cbt-page-btn" onclick="app.cbtGoToPage(1)">1</button>`;
+            if (startPage > 2)
+              html += `<span style="color:var(--secondary);">...</span>`;
+          }
+
+          for (let p = startPage; p <= endPage; p++) {
+            html += `<button class="cbt-page-btn ${p === current ? "active" : ""}" onclick="app.cbtGoToPage(${p})">${p}</button>`;
+          }
+
+          if (endPage < totalPages) {
+            if (endPage < totalPages - 1)
+              html += `<span style="color:var(--secondary);">...</span>`;
+            html += `<button class="cbt-page-btn" onclick="app.cbtGoToPage(${totalPages})">${totalPages}</button>`;
+          }
+
+          html += `<button class="cbt-page-btn" onclick="app.cbtGoToPage(${current + 1})" ${current === totalPages ? "disabled" : ""}><i class="fas fa-chevron-right"></i></button>`;
+
+          container.innerHTML = html;
+        },
+
+        cbtGoToPage: function (page) {
+          const totalPages =
+            Math.ceil(
+              this.state.cbtFilteredQuestions.length / this.state.cbtPageSize,
+            ) || 1;
+          if (page < 1 || page > totalPages) return;
+          this.state.cbtCurrentPage = page;
+          this.renderCBTTable();
+        },
+
+        cbtToggleSelectAll: function (source) {
+          document
+            .querySelectorAll(".cbt-checkbox")
+            .forEach((cb) => (cb.checked = source.checked));
+          this.updateCBTSelectedCount();
+        },
+
+        updateCBTSelectedCount: function () {
+          const count = document.querySelectorAll(
+            ".cbt-checkbox:checked",
+          ).length;
+          document.getElementById("cbt-selected-count").textContent = count;
+        },
+
+        getSelectedCBTIds: function () {
+          const ids = [];
+          document.querySelectorAll("#cbt-tbody tr").forEach((row) => {
+            const cb = row.querySelector(".cbt-checkbox");
+            if (cb && cb.checked) ids.push(row.dataset.id);
+          });
+          return ids;
+        },
+
+        // --- SINGLE QUESTION MODAL ---
+        openCBTQuestionModal: function () {
+          document.getElementById("cbt-modal-title").textContent =
+            "Add CBT Question";
+          document.getElementById("cbtEditId").value = "";
+          document.getElementById("cbtSubject").value = "";
+          document.getElementById("cbtClass").value = "";
+          document.getElementById("cbtQuestion").value = "";
+          document.getElementById("cbtOptA").value = "";
+          document.getElementById("cbtOptB").value = "";
+          document.getElementById("cbtOptC").value = "";
+          document.getElementById("cbtOptD").value = "";
+          document.getElementById("cbtOptE").value = "";
+          document.getElementById("cbtAnswer").value = "";
+          document.querySelector(
+            'input[name="cbtDifficulty"][value="Medium"]',
+          ).checked = true;
+          document.getElementById("cbt-answer-preview").style.display = "none";
+
+          // Add live preview listeners
+          [
+            "cbtOptA",
+            "cbtOptB",
+            "cbtOptC",
+            "cbtOptD",
+            "cbtOptE",
+            "cbtAnswer",
+          ].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) {
+              el.removeEventListener("input", app.updateCBTAnswerPreview);
+              el.addEventListener("input", app.updateCBTAnswerPreview);
+            }
+          });
+
+          document.getElementById("modal-cbt-question").style.display = "flex";
+        },
+
+        editCBTQuestion: function (id) {
+          const question = this.state.cbtQuestions.find((q) => q.id === id);
+          if (!question) return this.showToast("Question not found", "error");
+
+          document.getElementById("cbt-modal-title").textContent =
+            "Edit CBT Question";
+          document.getElementById("cbtEditId").value = question.id;
+          document.getElementById("cbtSubject").value = question.subject || "";
+          document.getElementById("cbtClass").value = question.className || "";
+          document.getElementById("cbtQuestion").value =
+            question.question || "";
+          document.querySelector(
+            `input[name="cbtDifficulty"][value="${question.difficulty || "Medium"}"]`,
+          ).checked = true;
+
+          // Parse options
+          let options = [];
+          try {
+            options = JSON.parse(question.options || "[]");
+          } catch (e) {}
+          document.getElementById("cbtOptA").value = options[0]
+            ? options[0].replace(/^[A-E][\.\)]\s*/i, "")
+            : "";
+          document.getElementById("cbtOptB").value = options[1]
+            ? options[1].replace(/^[A-E][\.\)]\s*/i, "")
+            : "";
+          document.getElementById("cbtOptC").value = options[2]
+            ? options[2].replace(/^[A-E][\.\)]\s*/i, "")
+            : "";
+          document.getElementById("cbtOptD").value = options[3]
+            ? options[3].replace(/^[A-E][\.\)]\s*/i, "")
+            : "";
+          document.getElementById("cbtOptE").value = options[4]
+            ? options[4].replace(/^[A-E][\.\)]\s*/i, "")
+            : "";
+
+          // Resolve answer letter
+          const ans = String(question.answer || "").trim();
+          const letterMatch = ans.match(/^([A-E])[\.\)]?\s*/i);
+          const answerLetter = letterMatch ? letterMatch[1].toUpperCase() : "";
+          document.getElementById("cbtAnswer").value = answerLetter;
+
+          // Add live preview listeners
+          [
+            "cbtOptA",
+            "cbtOptB",
+            "cbtOptC",
+            "cbtOptD",
+            "cbtOptE",
+            "cbtAnswer",
+          ].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) {
+              el.removeEventListener("input", app.updateCBTAnswerPreview);
+              el.addEventListener("input", app.updateCBTAnswerPreview);
+            }
+          });
+
+          this.updateCBTAnswerPreview();
+          document.getElementById("modal-cbt-question").style.display = "flex";
+        },
+
+        updateCBTAnswerPreview: function () {
+          const answerLetter = document.getElementById("cbtAnswer").value;
+          const optionInputs = {
+            A: document.getElementById("cbtOptA").value.trim(),
+            B: document.getElementById("cbtOptB").value.trim(),
+            C: document.getElementById("cbtOptC").value.trim(),
+            D: document.getElementById("cbtOptD").value.trim(),
+            E: document.getElementById("cbtOptE").value.trim(),
+          };
+
+          const preview = document.getElementById("cbt-answer-preview");
+          const previewText = document.getElementById(
+            "cbt-answer-preview-text",
+          );
+
+          if (answerLetter && optionInputs[answerLetter]) {
+            previewText.textContent =
+              answerLetter + ". " + optionInputs[answerLetter];
+            preview.style.display = "block";
+          } else {
+            preview.style.display = "none";
+          }
+        },
+
+        buildCBTQuestionData: function () {
+          const subject = document.getElementById("cbtSubject").value;
+          const className = document.getElementById("cbtClass").value;
+          const question = document.getElementById("cbtQuestion").value.trim();
+          const difficulty = document.querySelector(
+            'input[name="cbtDifficulty"]:checked',
+          ).value;
+          const answerLetter = document.getElementById("cbtAnswer").value;
+
+          if (!subject) return { error: "Subject is required" };
+          if (!question) return { error: "Question text is required" };
+          if (!answerLetter) return { error: "Select the correct answer" };
+
+          // Build options array
+          const labels = ["A", "B", "C", "D", "E"];
+          const inputs = [
+            "cbtOptA",
+            "cbtOptB",
+            "cbtOptC",
+            "cbtOptD",
+            "cbtOptE",
+          ];
+          const options = [];
+          let hasCorrectOption = false;
+
+          inputs.forEach((inputId, i) => {
+            const val = document.getElementById(inputId).value.trim();
+            if (val) {
+              const formatted = labels[i] + ". " + val;
+              options.push(formatted);
+              if (labels[i] === answerLetter.toUpperCase())
+                hasCorrectOption = true;
+            }
+          });
+
+          if (options.length < 2)
+            return { error: "At least 2 options are required" };
+          if (!hasCorrectOption)
+            return {
+              error: `Option ${answerLetter} is empty but marked as correct answer`,
+            };
+
+          // The answer must match the option string exactly for CBT to work
+          const correctOption = options.find(
+            (o) =>
+              o.startsWith(answerLetter.toUpperCase() + ".") ||
+              o.startsWith(answerLetter.toUpperCase() + ")"),
+          );
+
+          return {
+            id: document.getElementById("cbtEditId").value || undefined,
+            subject: subject,
+            class: className || "",
+            type: "MCQ",
+            difficulty: difficulty,
+            question: question,
+            options: options,
+            answer: correctOption,
+            author: this.state.currentUser.name,
+          };
+        },
+
+        saveCBTQuestion: async function () {
+          const data = this.buildCBTQuestionData();
+          if (data.error) return this.showToast(data.error, "warning");
+
+          this.toggleLoader(true);
+          const res = await GoogleSheetService.saveQuestionToBank(data);
+          this.toggleLoader(false);
+
+          if (res.status === "success") {
+            this.showToast("CBT Question Saved!", "success");
+            this.closeModals();
+            this.loadCBTQuestions();
+          } else {
+            this.showToast("Error saving question", "error");
+          }
+        },
+
+        saveCBTQuestionAndNew: async function () {
+          const data = this.buildCBTQuestionData();
+          if (data.error) return this.showToast(data.error, "warning");
+
+          this.toggleLoader(true);
+          const res = await GoogleSheetService.saveQuestionToBank(data);
+          this.toggleLoader(false);
+
+          if (res.status === "success") {
+            this.showToast("Saved! Add another...", "success");
+            // Clear form but keep subject/class/difficulty
+            document.getElementById("cbtEditId").value = "";
+            document.getElementById("cbtQuestion").value = "";
+            document.getElementById("cbtOptA").value = "";
+            document.getElementById("cbtOptB").value = "";
+            document.getElementById("cbtOptC").value = "";
+            document.getElementById("cbtOptD").value = "";
+            document.getElementById("cbtOptE").value = "";
+            document.getElementById("cbtAnswer").value = "";
+            document.getElementById("cbt-answer-preview").style.display =
+              "none";
+            document.getElementById("cbtQuestion").focus();
+          } else {
+            this.showToast("Error saving question", "error");
+          }
+        },
+
+        deleteCBTQuestion: async function (id) {
+          if (!confirm("Delete this CBT question?")) return;
+          this.toggleLoader(true);
+          await GoogleSheetService.deleteQuestionFromBank(id);
+          this.toggleLoader(false);
+          this.showToast("Question deleted", "success");
+          this.loadCBTQuestions();
+        },
+
+        deleteSelectedCBTQuestions: async function () {
+          const ids = this.getSelectedCBTIds();
+          if (ids.length === 0)
+            return this.showToast("Select questions to delete", "warning");
+          if (!confirm(`Delete ${ids.length} selected question(s)?`)) return;
+
+          this.toggleLoader(true);
+          for (const id of ids) {
+            await GoogleSheetService.deleteQuestionFromBank(id);
+          }
+          this.toggleLoader(false);
+          this.showToast(`${ids.length} questions deleted`, "success");
+          this.loadCBTQuestions();
+        },
+
+        // --- BULK ADD ---
+        openCBTBulkAddModal: function () {
+          document.getElementById("bulkCbtSubject").value = "";
+          document.getElementById("bulkCbtClass").value = "";
+          document.getElementById("bulkCbtDifficulty").value = "Medium";
+          document.getElementById("bulkCbtText").value = "";
+          document.getElementById("modal-cbt-bulk").style.display = "flex";
+        },
+
+        parseAndSaveBulkCBT: async function () {
+          const subject = document.getElementById("bulkCbtSubject").value;
+          const className = document.getElementById("bulkCbtClass").value;
+          const difficulty = document.getElementById("bulkCbtDifficulty").value;
+          const rawText = document.getElementById("bulkCbtText").value.trim();
+
+          if (!subject) return this.showToast("Select a subject", "warning");
+          if (!rawText)
+            return this.showToast("Paste questions first", "warning");
+
+          // Parse: split by double newline (blank line separates questions)
+          const blocks = rawText.split(/\n\s*\n/).filter((b) => b.trim());
+          const questions = [];
+          const errors = [];
+
+          blocks.forEach((block, blockIdx) => {
+            const lines = block
+              .split("\n")
+              .map((l) => l.trim())
+              .filter((l) => l);
+            if (lines.length < 3) {
+              errors.push(`Block ${blockIdx + 1}: Too few lines`);
+              return;
+            }
+
+            // First line = question
+            const questionText = lines[0];
+            const options = [];
+            let answerLetter = "";
+
+            for (let i = 1; i < lines.length; i++) {
+              const line = lines[i];
+
+              // Check for ANSWER: line
+              const answerMatch = line.match(/^ANSWER\s*:\s*([A-E])/i);
+              if (answerMatch) {
+                answerLetter = answerMatch[1].toUpperCase();
+                continue;
+              }
+
+              // Check for option pattern: "A. text" or "A) text" or "A text"
+              const optMatch = line.match(/^([A-E])[\.\)\:]?\s*(.+)$/i);
+              if (optMatch) {
+                const label = optMatch[1].toUpperCase();
+                const text = optMatch[2].trim();
+                options.push(label + ". " + text);
+              }
+            }
+
+            if (options.length < 2) {
+              errors.push(`Q${blockIdx + 1}: Need at least 2 options`);
+              return;
+            }
+            if (!answerLetter) {
+              errors.push(`Q${blockIdx + 1}: No ANSWER: line found`);
+              return;
+            }
+
+            // Find the correct option string
+            const correctOption = options.find((o) =>
+              o.startsWith(answerLetter + "."),
+            );
+            if (!correctOption) {
+              errors.push(
+                `Q${blockIdx + 1}: Answer ${answerLetter} not in options`,
+              );
+              return;
+            }
+
+            questions.push({
+              subject: subject,
+              class: className || "",
+              type: "MCQ",
+              difficulty: difficulty,
+              question: questionText,
+              options: options,
+              answer: correctOption,
+              author: this.state.currentUser.name,
+            });
+          });
+
+          if (errors.length > 0) {
+            this.showToast(
+              `${errors.length} error(s): ${errors.slice(0, 3).join("; ")}${errors.length > 3 ? "..." : ""}`,
+              "error",
+            );
+          }
+
+          if (questions.length === 0) {
+            return this.showToast(
+              "No valid questions parsed. Check the format.",
+              "error",
+            );
+          }
+
+          this.closeModals();
+          this.toggleLoader(true);
+
+          let savedCount = 0;
+          let failCount = 0;
+
+          for (const q of questions) {
+            const res = await GoogleSheetService.saveQuestionToBank(q);
+            if (res.status === "success") savedCount++;
+            else failCount++;
+          }
+
+          this.toggleLoader(false);
+
+          if (failCount === 0) {
+            this.showToast(`All ${savedCount} questions saved!`, "success");
+          } else {
+            this.showToast(
+              `${savedCount} saved, ${failCount} failed`,
+              "warning",
+            );
+          }
+
+          this.loadCBTQuestions();
+        },
+
+        // --- AI GENERATE ---
+        openCBTAIGenerateModal: function () {
+          document.getElementById("aiCbtSubject").value = "";
+          document.getElementById("aiCbtClass").value = "";
+          document.getElementById("aiCbtTopic").value = "";
+          document.getElementById("aiCbtCount").value = "10";
+          document.getElementById("aiCbtDifficulty").value = "Medium";
+          document.getElementById("ai-cbt-results").style.display = "none";
+          document.getElementById("ai-cbt-generate-btn").style.display =
+            "inline-flex";
+          document.getElementById("ai-cbt-save-btn").style.display = "none";
+          this.state.cbtAiGenerated = [];
+          document.getElementById("modal-cbt-ai").style.display = "flex";
+        },
+
+        generateCBTWithAI: async function () {
+          const subject = document.getElementById("aiCbtSubject").value;
+          const className = document.getElementById("aiCbtClass").value;
+          const topic = document.getElementById("aiCbtTopic").value.trim();
+          const count =
+            parseInt(document.getElementById("aiCbtCount").value) || 10;
+          const difficulty = document.getElementById("aiCbtDifficulty").value;
+
+          if (!subject) return this.showToast("Select a subject", "warning");
+          if (!topic) return this.showToast("Enter a topic", "warning");
+
+          const genBtn = document.getElementById("ai-cbt-generate-btn");
+          genBtn.disabled = true;
+          genBtn.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Generating...';
+
+          const res = await GoogleSheetService._post("generateAiQuestions", {
+            subject: subject,
+            topic: topic,
+            questionType: "Multiple Choice (MCQ)",
+            difficulty: difficulty,
+            count: count,
+          });
+
+          genBtn.disabled = false;
+          genBtn.innerHTML = '<i class="fas fa-magic"></i> Generate';
+
+          if (
+            res.status === "success" &&
+            res.questions &&
+            res.questions.length > 0
+          ) {
+            this.state.cbtAiGenerated = res.questions.map((q) => ({
+              ...q,
+              subject: subject,
+              className: className || "",
+              difficulty: difficulty,
+            }));
+
+            document.getElementById("ai-cbt-result-count").textContent =
+              `${res.questions.length} questions generated`;
+            document.getElementById("ai-cbt-results").style.display = "block";
+            document.getElementById("ai-cbt-save-btn").style.display =
+              "inline-flex";
+
+            // Render preview list
+            const listEl = document.getElementById("ai-cbt-questions-list");
+            listEl.innerHTML = this.state.cbtAiGenerated
+              .map((q, i) => {
+                const opts = (q.opts || [])
+                  .map(
+                    (o) =>
+                      `<span class="cbt-option-preview cbt-option-${["a", "b", "c", "d", "e"][Math.min(i % 4, 4)]}">${String(o).substring(0, 25)}...</span>`,
+                  )
+                  .join("");
+                return `<div style="margin-bottom:8px; padding:8px; background:white; border:1px solid var(--border); border-radius:6px;">
+                <div style="font-size:0.8rem; font-weight:600;">Q${i + 1}: ${String(q.q || "").substring(0, 60)}...</div>
+                <div style="margin-top:4px;">${opts}</div>
+              </div>`;
+              })
+              .join("");
+          } else {
+            this.showToast(res.message || "AI generation failed", "error");
+          }
+        },
+
+        saveAICBTQuestions: async function () {
+          if (this.state.cbtAiGenerated.length === 0)
+            return this.showToast("No questions to save", "warning");
+
+          this.closeModals();
+          this.toggleLoader(true);
+
+          let savedCount = 0;
+          let failCount = 0;
+          const labels = ["A", "B", "C", "D", "E", "F", "G", "H"];
+
+          for (const q of this.state.cbtAiGenerated) {
+            const opts = q.opts || [];
+            if (opts.length < 2) {
+              failCount++;
+              continue;
+            }
+
+            // Normalize options
+            const cleanOptions = opts.map((opt, i) => {
+              const text = String(opt)
+                .trim()
+                .replace(/^[A-H][\.\)\:]\s*/i, "")
+                .trim();
+              return (labels[i] || i + 1) + ". " + text;
+            });
+
+            // Resolve answer
+            let answer = String(q.ans || "").trim();
+            const letterMatch = answer.match(/^([A-H])$/i);
+            if (letterMatch) {
+              const idx = letterMatch[1].toUpperCase().charCodeAt(0) - 65;
+              if (idx < cleanOptions.length) answer = cleanOptions[idx];
+            }
+            // Try text match
+            if (!cleanOptions.includes(answer)) {
+              const cleanAns = answer
+                .replace(/^[A-H][\.\)\:]\s*/i, "")
+                .trim()
+                .toLowerCase();
+              for (const opt of cleanOptions) {
+                if (
+                  opt
+                    .replace(/^[A-H][\.\)\:]\s*/i, "")
+                    .trim()
+                    .toLowerCase() === cleanAns
+                ) {
+                  answer = opt;
+                  break;
+                }
+              }
+            }
+
+            if (!cleanOptions.includes(answer)) {
+              failCount++;
+              continue;
+            }
+
+            const res = await GoogleSheetService.saveQuestionToBank({
+              subject: q.subject,
+              class: q.className || "",
+              type: "MCQ",
+              difficulty: q.difficulty || "Medium",
+              question: String(q.q || "").trim(),
+              options: cleanOptions,
+              answer: answer,
+              author: this.state.currentUser.name,
+            });
+
+            if (res.status === "success") savedCount++;
+            else failCount++;
+          }
+
+          this.toggleLoader(false);
+
+          if (failCount === 0) {
+            this.showToast(
+              `All ${savedCount} AI questions saved to bank!`,
+              "success",
+            );
+          } else {
+            this.showToast(
+              `${savedCount} saved, ${failCount} failed to parse`,
+              "warning",
+            );
+          }
+
+          this.state.cbtAiGenerated = [];
+          this.loadCBTQuestions();
+        },
+
+        previewAICBTQuestions: function () {
+          const questions = this.state.cbtAiGenerated;
+          if (questions.length === 0) return;
+
+          let html = `<div style="font-family: 'Times New Roman', serif; color: #000;">
+            <div style="text-align:center; margin-bottom:20px; border-bottom:2px solid #000; padding-bottom:10px;">
+              <h2 style="margin:0;">NIFTY STEPS COLLEGE</h2>
+              <p style="margin:5px 0 0;">Computer Based Test — Preview</p>
+              <p style="font-size:0.85rem;">Subject: ${questions[0].subject} | Questions: ${questions.length}</p>
+            </div>`;
+
+          questions.forEach((q, i) => {
+            const opts = q.opts || [];
+            html += `<div style="margin-bottom:18px; page-break-inside:avoid;">
+              <p style="font-weight:600; margin-bottom:8px;"><strong>${i + 1}.</strong> ${this.escapeHtml(q.q || q.question || "")}</p>
+              <div style="padding-left:20px;">`;
+
+            opts.forEach((opt) => {
+              const isAns =
+                String(q.ans || "")
+                  .trim()
+                  .toUpperCase() === opt.trim().charAt(0).toUpperCase();
+              html += `<p style="margin:4px 0; ${isAns ? "font-weight:bold; color:#15803d;" : ""}">${this.escapeHtml(opt)} ${isAns ? "✓" : ""}</p>`;
+            });
+
+            html += `</div></div>`;
+          });
+
+          html += `</div>`;
+
+          document.getElementById("cbt-preview-content").innerHTML = html;
+          document.getElementById("modal-cbt-preview").style.display = "flex";
+        },
+
+        printCBTPreview: function () {
+          const content = document.getElementById(
+            "cbt-preview-content",
+          ).innerHTML;
+          const printArea = document.getElementById("printable-area");
+          printArea.innerHTML = `
+            <style>
+              @media print {
+                body * { visibility: hidden; }
+                #printable-area, #printable-area * { visibility: visible; }
+                #printable-area { position: absolute; left: 0; top: 0; width: 100%; padding: 30px; }
+              }
+            </style>
+            ${content}
+          `;
+          this.closeModals();
+          setTimeout(() => {
+            window.print();
+            printArea.innerHTML = "";
+          }, 500);
+        },
+
+        // Helper: escape HTML for safe rendering
+        escapeHtml: function (text) {
+          const d = document.createElement("div");
+          d.textContent = text || "";
+          return d.innerHTML;
+        },
+
+        // ==========================================
         // AI IN MODAL LOGIC
         // ==========================================
 
@@ -3882,6 +5739,10 @@
                         </div>
                         <div class="card" onclick="app.loadFees()">
                             <div class="card-content"><div class="card-icon">💰</div><div class="card-title">Fee Management</div><div class="card-meta">Collect & Configure</div></div>
+                            <div class="card-footer"><button class="btn btn-primary btn-sm w-full">Open</button></div>
+                        </div>
+                        <div class="card" onclick="app.loadCBTUploadSection()">
+                            <div class="card-content"><div class="card-icon">📋</div><div class="card-title">CBT Questions</div><div class="card-meta">Upload & Manage CBT Questions</div></div>
                             <div class="card-footer"><button class="btn btn-primary btn-sm w-full">Open</button></div>
                         </div>
                     `;
