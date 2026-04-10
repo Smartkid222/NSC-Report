@@ -911,6 +911,12 @@
           padding: 12px 24px;
           font-size: 0.9rem;
         }
+
+        .chip {
+          display: grid !important;
+          grid-template-columns: 1fr 1fr;
+          gap: 6px;
+        }
       }
 
       .input-midterm {
@@ -1046,6 +1052,54 @@
       .cbt-page-btn:disabled {
         opacity: 0.4;
         cursor: not-allowed;
+      }
+      /* =========================================
+     BROADSHEET SCROLLBAR (Always Visible)
+     ========================================= */
+      #broadsheet-container {
+        overflow-y: scroll !important;
+        overflow-x: auto !important;
+        max-height: 65vh;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+
+      /* Always show scrollbar track */
+      #broadsheet-container::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+
+      /* Track — always visible, subtle background */
+      #broadsheet-container::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+      }
+
+      /* Thumb — the draggable part */
+      #broadsheet-container::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 10px;
+        border: 2px solid #f1f5f9;
+      }
+
+      /* Thumb hover */
+      #broadsheet-container::-webkit-scrollbar-thumb:hover {
+        background: #64748b;
+      }
+
+      /* Firefox — always visible */
+      #broadsheet-container {
+        scrollbar-width: thin;
+        scrollbar-color: #94a3b8 #f1f5f9;
+      }
+      @media (max-width: 600px) {
+        /* ...existing rules below... */
+
+        .forms-wrapper {
+          padding: 20px;
+        }
       }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
@@ -1240,7 +1294,7 @@
                 <label style="margin-bottom: 8px; display: block"
                   >Subjects Taught</label
                 >
-                <div class="flex gap-2" style="flex-wrap: wrap">
+                <div class="chip flex gap-2" style="flex-wrap: wrap">
                   <select
                     id="subjectLevel"
                     class="form-control"
@@ -3791,8 +3845,19 @@ ANSWER: B</pre
           const res = await this._post("getFeeTransactions", {});
           return res.status === "success" ? res.transactions : [];
         },
-        getClassScores: async function (className, mode = "exam") {
-          const res = await this._post("getClassScores", { className, mode });
+        // ✅ NEW — passes session & term so backend reads the correct sheet tab
+        getClassScores: async function (
+          className,
+          mode = "exam",
+          session = "",
+          term = "",
+        ) {
+          const res = await this._post("getClassScores", {
+            className,
+            mode,
+            session,
+            term,
+          });
           return res.status === "success"
             ? res
             : { students: [], subjects: [], subjectAverages: {} };
@@ -6001,8 +6066,14 @@ ANSWER: B</pre
           // (No changes needed to the calculation logic, just the data fetch above)
 
           if (!data.students || data.students.length === 0) {
-            container.innerHTML =
-              '<p class="text-center" style="padding:3rem;color:var(--secondary);">No students or scores found for this class yet.</p>';
+            const sheetHint = data._info
+              ? `<br><small style="color:var(--danger);">${data._info}</small>`
+              : "";
+            container.innerHTML = `<div class="text-center" style="padding:3rem;">
+      <i class="fas fa-folder-open" style="font-size:2.5rem;opacity:0.2;display:block;margin-bottom:10px;"></i>
+      <p style="color:var(--secondary);">No scores found for <strong>${className}</strong> — ${isMidTerm ? "Mid-Term" : "Exam"}${sheetHint}</p>
+      <p style="font-size:0.85rem;color:var(--secondary);margin-top:5px;">Session: ${session} &bull; Term: ${term}</p>
+    </div>`;
             statsContainer.innerHTML = "";
             return;
           }
@@ -6163,7 +6234,7 @@ ANSWER: B</pre
           container.innerHTML = `
             <div style="margin-bottom:1.5rem;">
               <h3 style="margin:0;">${className} – ${isMidTerm ? "Mid-Term" : "Exam"} Broadsheet</h3>
-              <small style="color:var(--secondary);">Session: 2025/2026 • Students: ${processedStudents.length} • Subjects: ${subjects.length}</small>
+              <small style="color:var(--secondary);">Session: ${session} • Term: ${term} • Students: ${processedStudents.length} • Subjects: ${subjects.length}</small>
             </div>
             <table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
               <thead style="background:#f1f5f9;">${thead}</thead>
@@ -6190,8 +6261,17 @@ ANSWER: B</pre
           const type = this.state.broadsheetMode || "exam";
           const isMidTerm = type === "midterm";
 
+          // ✅ FIX: Read session/term from the SAME dropdowns the user is looking at
+          const session = document.getElementById("perfSessionSelect").value;
+          const term = document.getElementById("perfTermSelect").value;
+
           this.toggleLoader(true);
-          const data = await GoogleSheetService.getClassScores(cls, type);
+          const data = await GoogleSheetService.getClassScores(
+            cls,
+            type,
+            session,
+            term,
+          );
 
           if (!data.students || data.students.length === 0) {
             this.toggleLoader(false);
@@ -6200,8 +6280,7 @@ ANSWER: B</pre
 
           const subjects = data.subjects;
           const isJSS = cls.startsWith("JSS");
-          const session = "2025/2026"; // You can make this dynamic if needed
-          const term = isMidTerm ? "Mid-Term" : "Examination";
+          const termLabel = isMidTerm ? "Mid-Term" : "Examination";
 
           // --- Process Data for Print (Sorting and Calculating) ---
           let grandTotals = {};
@@ -6240,7 +6319,6 @@ ANSWER: B</pre
           let headerHtml =
             '<tr><th style="width:30px;">S/N</th><th style="text-align:left;">NAME</th>';
           subjects.forEach((sub) => {
-            // Abbreviate long subject names for print
             const shortSub = sub.length > 10 ? sub.substring(0, 10) + "." : sub;
             headerHtml += `<th style="writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); height: 120px; width: 25px; padding: 5px 2px; font-size: 0.7rem;">${shortSub}</th>`;
           });
@@ -6250,7 +6328,6 @@ ANSWER: B</pre
           let rank = 0;
 
           processedStudents.forEach((student, index) => {
-            // Handle Ties
             if (
               index > 0 &&
               student.avgPerc === processedStudents[index - 1].avgPerc
@@ -6294,43 +6371,43 @@ ANSWER: B</pre
           // --- RENDER PRINT AREA ---
           const area = document.getElementById("printable-area");
           area.innerHTML = `
-                <style>
-                    @media print {
-                        @page { size: A4 landscape; margin: 8mm; }
-                        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                        
-                        .bp-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-                        .bp-table th, .bp-table td { border: 1px solid #000; padding: 4px; text-align: center; }
-                        .bp-table th { background-color: #e2e8f0; }
-                        
-                        .bp-header { text-align: center; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 10px; }
-                        .bp-title { font-size: 20px; font-weight: bold; text-transform: uppercase; }
-                        .bp-meta { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-family: 'Times New Roman', serif; }
-                    }
-                </style>
+        <style>
+            @media print {
+                @page { size: A4 landscape; margin: 8mm; }
+                body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
-                <div class="report-card" style="font-family: 'Times New Roman', serif; color: #000;">
-                    <div class="bp-header">
-                        <div class="bp-title">Nifty Steps College</div>
-                        <div style="font-size: 14px; font-style: italic;">Broadsheet / Class Performance Analysis</div>
-                    </div>
+                .bp-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+                .bp-table th, .bp-table td { border: 1px solid #000; padding: 4px; text-align: center; }
+                .bp-table th { background-color: #e2e8f0; }
 
-                    <div class="bp-meta">
-                        <div><strong>Class:</strong> ${cls}</div>
-                        <div><strong>Term:</strong> ${term} Term</div>
-                        <div><strong>Session:</strong> ${session}</div>
-                        <div><strong>Total Students:</strong> ${processedStudents.length}</div>
-                    </div>
+                .bp-header { text-align: center; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+                .bp-title { font-size: 20px; font-weight: bold; text-transform: uppercase; }
+                .bp-meta { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-family: 'Times New Roman', serif; }
+            }
+        </style>
 
-                    <table class="bp-table">
-                        <thead>${headerHtml}</thead>
-                        <tbody>
-                            ${bodyHtml}
-                            ${avgRowHtml}
-                        </tbody>
-                    </table>
-                </div>
-            `;
+        <div class="report-card" style="font-family: 'Times New Roman', serif; color: #000;">
+            <div class="bp-header">
+                <div class="bp-title">Nifty Steps College</div>
+                <div style="font-size: 14px; font-style: italic;">Broadsheet / Class Performance Analysis</div>
+            </div>
+
+            <div class="bp-meta">
+                <div><strong>Class:</strong> ${cls}</div>
+                <div><strong>Term:</strong> ${termLabel} Term</div>
+                <div><strong>Session:</strong> ${session}</div>
+                <div><strong>Total Students:</strong> ${processedStudents.length}</div>
+            </div>
+
+            <table class="bp-table">
+                <thead>${headerHtml}</thead>
+                <tbody>
+                    ${bodyHtml}
+                    ${avgRowHtml}
+                </tbody>
+            </table>
+        </div>
+    `;
 
           this.toggleLoader(false);
           setTimeout(() => window.print(), 500);
@@ -6798,6 +6875,8 @@ ANSWER: B</pre
           const classData = await GoogleSheetService.getClassScores(
             s.class,
             mode,
+            session,
+            term,
           );
           const subjectAverages = classData.subjectAverages || {};
 
