@@ -3482,23 +3482,35 @@ ANSWER: B</pre
       </div>
     </div>
 
-    <!-- Add Student Modal -->
+    <!-- Add/Edit Student Modal -->
     <div id="modal-add-student" class="modal-overlay">
       <div class="modal">
-        <h3>Add New Student</h3>
+        <h3 id="student-modal-title">Add New Student</h3>
+        <input type="hidden" id="editStudentId" value="" />
+
         <div class="form-group">
-          <label>Full Name</label
-          ><input type="text" id="newStdName" class="form-control" />
+          <label>Full Name</label>
+          <input
+            type="text"
+            id="newStdName"
+            class="form-control"
+            placeholder="Enter full name"
+          />
         </div>
         <div class="form-group">
-          <label>Admin ID</label
-          ><input type="text" id="newStdId" class="form-control" />
+          <label>Admin ID</label>
+          <input
+            type="text"
+            id="newStdId"
+            class="form-control"
+            placeholder="Enter admin ID"
+          />
         </div>
         <div class="form-group">
-          <label>Gender</label
-          ><select id="newStdGender" class="form-control">
-            <option>Male</option>
-            <option>Female</option>
+          <label>Gender</label>
+          <select id="newStdGender" class="form-control">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
           </select>
         </div>
         <div id="modal-dept-group" class="form-group hidden">
@@ -3509,12 +3521,17 @@ ANSWER: B</pre
             <option value="Commercial">Commercial</option>
           </select>
         </div>
+
         <div class="flex justify-between" style="margin-top: 20px">
           <button class="btn btn-outline" onclick="app.closeModals()">
             Cancel
           </button>
-          <button class="btn btn-primary" onclick="app.addStudentConfirm()">
-            Save
+          <button
+            id="student-save-btn"
+            class="btn btn-primary"
+            onclick="app.addStudentConfirm()"
+          >
+            Add Student
           </button>
         </div>
       </div>
@@ -3830,6 +3847,12 @@ ANSWER: B</pre
           // Clear all cache because a new student affects class lists
           if (res.status === "success") this.clearCache();
           return res.status === "success";
+        },
+        // ✅ ADD THIS NEW METHOD RIGHT AFTER addStudent:
+        updateStudent: async function (studentData) {
+          const res = await this._post("updateStudent", studentData);
+          if (res.status === "success") this.clearCache();
+          return res;
         },
         getAllStaff: async function () {
           const res = await this._post("getTeachers", {});
@@ -6462,6 +6485,9 @@ ANSWER: B</pre
                                 <button class="btn btn-primary btn-sm" onclick="app.loadStudentDetail('${s.id}')">
                                     View Results
                                 </button>
+                                <button class="btn btn-outline btn-sm" onclick="app.openEditStudentModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', '${s.gender}', '${s.dept || ""}')">
+                                  <i class="fas fa-edit"></i> Edit
+                                </button>
                             </td>
                         </tr>
                     `;
@@ -6920,7 +6946,7 @@ ANSWER: B</pre
             }
           };
 
-          // Build Table Rows
+          // Build Table Rows - ONLY SHOW SUBJECTS WITH SCORES > 0
           subjectsList.forEach((sub) => {
             const sc = scores[sub] || { ca: "", exam: "", total: "" };
             let scoreValue = 0;
@@ -6940,39 +6966,50 @@ ANSWER: B</pre
               totalDisplay = scoreValue > 0 ? scoreValue : "-";
             }
 
-            if (scoreValue > 0) {
-              grandTotalScore += scoreValue;
-              validSubjectCount++;
+            // ✅✅✅ SKIP subjects with ZERO scores entirely ✅✅✅
+            if (scoreValue === 0 || scoreValue === null || isNaN(scoreValue)) {
+              return;
             }
 
+            // Only count subjects that actually have scores
+            grandTotalScore += scoreValue;
+            validSubjectCount++;
+
             const gradeInfo = getGradeInfo(scoreValue);
-            const classAvg = subjectAverages[sub]
-              ? parseFloat(subjectAverages[sub]).toFixed(1)
-              : "-";
+
+            // ✅✅✅ Get Class Average for this subject ✅✅✅
+            const classAvg =
+              subjectAverages[sub] !== undefined &&
+              subjectAverages[sub] !== null &&
+              subjectAverages[sub] > 0
+                ? parseFloat(subjectAverages[sub]).toFixed(1)
+                : "-";
 
             if (isMidTerm) {
+              // ✅ FIXED: Now shows Class Average instead of "-"
               tableRows += `
-                        <tr>
-                            <td style="text-align:left; padding-left:10px;">${sub}</td>
-                            <td>${scoreValue > 0 ? 100 : "-"}</td>
-                            <td style="font-weight:bold;">${totalDisplay}</td>
-                            <td>-</td>
-                            <td style="font-weight:bold;">${scoreValue > 0 ? gradeInfo.g : "-"}</td>
-                            <td>${scoreValue > 0 ? gradeInfo.remark : "-"}</td>
-                        </tr>
-                    `;
+                <tr>
+                    <td style="text-align:left; padding-left:10px;">${sub}</td>
+                    <td>100</td>
+                    <td style="font-weight:bold;">${totalDisplay}</td>
+                    <td style="color:#2563eb; font-weight:600;">${classAvg}</td>
+                    <td style="font-weight:bold;">${gradeInfo.g}</td>
+                    <td>${gradeInfo.remark}</td>
+                </tr>
+            `;
             } else {
+              // ✅ ENHANCED: Class Average now styled better and always shows
               tableRows += `
-                        <tr>
-                            <td style="text-align:left; padding-left:10px;">${sub}</td>
-                            <td>${caDisplay}</td>
-                            <td>${examDisplay}</td>
-                            <td style="font-weight:bold;">${totalDisplay}</td>
-                            <td>${classAvg}</td>
-                            <td style="font-weight:bold;">${scoreValue > 0 ? gradeInfo.g : "-"}</td>
-                            <td>${scoreValue > 0 ? gradeInfo.remark : "-"}</td>
-                        </tr>
-                    `;
+                <tr>
+                    <td style="text-align:left; padding-left:10px;">${sub}</td>
+                    <td>${caDisplay}</td>
+                    <td>${examDisplay}</td>
+                    <td style="font-weight:bold;">${totalDisplay}</td>
+                    <td style="color:#2563eb; font-weight:600; background:#eff6ff;">${classAvg}</td>
+                    <td style="font-weight:bold;">${gradeInfo.g}</td>
+                    <td>${gradeInfo.remark}</td>
+                </tr>
+            `;
             }
           });
 
@@ -6998,7 +7035,7 @@ ANSWER: B</pre
           const teacherComments = [
             "is attentive and eager to learn.",
             "has shown great potential this term.",
-            "needs to be more consistent with assignments.",
+            "sets an example of excellence in behavior and cooperation.",
             "shows a positive attitude towards learning.",
             "is hardworking and dedicated.",
           ];
@@ -7020,7 +7057,7 @@ ANSWER: B</pre
                 <div class="report-card">
                     <!-- HEADER -->
                     <div class="rp-header" style="display: flex; align-items: center; justify-content: center; margin-bottom: 12px; gap: 20px;">
-                        <img src="https://z-cdn-media.chatglm.cn/files/cc741a52-6dc8-4d89-97cb-fdf1a87aa38a.png?auth_key=1868210321-d7534ff785814de88115631510ed5dbc-0-0d208a01c26657a242308b62449ab19b"
+                        <img src="img/NSS LOGO.png"
                              alt="Nifty Steps Logo" style="width: 70px; height: 70px; object-fit: contain;">
                         <div style="text-align: center;">
                             <h1 style="color: #1e40af; margin: 0 0 4px 0; line-height: 1.1; font-size: 1.6rem;">NIFTY STEPS COLLEGE</h1>
@@ -7881,11 +7918,30 @@ ANSWER: B</pre
         },
 
         // --- UTILS ---
+        // UPDATE this existing function:
         openAddStudentModal: function (cls) {
-          this.state.viewContext.tempClass = cls;
+          this.state.viewContext.tempClass = cls || this.state.viewContext.cls;
+          const effectiveClass = this.state.viewContext.tempClass || "";
+
+          // RESET TO ADD MODE
+          document.getElementById("student-modal-title").textContent =
+            "Add New Student";
+          document.getElementById("editStudentId").value = "";
+          document.getElementById("newStdName").value = "";
+          document.getElementById("newStdId").value = "";
+          document.getElementById("newStdGender").value = "Male";
+          document.getElementById("newStdDept").value = "Science";
+
           document
             .getElementById("modal-dept-group")
-            .classList.toggle("hidden", !cls.startsWith("SSS"));
+            .classList.toggle("hidden", !effectiveClass.startsWith("SSS"));
+
+          // Reset button to Add mode
+          document.getElementById("student-save-btn").textContent = "Save";
+          document
+            .getElementById("student-save-btn")
+            .setAttribute("onclick", "app.addStudentConfirm()");
+
           document.getElementById("modal-add-student").style.display = "flex";
         },
 
@@ -7923,6 +7979,61 @@ ANSWER: B</pre
             }
           } else {
             this.showToast("Error adding student", "error");
+          }
+        },
+
+        // Inside the app = { ... } object, add these methods:
+
+        openEditStudentModal: function (id, name, gender, dept) {
+          document.getElementById("student-modal-title").textContent =
+            "Edit Student";
+          document.getElementById("editStudentId").value = id;
+          document.getElementById("newStdName").value = name;
+          document.getElementById("newStdId").value = id;
+          document.getElementById("newStdGender").value = gender || "Male";
+          document.getElementById("newStdDept").value = dept || "Science";
+
+          const cls = this.state.viewContext.cls || "";
+          document
+            .getElementById("modal-dept-group")
+            .classList.toggle("hidden", !cls.startsWith("SSS"));
+
+          document.getElementById("student-save-btn").textContent =
+            "Update Student";
+          document
+            .getElementById("student-save-btn")
+            .setAttribute("onclick", "app.updateStudentConfirm()");
+
+          document.getElementById("modal-add-student").style.display = "flex";
+        },
+
+        updateStudentConfirm: async function () {
+          const id = document.getElementById("editStudentId").value;
+          const name = document.getElementById("newStdName").value.trim();
+          const gender = document.getElementById("newStdGender").value;
+          const dept = document.getElementById("newStdDept").value;
+
+          if (!name) return this.showToast("Name is required", "warning");
+
+          this.toggleLoader(true);
+          const res = await GoogleSheetService.updateStudent({
+            id: id,
+            name: name,
+            gender: gender,
+            dept: dept,
+            className: this.state.viewContext.cls,
+          });
+          this.toggleLoader(false);
+
+          if (res.status === "success") {
+            this.showToast(res.message || "Student updated!", "success");
+            this.closeModals();
+
+            // Refresh the roster list
+            const resultType = this.state.viewContext.resultType || "exam";
+            this.loadAdminRoster(this.state.viewContext.cls, resultType);
+          } else {
+            this.showToast(res.message || "Error updating student", "error");
           }
         },
 
