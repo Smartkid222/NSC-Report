@@ -1349,6 +1349,23 @@
       .password-wrapper .toggle-eye:hover {
         color: var(--primary);
       }
+      /* Performance Table Mobile Enhancements */
+      @media (max-width: 600px) {
+        .perf-name-cell {
+          max-width: 110px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: inline-block;
+          vertical-align: middle;
+        }
+
+        #broadsheet-container table th,
+        #broadsheet-container table td {
+          padding: 12px 8px; /* Tighter padding for mobile */
+          font-size: 0.9rem;
+        }
+      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -6612,11 +6629,12 @@ ANSWER: B</pre
           processedStudents.sort((a, b) => b.avgPerc - a.avgPerc);
 
           // 3. Generate Table Headers
-          let thead = "<tr><th>Position</th><th>Admin ID</th><th>Name</th>";
+          let thead =
+            "<tr><th>Pos.</th><th class='hide-mobile'>Admin ID</th><th>Name</th>";
           subjects.forEach((sub) => {
             thead += `<th title="${sub}" class="hide-mobile">${sub}</th>`;
           });
-          thead += "<th>Total</th><th>%</th></tr>";
+          thead += "<th class='hide-mobile'>Total</th><th>%</th></tr>";
 
           // 4. Generate Rows (Loop through sorted students)
           let rowsHtml = "";
@@ -6644,7 +6662,7 @@ ANSWER: B</pre
 
             // Start Row
             let cells = `<td style="font-weight:bold; background:#f8fafc;">${positionStr}</td>`;
-            cells += `<td>${student.id}</td><td><strong>${student.name}</strong></td>`;
+            cells += `<td class="hide-mobile">${student.id}</td><td class="perf-name-cell"><strong>${student.name}</strong></td>`;
 
             // Subject Scores
             subjects.forEach((sub) => {
@@ -6667,7 +6685,7 @@ ANSWER: B</pre
               cells += `<td style="text-align:center;" class="hide-mobile">${display}<br><small>${grade}</small></td>`;
             });
 
-            cells += `<td style="font-weight:bold;text-align:center;">${student.totalScore}</td>`;
+            cells += `<td style="font-weight:bold;text-align:center;" class="hide-mobile">${student.totalScore}</td>`;
             cells += `<td style="font-weight:bold;color:var(--primary);text-align:center;">${student.avgPerc}%</td>`;
 
             rowsHtml += `<tr style="cursor:pointer;" onclick="app.openPerfStudentModal('${student.id}', '${student.name.replace(/'/g, "\\'")}')">${cells}</tr>`;
@@ -6683,16 +6701,16 @@ ANSWER: B</pre
 
           // 5. Class Average Row
           let avgRow =
-            '<tr style="background:#f1f5f9;font-weight:600;"><td colspan="3">Class Average</td>';
+            '<tr style="background:#f1f5f9;font-weight:600;"><td colspan="1">Avg</td><td class="hide-mobile"></td><td></td>';
           subjects.forEach((sub) => {
             const avg = data.subjectAverages[sub] || 0;
-            avgRow += `<td style="text-align:center;">${avg.toFixed(1)}</td>`;
+            avgRow += `<td style="text-align:center;" class="hide-mobile">${avg.toFixed(1)}</td>`;
           });
           const overallAvg =
             Object.values(data.subjectAverages).reduce((sum, v) => sum + v, 0) /
               subjects.length || 0;
           avgRow +=
-            '<td>-</td><td style="color:var(--primary);">' +
+            '<td class="hide-mobile">-</td><td style="color:var(--primary);">' +
             overallAvg.toFixed(1) +
             "%</td></tr>";
 
