@@ -355,59 +355,78 @@
         padding: 0 20px;
       }
 
-      /* --- CARDS & GRID --- */
+      /* --- DASHBOARD GRID (Image-style) --- */
       .dashboard-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 25px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
       }
       .card {
         background: var(--surface);
         border-radius: 16px;
-        padding: 25px;
-        box-shadow: var(--shadow);
-        border: 1px solid white;
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
+        padding: 30px 22px 22px;
+        box-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.05),
+          0 1px 2px rgba(0, 0, 0, 0.03);
+        border: 1px solid #e5e9ef;
+        transition: all 0.25s ease;
         display: flex;
         flex-direction: column;
         cursor: pointer;
         position: relative;
+        text-align: center;
       }
       .card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
         border-color: var(--primary);
+      }
+      .card-icon-wrap {
+        width: 54px;
+        height: 54px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: #fff;
+        margin: 0 auto 14px;
+        flex-shrink: 0;
       }
       .card-content {
         flex-grow: 1;
         display: flex;
         flex-direction: column;
-        gap: 5px;
-        margin-bottom: 10px;
-      }
-      .card-icon {
-        font-size: 2.5rem;
-        margin-bottom: 5px;
+        gap: 4px;
+        margin-bottom: 12px;
       }
       .card-title {
-        font-size: 1.25rem;
+        font-size: 0.95rem;
         font-weight: 700;
         color: var(--text);
         margin-bottom: 2px;
       }
       .card-meta {
-        font-size: 0.9rem;
+        font-size: 0.82rem;
         color: var(--secondary);
-        line-height: 1.3;
+        line-height: 1.45;
       }
       .card-footer {
         margin-top: auto;
-        z-index: 2;
-        position: relative;
       }
-
+      .card-learn {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--primary);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: gap 0.2s;
+        text-decoration: none;
+      }
+      .card:hover .card-learn {
+        gap: 9px;
+      }
       .badge {
         display: inline-block;
         padding: 4px 12px;
@@ -718,6 +737,123 @@
       #printable-area {
         display: none;
       }
+      /* =========================================
+   MOBILE UI/UX IMPROVEMENTS
+   ========================================= */
+
+      /* Hide on Mobile Utility */
+      @media (max-width: 600px) {
+        .hide-mobile {
+          display: none !important;
+        }
+      }
+
+      /* Action Cell Switcher (Desktop vs Mobile) */
+      .action-cell-mobile {
+        display: none;
+      }
+      .action-cell-desktop {
+        display: flex;
+        gap: 8px;
+      }
+      @media (max-width: 600px) {
+        .action-cell-mobile {
+          display: block;
+        }
+        .action-cell-desktop {
+          display: none;
+        }
+      }
+
+      /* Kebab Menu Styles */
+      .kebab-menu {
+        position: relative;
+        display: inline-block;
+      }
+      .kebab-trigger {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: white;
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: var(--secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      .kebab-trigger:hover,
+      .kebab-trigger:active {
+        background: #f1f5f9;
+        color: var(--primary);
+      }
+      .kebab-dropdown {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        z-index: 10;
+        min-width: 180px;
+        overflow: hidden;
+      }
+      .kebab-dropdown.show {
+        display: block;
+      }
+      .kebab-dropdown button {
+        width: 100%;
+        border: none;
+        background: white;
+        text-align: left;
+        padding: 14px 18px;
+        border-bottom: 1px solid #f1f5f9;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+      }
+      .kebab-dropdown button:last-child {
+        border-bottom: none;
+      }
+      .kebab-dropdown button:hover {
+        background: #f8fafc;
+      }
+      .kebab-dropdown button i {
+        width: 18px;
+        text-align: center;
+      }
+
+      /* Fee Table Sticky First Column */
+      @media (max-width: 600px) {
+        #fee-table td:first-child,
+        #fee-table th:first-child {
+          position: sticky;
+          left: 0;
+          background-color: var(--surface);
+          z-index: 1;
+          box-shadow: 3px 0 6px rgba(0, 0, 0, 0.06);
+          min-width: 120px;
+        }
+        #fee-table th:first-child {
+          z-index: 2;
+          background-color: #f1f5f9;
+        }
+
+        /* Touch-friendly Buttons General */
+        .btn-sm {
+          min-height: 40px;
+          min-width: 40px;
+          padding: 8px 12px;
+        }
+      }
       @media print {
         body * {
           visibility: hidden;
@@ -836,6 +972,86 @@
         }
       }
 
+      /* --- SHARE BAR --- */
+      .share-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 20px;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-bottom: 1px solid #e2e8f0;
+        flex-wrap: wrap;
+      }
+      .share-bar-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-right: 4px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .share-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        background: white;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #475569;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .share-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: #f0f9ff;
+        box-shadow: 0 1px 3px rgba(14, 165, 233, 0.1);
+      }
+      .share-btn i {
+        font-size: 0.82rem;
+      }
+      .share-btn.whatsapp:hover {
+        border-color: #25d366;
+        color: #25d366;
+        background: #f0fdf4;
+      }
+      .share-btn.sms:hover {
+        border-color: #f59e0b;
+        color: #f59e0b;
+        background: #fffbeb;
+      }
+      .share-btn.email:hover {
+        border-color: #3b82f6;
+        color: #3b82f6;
+        background: #eff6ff;
+      }
+      .share-divider {
+        width: 1px;
+        height: 22px;
+        background: #cbd5e1;
+        margin: 0 2px;
+      }
+      @media (max-width: 600px) {
+        .share-bar {
+          padding: 8px 12px;
+          gap: 5px;
+        }
+        .share-btn {
+          padding: 4px 10px;
+          font-size: 0.72rem;
+        }
+        .share-divider {
+          display: none;
+        }
+      }
+
       /* =========================================
            MOBILE RESPONSIVENESS
            ========================================= */
@@ -916,6 +1132,17 @@
           display: grid !important;
           grid-template-columns: 1fr 1fr;
           gap: 6px;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .dashboard-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .dashboard-grid {
+          grid-template-columns: 1fr;
         }
       }
 
@@ -1101,6 +1328,27 @@
           padding: 20px;
         }
       }
+      .password-wrapper {
+        position: relative;
+      }
+      .password-wrapper .form-control {
+        padding-right: 45px;
+      }
+      .password-wrapper .toggle-eye {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--secondary);
+        cursor: pointer;
+        font-size: 1.1rem;
+        padding: 4px;
+      }
+      .password-wrapper .toggle-eye:hover {
+        color: var(--primary);
+      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -1111,6 +1359,8 @@
       pdfjsLib.GlobalWorkerOptions.workerSrc =
         "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
     </script>
+    <!-- html2pdf.js Library for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   </head>
   <body>
     <!-- GLOBAL LOADER -->
@@ -1199,8 +1449,7 @@
                 />
               </div>
             </div>
-            <div class="form-group">
-              <label>Password</label>
+            <div class="password-wrapper">
               <input
                 type="password"
                 id="loginPass"
@@ -1208,6 +1457,13 @@
                 placeholder="•••••"
                 required
               />
+              <button
+                type="button"
+                class="toggle-eye"
+                onclick="app.togglePassword('loginPass', this)"
+              >
+                <i class="fas fa-eye"></i>
+              </button>
             </div>
             <div class="form-group" style="margin: 1rem 0">
               <label
@@ -1256,14 +1512,20 @@
                   <option value="Dr.">Dr.</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label>Password</label>
+              <div class="password-wrapper">
                 <input
                   type="password"
                   id="signupPass"
                   class="form-control"
                   required
                 />
+                <button
+                  type="button"
+                  class="toggle-eye"
+                  onclick="app.togglePassword('signupPass', this)"
+                >
+                  <i class="fas fa-eye"></i>
+                </button>
               </div>
             </div>
             <div class="grid-2">
@@ -1407,10 +1669,19 @@
           </div>
           <div class="list-container">
             <div class="list-header">
-              <h2>Staff Members</h2>
-              <p class="text-sm text-secondary">
-                Manage staff access and permissions
-              </p>
+              <div>
+                <h2>Staff Members</h2>
+                <p class="text-sm text-secondary">
+                  Manage staff access and permissions
+                </p>
+              </div>
+              <input
+                type="text"
+                id="staff-search"
+                class="search-input"
+                placeholder="Search by name or subject..."
+                oninput="app.filterStaffTable()"
+              />
             </div>
             <div style="overflow-x: auto">
               <table>
@@ -1529,6 +1800,13 @@
               <div class="list-header">
                 <div><h2>Student Accounts</h2></div>
                 <div class="flex gap-2" style="flex-wrap: wrap">
+                  <input
+                    type="text"
+                    id="fee-search"
+                    class="search-input"
+                    placeholder="Search student..."
+                    oninput="app.filterFeeTable()"
+                  />
                   <!-- NEW: Session/Term Filters -->
                   <select
                     id="feeSessionSelect"
@@ -1643,13 +1921,36 @@
           <div class="list-container">
             <div class="list-header">
               <h2 id="roster-title">Class Roster</h2>
-              <button
-                id="btn-roster-add-student"
-                class="btn btn-primary btn-sm"
-                onclick="app.openAddStudentModal()"
-              >
-                + Add Student
-              </button>
+              <div class="flex gap-2">
+                <input
+                  type="text"
+                  id="roster-search"
+                  class="search-input"
+                  placeholder="Search student..."
+                  oninput="app.filterRosterTable()"
+                />
+                <button
+                  class="btn btn-outline btn-sm"
+                  onclick="app.printAllResults()"
+                >
+                  <i class="fas fa-print"></i> Print All
+                </button>
+                <button
+                  id="btn-roster-add-student"
+                  class="btn btn-primary btn-sm"
+                  onclick="app.openAddStudentModal()"
+                >
+                  + Add Student
+                </button>
+                <!-- NEW -->
+                <button
+                  class="btn btn-primary btn-sm"
+                  onclick="app.openPrintConfigForEcopy()"
+                  style="background: var(--success)"
+                >
+                  <i class="fas fa-stamp"></i> Print All (E-Copy)
+                </button>
+              </div>
             </div>
             <div style="overflow-x: auto">
               <table>
@@ -1657,8 +1958,8 @@
                   <tr>
                     <th>Admin No</th>
                     <th>Name</th>
-                    <th>Gender</th>
-                    <th>Department</th>
+                    <th class="hide-mobile">Gender</th>
+                    <th class="hide-mobile">Department</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -1803,6 +2104,13 @@
                 </p>
               </div>
               <div class="flex gap-2" style="flex-wrap: wrap">
+                <input
+                  type="text"
+                  id="qb-search"
+                  class="search-input"
+                  placeholder="Search questions..."
+                  oninput="app.filterQuestionBankTable()"
+                />
                 <select
                   id="qbFilterSubject"
                   class="form-control"
@@ -1914,6 +2222,13 @@
             <div class="list-header">
               <div><h2>📝 Assignments & Homework</h2></div>
               <div class="flex gap-2">
+                <input
+                  type="text"
+                  id="assign-search"
+                  class="search-input"
+                  placeholder="Search assignments..."
+                  oninput="app.filterAssignmentTable()"
+                />
                 <select
                   id="assignClassFilter"
                   class="form-control"
@@ -1961,6 +2276,13 @@
                 </p>
               </div>
               <div class="flex gap-2" style="flex-wrap: wrap">
+                <input
+                  type="text"
+                  id="res-search"
+                  class="search-input"
+                  placeholder="Search resources..."
+                  oninput="app.filterResourceTable()"
+                />
                 <select
                   id="resClassFilter"
                   class="form-control"
@@ -2025,6 +2347,13 @@
                 </p>
               </div>
               <div class="flex gap-2" style="flex-wrap: wrap">
+                <input
+                  type="text"
+                  id="cbt-search"
+                  class="search-input"
+                  placeholder="Search questions..."
+                  oninput="app.filterCBTTable()"
+                />
                 <select
                   id="cbtFilterSubject"
                   class="form-control"
@@ -3614,10 +3943,29 @@ ANSWER: B</pre
           <button class="btn btn-outline" onclick="app.closeModals()">
             Cancel
           </button>
-          <button class="btn btn-primary" onclick="app.generatePrintReport()">
+          <button class="btn btn-primary" onclick="app.dispatchPrintReport()">
             <i class="fas fa-print"></i> Generate Report
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Performance Student Detail Modal -->
+    <div id="modal-perf-student" class="modal-overlay">
+      <div class="modal" style="max-width: 600px">
+        <div
+          class="flex justify-between items-center"
+          style="margin-bottom: 20px"
+        >
+          <h3 id="perf-modal-student-name" style="margin: 0">Student Scores</h3>
+          <button class="btn btn-sm btn-outline" onclick="app.closeModals()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div
+          id="perf-modal-content"
+          style="max-height: 60vh; overflow-y: auto"
+        ></div>
       </div>
     </div>
 
@@ -3836,10 +4184,23 @@ ANSWER: B</pre
           if (res.status === "success") this.clearCache(className);
           return res;
         },
-        getFullResult: async function (adminNo) {
-          const res = await this._post("getFullResult", { adminNo });
-          if (res.status === "success")
+        getFullResult: async function (adminNo, session = "", term = "") {
+          let effectiveSession = session;
+
+          // 3rd term uses base sheet (no session suffix)
+          if (term === "3rd") {
+            effectiveSession = "";
+          }
+
+          const res = await this._post("getFullResult", {
+            adminNo: adminNo,
+            session: effectiveSession,
+            term: term,
+          });
+
+          if (res.status === "success") {
             return { info: res.student, scores: res.scores };
+          }
           return { info: {}, scores: {} };
         },
         addStudent: async function (stdData) {
@@ -3870,19 +4231,29 @@ ANSWER: B</pre
           const res = await this._post("getFeeTransactions", {});
           return res.status === "success" ? res.transactions : [];
         },
-        // ✅ NEW — passes session & term so backend reads the correct sheet tab
+        // Inside GoogleSheetService object, update getClassScores:
         getClassScores: async function (
           className,
           mode = "exam",
           session = "",
           term = "",
         ) {
+          // For 3rd term, we pass empty session so GAS uses base sheet name
+          let effectiveSession = session;
+          let effectiveTerm = term;
+
+          // If term is "3rd", don't pass session (your GAS getSheetName will return base name)
+          if (term === "3rd") {
+            effectiveSession = ""; // This triggers base sheet in GAS
+          }
+
           const res = await this._post("getClassScores", {
-            className,
-            mode,
-            session,
-            term,
+            className: className,
+            mode: mode,
+            session: effectiveSession,
+            term: effectiveTerm,
           });
+
           return res.status === "success"
             ? res
             : { students: [], subjects: [], subjectAverages: {} };
@@ -4001,6 +4372,8 @@ ANSWER: B</pre
           cbtCurrentPage: 1,
           cbtPageSize: 15,
           cbtAiGenerated: [], // Temp storage for AI-generated questions
+          printAllMode: false,
+          downloadMode: false, // <-- ADD THIS
         },
 
         pushHistory: function (sectionId, title, backAction = null) {
@@ -4026,6 +4399,18 @@ ANSWER: B</pre
             }
           } else {
             this.goHome();
+          }
+        },
+
+        togglePassword: function (inputId, btn) {
+          const input = document.getElementById(inputId);
+          const icon = btn.querySelector("i");
+          if (input.type === "password") {
+            input.type = "text";
+            icon.className = "fas fa-eye-slash";
+          } else {
+            input.type = "password";
+            icon.className = "fas fa-eye";
           }
         },
 
@@ -4666,6 +5051,28 @@ ANSWER: B</pre
             mcqQuestions = mcqQuestions.filter(
               (q) => q.difficulty === diffFilter,
             );
+          }
+
+          // Apply text search if present
+          const cbtSearchText = (
+            document.getElementById("cbt-search")?.value || ""
+          )
+            .toLowerCase()
+            .trim();
+          if (cbtSearchText) {
+            mcqQuestions = mcqQuestions.filter((q) => {
+              return (
+                String(q.question || "")
+                  .toLowerCase()
+                  .includes(cbtSearchText) ||
+                String(q.subject || "")
+                  .toLowerCase()
+                  .includes(cbtSearchText) ||
+                String(q.className || "")
+                  .toLowerCase()
+                  .includes(cbtSearchText)
+              );
+            });
           }
 
           this.state.cbtQuestions = mcqQuestions;
@@ -5808,84 +6215,143 @@ ANSWER: B</pre
           const land = document.getElementById("landing-grid");
           land.innerHTML = "";
 
-          // 1. Admin & Head Specific Cards
+          // Card definitions: [icon, bg-color, title, desc, onclick, adminOnly]
+          const cards = [
+            [
+              "fa-pen-to-square",
+              "#0ea5e9",
+              "Manage Exam Results",
+              "View & edit class rosters and exam scores",
+              "app.loadClassSelectionForAdmin('exam')",
+              true,
+            ],
+            [
+              "fa-chart-bar",
+              "#8b5cf6",
+              "Manage Mid-Term Results",
+              "View & edit mid-term score entries",
+              "app.loadClassSelectionForAdmin('midterm')",
+              true,
+            ],
+            [
+              "fa-users-gear",
+              "#f59e0b",
+              "All Staff",
+              "Manage staff access and permissions",
+              "app.loadStaffList()",
+              true,
+            ],
+            [
+              "fa-trophy",
+              "#22c55e",
+              "Performance",
+              "Top students stats & broadsheets",
+              "app.loadPerformance()",
+              true,
+            ],
+            [
+              "fa-money-bill-wave",
+              "#ef4444",
+              "Fee Management",
+              "Collect fees & configure school billing",
+              "app.loadFees()",
+              true,
+            ],
+            [
+              "fa-clipboard-list",
+              "#06b6d4",
+              "CBT Questions",
+              "Upload & manage computer-based test items",
+              "app.loadCBTUploadSection()",
+              true,
+            ],
+            [
+              "fa-book-open",
+              "#6366f1",
+              "Question Bank",
+              "Create, store & organize exam questions",
+              "app.loadQuestionBank()",
+              false,
+            ],
+            [
+              "fa-keyboard",
+              "#0ea5e9",
+              "Exam Directory",
+              "Navigate classes to enter exam scores",
+              "app.loadClassList('exam')",
+              false,
+            ],
+            [
+              "fa-keyboard",
+              "#0ea5e9",
+              "Mid-Term Directory",
+              "Navigate classes to enter mid-term scores",
+              "app.loadClassList('midterm')",
+              false,
+            ],
+            [
+              "fa-calendar-days",
+              "#ec4899",
+              "Timetable",
+              "Upload & edit class schedules",
+              "app.loadTimetableSection()",
+              true,
+            ],
+            [
+              "fa-file-pen",
+              "#f97316",
+              "Assignments",
+              "Post homework & assignments for students",
+              "app.loadAssignmentSection()",
+              false,
+            ],
+            [
+              "fa-graduation-cap",
+              "#14b8a6",
+              "E-Learning",
+              "Syllabus, lesson notes, videos & resource links",
+              "app.loadElearningSection()",
+              false,
+            ],
+          ];
+
+          // Admin/Head cards first
           if (r === "Admin" || r === "Head") {
-            land.innerHTML += `
-                        <div class="card" onclick="app.loadClassSelectionForAdmin('exam')">
-                            <div class="card-content"><div class="card-icon">📝</div><div class="card-title">Manage Exam Results</div><div class="card-meta">View & Edit Class Rosters</div></div>
-                            <div class="card-footer"><button class="btn btn-primary btn-sm w-full">Open</button></div>
-                        </div>
-                        <div class="card" onclick="app.loadClassSelectionForAdmin('midterm')">
-                            <div class="card-content"><div class="card-icon">📊</div><div class="card-title">Manage Mid-Term Results</div><div class="card-meta">View & Edit Class Rosters</div></div>
-                            <div class="card-footer"><button class="btn btn-primary btn-sm w-full">Open</button></div>
-                        </div>
-                        <div class="card" onclick="app.loadStaffList()">
-                            <div class="card-content"><div class="card-icon">👥</div><div class="card-title">All Staff</div><div class="card-meta">Manage Staff Access</div></div>
-                            <div class="card-footer"><button class="btn btn-primary btn-sm w-full">View</button></div>
-                        </div>
-                        <div class="card" onclick="app.loadPerformance()">
-                            <div class="card-content"><div class="card-icon">🏆</div><div class="card-title">Performance</div><div class="card-meta">Top Students Stats</div></div>
-                            <div class="card-footer"><button class="btn btn-primary btn-sm w-full">View</button></div>
-                        </div>
-                        <div class="card" onclick="app.loadFees()">
-                            <div class="card-content"><div class="card-icon">💰</div><div class="card-title">Fee Management</div><div class="card-meta">Collect & Configure</div></div>
-                            <div class="card-footer"><button class="btn btn-primary btn-sm w-full">Open</button></div>
-                        </div>
-                        <div class="card" onclick="app.loadCBTUploadSection()">
-                            <div class="card-content"><div class="card-icon">📋</div><div class="card-title">CBT Questions</div><div class="card-meta">Upload & Manage CBT Questions</div></div>
-                            <div class="card-footer"><button class="btn btn-primary btn-sm w-full">Open</button></div>
-                        </div>
-                    `;
+            cards.forEach(([icon, bg, title, desc, onclick, adminOnly]) => {
+              if (!adminOnly) return;
+              land.innerHTML += `
+                <div class="card" onclick="${onclick}">
+                  <div class="card-icon-wrap" style="background:${bg}">
+                    <i class="fas ${icon}"></i>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-title">${title}</div>
+                    <div class="card-meta">${desc}</div>
+                  </div>
+                  <div class="card-footer">
+                    <span class="card-learn">Learn more <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></span>
+                  </div>
+                </div>`;
+            });
           }
 
-          // 2. AI CARD & QUESTION BANK (Visible to Teachers, Admins, Heads)
-          land.innerHTML += `
-            <div class="card" onclick="app.loadQuestionBank()">
+          // General cards (visible to all)
+          cards.forEach(([icon, bg, title, desc, onclick, adminOnly]) => {
+            if (adminOnly) return;
+            land.innerHTML += `
+              <div class="card" onclick="${onclick}">
+                <div class="card-icon-wrap" style="background:${bg}">
+                  <i class="fas ${icon}"></i>
+                </div>
                 <div class="card-content">
-                  <div class="card-icon">📚</div>
-                  <div class="card-title">Question Bank</div>
-                  <div class="card-meta">Create & Store Questions</div>
+                  <div class="card-title">${title}</div>
+                  <div class="card-meta">${desc}</div>
                 </div>
                 <div class="card-footer">
-                  <button class="btn btn-outline btn-sm w-full">Open</button>
+                  <span class="card-learn">Learn more <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></span>
                 </div>
-            </div>
-          `;
-
-          // 3. General Directories (Visible to everyone)
-          land.innerHTML += `
-            <div class="card" onclick="app.loadClassList('exam')">
-                <div class="card-content"><div class="card-icon">⌨️</div><div class="card-title">Exam Directory</div><div class="card-meta">Enter Exam Scores</div></div>
-                <div class="card-footer"><button class="btn btn-outline btn-sm w-full">Open</button></div>
-            </div>
-            <div class="card" onclick="app.loadClassList('midterm')">
-                <div class="card-content"><div class="card-icon">⌨️</div><div class="card-title">Mid-Term Directory</div><div class="card-meta">Enter Mid-Term Scores</div></div>
-                <div class="card-footer"><button class="btn btn-outline btn-sm w-full">Open</button></div>
-            </div>
-          `;
-          // --- NEW CARDS ---
-          // --- TIMETABLE (Admin/Head ONLY) ---
-          if (r === "Admin" || r === "Head") {
-            land.innerHTML += `
-        <div class="card" onclick="app.loadTimetableSection()">
-            <div class="card-content"><div class="card-icon">📅</div><div class="card-title">Timetable</div><div class="card-meta">Upload/Edit Schedules</div></div>
-            <div class="card-footer"><button class="btn btn-primary btn-sm w-full">Open</button></div>
-        </div>`;
-          }
-
-          // Assignments Card (all roles)
-          land.innerHTML += `
-        <div class="card" onclick="app.loadAssignmentSection()">
-            <div class="card-content"><div class="card-icon">📝</div><div class="card-title">Assignments</div><div class="card-meta">Upload Homework</div></div>
-            <div class="card-footer"><button class="btn btn-outline btn-sm w-full">Open</button></div>
-        </div>`;
-
-          // E-Learning Resources Card (all roles)
-          land.innerHTML += `
-        <div class="card" onclick="app.loadElearningSection()">
-            <div class="card-content"><div class="card-icon">📖</div><div class="card-title">E-Learning</div><div class="card-meta">Syllabus, Notes, Videos & Links</div></div>
-            <div class="card-footer"><button class="btn btn-outline btn-sm w-full">Open</button></div>
-        </div>`;
+              </div>`;
+          });
         },
 
         // --- NAVIGATION ---
@@ -5928,6 +6394,10 @@ ANSWER: B</pre
           document
             .querySelectorAll(".modal-overlay")
             .forEach((m) => (m.style.display = "none"));
+          // Close kebab menus
+          document
+            .querySelectorAll(".kebab-dropdown.show")
+            .forEach((d) => d.classList.remove("show"));
         },
 
         // --- STAFF LIST ---
@@ -6026,12 +6496,13 @@ ANSWER: B</pre
 
           const container = document.getElementById("perf-container");
           container.innerHTML = `
-            <div id="perf-controls" style="margin-bottom: 15px; display:flex; gap:10px; align-items:center;">
-                <select id="perf-class-select" class="form-control" style="width:200px">
-                    <option value="">Select Class</option>
-                    ${ALL_CLASSES.map((c) => `<option value="${c}">${c}</option>`).join("")}
-                </select>
-                <button class="btn btn-primary btn-sm" id="perf-switch-type">Switch to Mid-Term</button>
+            <div id="perf-controls" style="margin-bottom: 15px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+              <select id="perf-class-select" class="form-control" style="width:200px">
+                <option value="">Select Class</option>
+                ${ALL_CLASSES.map((c) => `<option value="${c}">${c}</option>`).join("")}
+              </select>
+              <button class="btn btn-primary btn-sm" id="perf-switch-type">Switch to Mid-Term</button>
+              <input type="text" id="perf-search" class="search-input" placeholder="Search student name..." oninput="app.filterPerformanceTable()">
             </div>
             <div id="broadsheet-container" style="overflow-x:auto; margin-top:1rem;"></div>
             <div id="perf-stats" style="margin-top:2rem;"></div>
@@ -6087,6 +6558,9 @@ ANSWER: B</pre
             term,
           );
 
+          // Store data for modal access
+          this.state.currentBroadsheetData = data;
+
           // ... REST OF THE FUNCTION REMAINS THE SAME ...
           // (No changes needed to the calculation logic, just the data fetch above)
 
@@ -6095,10 +6569,10 @@ ANSWER: B</pre
               ? `<br><small style="color:var(--danger);">${data._info}</small>`
               : "";
             container.innerHTML = `<div class="text-center" style="padding:3rem;">
-      <i class="fas fa-folder-open" style="font-size:2.5rem;opacity:0.2;display:block;margin-bottom:10px;"></i>
-      <p style="color:var(--secondary);">No scores found for <strong>${className}</strong> — ${isMidTerm ? "Mid-Term" : "Exam"}${sheetHint}</p>
-      <p style="font-size:0.85rem;color:var(--secondary);margin-top:5px;">Session: ${session} &bull; Term: ${term}</p>
-    </div>`;
+              <i class="fas fa-folder-open" style="font-size:2.5rem;opacity:0.2;display:block;margin-bottom:10px;"></i>
+              <p style="color:var(--secondary);">No scores found for <strong>${className}</strong> — ${isMidTerm ? "Mid-Term" : "Exam"}${sheetHint}</p>
+              <p style="font-size:0.85rem;color:var(--secondary);margin-top:5px;">Session: ${session} &bull; Term: ${term}</p>
+            </div>`;
             statsContainer.innerHTML = "";
             return;
           }
@@ -6140,7 +6614,7 @@ ANSWER: B</pre
           // 3. Generate Table Headers
           let thead = "<tr><th>Position</th><th>Admin ID</th><th>Name</th>";
           subjects.forEach((sub) => {
-            thead += `<th title="${sub}">${sub}</th>`;
+            thead += `<th title="${sub}" class="hide-mobile">${sub}</th>`;
           });
           thead += "<th>Total</th><th>%</th></tr>";
 
@@ -6190,13 +6664,13 @@ ANSWER: B</pre
 
               const display = val > 0 ? val : "-";
               const grade = val > 0 ? app.getGrade(val, isJSS) : "-";
-              cells += `<td style="text-align:center;">${display}<br><small>${grade}</small></td>`;
+              cells += `<td style="text-align:center;" class="hide-mobile">${display}<br><small>${grade}</small></td>`;
             });
 
             cells += `<td style="font-weight:bold;text-align:center;">${student.totalScore}</td>`;
             cells += `<td style="font-weight:bold;color:var(--primary);text-align:center;">${student.avgPerc}%</td>`;
 
-            rowsHtml += `<tr>${cells}</tr>`;
+            rowsHtml += `<tr style="cursor:pointer;" onclick="app.openPerfStudentModal('${student.id}', '${student.name.replace(/'/g, "\\'")}')">${cells}</tr>`;
 
             // Check for low performers
             if (
@@ -6263,13 +6737,15 @@ ANSWER: B</pre
             </div>
             <table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
               <thead style="background:#f1f5f9;">${thead}</thead>
-              <tbody>
+              <tbody id="broadsheet-tbody">
                 ${rowsHtml}
                 ${avgRow}
               </tbody>
             </table>
           `;
           statsContainer.innerHTML = statsHtml;
+          // ← ADD THIS LINE:
+          this.injectShareBar("section-performance", "broadsheet-tbody");
         },
 
         // NEW: Handle Session/Term change in Fees
@@ -6450,6 +6926,8 @@ ANSWER: B</pre
             resultType || this.state.viewContext.resultType;
 
           this.showSection("section-admin-roster");
+          // ← ADD THIS LINE:
+          this.injectShareBar("section-admin-roster", "admin-roster-tbody");
 
           const dirType =
             this.state.viewContext.resultType === "midterm"
@@ -6476,21 +6954,36 @@ ANSWER: B</pre
           if (stds && stds.length > 0) {
             stds.forEach((s) => {
               tbody.innerHTML += `
-                        <tr>
-                            <td>${s.id}</td>
-                            <td><strong>${s.name}</strong></td>
-                            <td>${s.gender}</td>
-                            <td>${s.dept || "-"}</td>
-                            <td>
-                                <button class="btn btn-primary btn-sm" onclick="app.loadStudentDetail('${s.id}')">
-                                    View Results
-                                </button>
-                                <button class="btn btn-outline btn-sm" onclick="app.openEditStudentModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', '${s.gender}', '${s.dept || ""}')">
-                                  <i class="fas fa-edit"></i> Edit
-                                </button>
-                            </td>
-                        </tr>
-                    `;
+                <tr>
+                  <td>${s.id}</td>
+                  <td><strong>${s.name}</strong></td>
+                  <td class="hide-mobile">${s.gender}</td>
+                  <td class="hide-mobile">${s.dept || "-"}</td>
+                  <td>
+                    <div class="action-cell-desktop">
+                      <button class="btn btn-success btn-sm" onclick="app.printStudentResult('${s.id}', '${s.name.replace(/'/g, "\\'")}')">
+                        <i class="fas fa-print"></i> Print
+                      </button>
+                      <button class="btn btn-primary btn-sm" onclick="app.loadStudentDetail('${s.id}')">
+                        View
+                      </button>
+                      <button class="btn btn-outline btn-sm" onclick="app.openEditStudentModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', '${s.gender}', '${s.dept || ""}')">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                    </div>
+                    <div class="action-cell-mobile">
+                      <div class="kebab-menu">
+                        <button class="kebab-trigger" onclick="app.toggleKebab(this)"><i class="fas fa-ellipsis-v"></i></button>
+                        <div class="kebab-dropdown">
+                          <button onclick="app.printStudentResult('${s.id}', '${s.name.replace(/'/g, "\\'")}')"><i class="fas fa-print"></i> Print Result</button>
+                          <button onclick="app.loadStudentDetail('${s.id}')"><i class="fas fa-eye"></i> View Results</button>
+                          <button onclick="app.openEditStudentModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', '${s.gender}', '${s.dept || ""}')"><i class="fas fa-edit"></i> Edit Student</button>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              `;
             });
           } else {
             tbody.innerHTML =
@@ -6539,8 +7032,16 @@ ANSWER: B</pre
             classesToShow.forEach((cls) => {
               grid.innerHTML += `
                     <div class="card" onclick="app.loadAdminRoster('${cls}', '${this.state.viewContext.resultType}')">
-                        <div class="card-content"><div class="card-title">${cls}</div><div class="card-meta">View Student List</div></div>
-                        <div class="card-footer"><button class="btn btn-outline btn-sm w-full">Select</button></div>
+                        <div class="card-icon-wrap" style="background:#0ea5e9">
+                          <i class="fas fa-chalkboard-user"></i>
+                        </div>
+                        <div class="card-content">
+                          <div class="card-title">${cls}</div>
+                          <div class="card-meta">View student list & results</div>
+                        </div>
+                        <div class="card-footer">
+                          <span class="card-learn">Learn more <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></span>
+                        </div>
                     </div>
                 `;
             });
@@ -6548,8 +7049,16 @@ ANSWER: B</pre
             classesToShow.forEach((cls) => {
               grid.innerHTML += `
                     <div class="card" onclick="app.loadSubjectList('${cls}')">
-                        <div class="card-content"><div class="card-title">${cls}</div><div class="card-meta">Manage Scores</div></div>
-                        <div class="card-footer"><button class="btn btn-outline btn-sm w-full">Select</button></div>
+                        <div class="card-icon-wrap" style="background:#0ea5e9">
+                          <i class="fas fa-chalkboard-user"></i>
+                        </div>
+                        <div class="card-content">
+                          <div class="card-title">${cls}</div>
+                          <div class="card-meta">Manage scores for this class</div>
+                        </div>
+                        <div class="card-footer">
+                          <span class="card-learn">Learn more <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></span>
+                        </div>
                     </div>
                 `;
             });
@@ -6594,14 +7103,23 @@ ANSWER: B</pre
             subsToShow.forEach((sub) => {
               grid.innerHTML += `
                             <div class="card" onclick="app.loadBatchEntry('${clsName}', '${sub}')">
-                                <div class="card-content"><div class="card-title">${sub}</div><div class="card-meta">Enter Scores</div></div>
-                                <div class="card-footer"><button class="btn btn-outline btn-sm w-full">Open</button></div>
+                                <div class="card-icon-wrap" style="background:#6366f1">
+                                  <i class="fas fa-book"></i>
+                                </div>
+                                <div class="card-content">
+                                  <div class="card-title">${sub}</div>
+                                  <div class="card-meta">Enter scores for ${clsName}</div>
+                                </div>
+                                <div class="card-footer">
+                                  <span class="card-learn">Learn more <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></span>
+                                </div>
                             </div>
                         `;
             });
           }
         },
 
+        // --- BATCH SCORE ENTRY ---
         // --- BATCH SCORE ENTRY ---
         loadBatchEntry: async function (cls, sub) {
           this.state.viewContext.cls = cls;
@@ -6639,11 +7157,26 @@ ANSWER: B</pre
               "Exam Score Entry";
           }
 
-          document.getElementById("batch-actions").innerHTML =
+          // UPDATED: Add Search Bar and Button
+          const searchHtml = `
+            <input type="text" id="batch-search-input" class="form-control" 
+                   placeholder="Search by Name or Admin No..." 
+                   oninput="app.filterBatchStudents()" 
+                   style="width: 220px; margin-right: 10px;">
+          `;
+
+          const addBtnHtml =
             this.state.currentUser.role === "Admin" ||
             this.state.currentUser.role === "Head"
               ? `<button class="btn btn-primary btn-sm" onclick="app.openAddStudentModal('${cls}')">+ Add Student</button>`
               : "";
+
+          document.getElementById("batch-actions").innerHTML = `
+            <div class="flex gap-2 items-center" style="flex-wrap: wrap;">
+                ${searchHtml}
+                ${addBtnHtml}
+            </div>
+          `;
 
           const stds = await GoogleSheetService.loadStudents(cls);
           const tbody = document.getElementById("batch-rows");
@@ -6706,6 +7239,33 @@ ANSWER: B</pre
 
           this.pushHistory("section-batch-entry", `${cls} - ${sub}`);
           this.showSection("section-batch-entry");
+        },
+
+        filterBatchStudents: function () {
+          const input = document.getElementById("batch-search-input");
+          if (!input) return;
+
+          const filter = input.value.toLowerCase().trim();
+          const rows = document.querySelectorAll("#batch-rows tr");
+
+          rows.forEach((row) => {
+            // Skip the "No students found" row or empty rows
+            if (!row.dataset.sid) {
+              // If searching, hide the "No students" message row
+              row.style.display = filter ? "none" : "";
+              return;
+            }
+
+            const adminNo = row.dataset.sid.toLowerCase();
+            // Name is in the second cell (index 1)
+            const nameCell = row.cells[1];
+            const name = nameCell ? nameCell.textContent.toLowerCase() : "";
+
+            // Check if Admin No OR Name contains the search query
+            const match = adminNo.includes(filter) || name.includes(filter);
+
+            row.style.display = match ? "" : "none";
+          });
         },
 
         saveBatchScores: async function () {
@@ -6869,7 +7429,616 @@ ANSWER: B</pre
             this.showToast("No student selected", "error");
             return;
           }
+          this.state.printAllMode = false;
           document.getElementById("modal-print-config").style.display = "flex";
+        },
+
+        // NEW: Opens config modal for roster print button
+        printStudentResult: async function (adminNo, studentName) {
+          if (!adminNo || !studentName) {
+            return this.showToast("Student data missing", "error");
+          }
+
+          // Store student info for later use after config selection
+          this.state.rosterPrintStudent = { id: adminNo, name: studentName };
+          this.state.printAllMode = false; // Not "print all"
+          this.state.printFromRoster = true; // Flag: coming from roster button
+
+          // Show the Print Configuration Modal
+          document.getElementById("modal-print-config").style.display = "flex";
+        },
+
+        printAllResults: function () {
+          const cls = this.state.viewContext.cls;
+          if (!cls) return this.showToast("No class selected", "error");
+          this.state.printAllMode = true;
+          document.getElementById("modal-print-config").style.display = "flex";
+        },
+
+        dispatchPrintReport: function () {
+          const selectedTerm = document.getElementById("printTerm").value;
+
+          if (selectedTerm === "3rd") {
+            if (this.state.printAllWithStampMode) {
+              this.state.printAllWithStampMode = false;
+              this.generatePrintAllReportsCumulative(true);
+            } else if (this.state.printAllMode) {
+              this.generatePrintAllReportsCumulative(false);
+            } else if (
+              this.state.printFromRoster &&
+              this.state.rosterPrintStudent
+            ) {
+              this.generateRosterPrintWithStampCumulative();
+            } else {
+              this.generatePrintReportCumulative();
+            }
+          } else {
+            if (this.state.printAllWithStampMode) {
+              this.state.printAllWithStampMode = false;
+              this.printAllResultsWithStamp();
+            } else if (this.state.printAllMode) {
+              this.generatePrintAllReports();
+            } else if (
+              this.state.printFromRoster &&
+              this.state.rosterPrintStudent
+            ) {
+              this.generateRosterPrintWithStamp();
+            } else {
+              this.generatePrintReport();
+            }
+          }
+        },
+
+        // NEW: Generates single student result WITH STAMP using config values
+        generateRosterPrintWithStamp: async function () {
+          const sid = this.state.rosterPrintStudent.id;
+          const studentName = this.state.rosterPrintStudent.name;
+
+          // Get config values from modal
+          const session = document.getElementById("printSession").value;
+          const term = document.getElementById("printTerm").value;
+          const nextTermDate = document.getElementById("printNextTerm").value;
+
+          this.closeModals();
+          this.toggleLoader(true);
+
+          try {
+            const res = await GoogleSheetService.getFullResult(sid);
+            if (!res.info || !res.scores) {
+              this.toggleLoader(false);
+              return this.showToast(
+                "No result found for this student",
+                "error",
+              );
+            }
+
+            const studentInfo = res.info;
+            const scores = res.scores;
+            const isJSS = studentInfo.class.startsWith("JSS");
+            const isMidTerm = this.state.viewContext.resultType === "midterm";
+
+            let subjectsList = isJSS
+              ? JSS_SUBJECTS
+              : studentInfo.dept && SSS_SUBJECTS[studentInfo.dept]
+                ? SSS_SUBJECTS[studentInfo.dept]
+                : SSS_SUBJECTS.All;
+
+            const classData = await GoogleSheetService.getClassScores(
+              studentInfo.class,
+              isMidTerm ? "midterm" : "exam",
+              session,
+              term,
+            );
+            const subjectAverages = classData.subjectAverages || {};
+
+            // Build report WITH STAMP (useStamp: true)
+            const reportHtml = this.buildSingleReportHtml({
+              studentInfo,
+              scores,
+              subjectAverages,
+              subjectsList,
+              isMidTerm,
+              isJSS,
+              session,
+              term,
+              nextTermDate,
+              useStamp: true, // <-- THIS SHOWS THE STAMP INSTEAD OF SIGNATURES
+            });
+
+            const printArea = document.getElementById("printable-area");
+            printArea.innerHTML = `
+      <style>
+        @media print {
+          @page { size: A4 portrait; margin: 12mm; }
+          body * { visibility: hidden; }
+          #printable-area, #printable-area * { visibility: visible; }
+          #printable-area { position: absolute; left: 0; top: 0; width: 100%; padding: 0; background: white; font-family: 'Times New Roman', serif; color: #000; font-size: 0.82rem; line-height: 1.35; }
+          .report-card { max-width: 100%; margin: 0 auto; page-break-after: avoid; page-break-inside: avoid; }
+          table { font-size: 0.78rem; }
+          th, td { padding: 4px 6px !important; }
+          .rp-header, .rp-info-grid, .rp-table, .summary-section, .comment-box, .rp-footer { page-break-inside: avoid; }
+        }
+      </style>
+      <div class="report-card">${reportHtml}</div>
+    `;
+
+            this.toggleLoader(false);
+            this.showToast(
+              `Preparing ${studentName}'s ${term} Term Result (E-Copy with Stamp)...`,
+              "success",
+            );
+
+            setTimeout(() => {
+              window.print();
+            }, 700);
+          } catch (err) {
+            console.error(err);
+            this.toggleLoader(false);
+            this.showToast("Failed to generate result", "error");
+          }
+
+          // Clean up state
+          this.state.printFromRoster = false;
+          this.state.rosterPrintStudent = null;
+        },
+
+        openPrintConfigForEcopy: function () {
+          const cls = this.state.viewContext.cls;
+          if (!cls) return this.showToast("No class selected", "error");
+          this.state.printAllWithStampMode = true;
+          document.getElementById("modal-print-config").style.display = "flex";
+        },
+
+        // NEW: Print ALL results with Stamp (E-Copy)
+        printAllResultsWithStamp: async function () {
+          const cls = this.state.viewContext.cls;
+          if (!cls) return this.showToast("No class selected", "error");
+
+          // Get config values from modal (or use defaults)
+          const session =
+            document.getElementById("printSession")?.value || "2025/2026";
+          const term = document.getElementById("printTerm")?.value || "1st";
+          const nextTermDate =
+            document.getElementById("printNextTerm")?.value ||
+            "12th of January, 2026";
+          // NEW: If 3rd term, route to cumulative version
+          if (term === "3rd") {
+            this.state.printAllWithStampMode = true;
+            document.getElementById("modal-print-config").style.display =
+              "flex";
+            return;
+          }
+
+          // If no config modal values exist yet, show modal first
+          if (!document.getElementById("printSession")?.value) {
+            this.state.printAllWithStampMode = true;
+            document.getElementById("modal-print-config").style.display =
+              "flex";
+            return;
+          }
+
+          this.state.printAllWithStampMode = false;
+          this.closeModals();
+          this.toggleLoader(true);
+
+          try {
+            const students = await GoogleSheetService.loadStudents(cls);
+            if (!students || students.length === 0) {
+              this.toggleLoader(false);
+              return this.showToast("No students found in this class", "error");
+            }
+
+            let allHtml = "";
+            let processedCount = 0;
+
+            for (let i = 0; i < students.length; i++) {
+              const s = students[i];
+              const res = await GoogleSheetService.getFullResult(s.id);
+              if (!res.info) continue;
+
+              const studentInfo = res.info;
+              const scores = res.scores;
+              const isJSS = studentInfo.class.startsWith("JSS");
+              const isMidTerm = this.state.viewContext.resultType === "midterm";
+
+              let subjectsList = isJSS
+                ? JSS_SUBJECTS
+                : studentInfo.dept && SSS_SUBJECTS[studentInfo.dept]
+                  ? SSS_SUBJECTS[studentInfo.dept]
+                  : SSS_SUBJECTS.All;
+
+              const classData = await GoogleSheetService.getClassScores(
+                studentInfo.class,
+                isMidTerm ? "midterm" : "exam",
+                session,
+                term,
+              );
+              const subjectAverages = classData.subjectAverages || {};
+
+              // Build report WITH STAMP
+              allHtml += this.buildSingleReportHtml({
+                studentInfo,
+                scores,
+                subjectAverages,
+                subjectsList,
+                isMidTerm,
+                isJSS,
+                session,
+                term,
+                nextTermDate,
+                useStamp: true, // <-- THIS SHOWS THE STAMP
+              });
+
+              processedCount++;
+
+              if (i < students.length - 1) {
+                allHtml +=
+                  '<div style="page-break-after: always; border: none; margin: 0; padding: 0; height: 0;"></div>';
+              }
+            }
+
+            if (processedCount === 0) {
+              this.toggleLoader(false);
+              return this.showToast(
+                "No student data available to print",
+                "error",
+              );
+            }
+
+            const printArea = document.getElementById("printable-area");
+            printArea.innerHTML = `
+      <style>
+        @media print {
+          @page { size: A4 portrait; margin: 12mm; }
+          body * { visibility: hidden; }
+          #printable-area, #printable-area * { visibility: visible; }
+          #printable-area { position: absolute; left: 0; top: 0; width: 100%; padding: 0; background: white; font-family: 'Times New Roman', serif; color: #000; font-size: 0.82rem; line-height: 1.35; }
+          .report-card { max-width: 100%; margin: 0 auto; page-break-after: avoid; page-break-inside: avoid; }
+          table { font-size: 0.78rem; }
+          th, td { padding: 4px 6px !important; }
+          .rp-header, .rp-info-grid, .rp-table, .summary-section, .comment-box, .rp-footer { page-break-inside: avoid; }
+        }
+      </style>
+      ${allHtml}
+    `;
+
+            this.toggleLoader(false);
+            this.showToast(
+              `Generating ${processedCount} E-Copy Reports with Stamp...`,
+              "success",
+            );
+
+            setTimeout(() => {
+              window.print();
+            }, 700);
+          } catch (err) {
+            console.error(err);
+            this.toggleLoader(false);
+            this.showToast("Failed to generate results", "error");
+          }
+        },
+
+        buildSingleReportHtml: function (opts) {
+          const s = opts.studentInfo;
+          const scores = opts.scores;
+          const subjectAverages = opts.subjectAverages;
+          const subjectsList = opts.subjectsList;
+          const isMidTerm = opts.isMidTerm;
+          const isJSS = opts.isJSS;
+          const session = opts.session;
+          const term = opts.term;
+          const nextTermDate = opts.nextTermDate;
+          // Add this at the beginning of the function:
+          const useStamp = opts.useStamp || false;
+
+          let grandTotalScore = 0;
+          let validSubjectCount = 0;
+          let tableRows = "";
+
+          const getGradeInfo = (total) => {
+            if (isJSS) {
+              if (total >= 80) return { g: "A", remark: "Distinction" };
+              if (total >= 70) return { g: "B", remark: "Excellent" };
+              if (total >= 60) return { g: "BC", remark: "Very Good" };
+              if (total >= 50) return { g: "C", remark: "Good" };
+              if (total >= 40) return { g: "P", remark: "Pass" };
+              return { g: "F", remark: "Fail" };
+            } else {
+              if (total >= 80) return { g: "A1", remark: "Excellent" };
+              if (total >= 75) return { g: "B2", remark: "Very Good" };
+              if (total >= 70) return { g: "B3", remark: "Good" };
+              if (total >= 65) return { g: "C4", remark: "Credit" };
+              if (total >= 60) return { g: "C5", remark: "Credit" };
+              if (total >= 50) return { g: "C6", remark: "Credit" };
+              if (total >= 45) return { g: "D7", remark: "Pass" };
+              if (total >= 40) return { g: "E8", remark: "Pass" };
+              return { g: "F9", remark: "Fail" };
+            }
+          };
+
+          subjectsList.forEach((sub) => {
+            const sc = scores[sub] || { ca: "", exam: "", total: "" };
+            let scoreValue = 0;
+            let caDisplay = "-";
+            let examDisplay = "-";
+            let totalDisplay = "-";
+
+            if (isMidTerm) {
+              scoreValue = parseInt(sc.total) || 0;
+              totalDisplay = scoreValue > 0 ? scoreValue : "-";
+            } else {
+              const ca = parseInt(sc.ca) || 0;
+              const exam = parseInt(sc.exam) || 0;
+              caDisplay = ca > 0 ? ca : "-";
+              examDisplay = exam > 0 ? exam : "-";
+              scoreValue = ca + exam;
+              totalDisplay = scoreValue > 0 ? scoreValue : "-";
+            }
+
+            if (scoreValue === 0 || scoreValue === null || isNaN(scoreValue)) {
+              return;
+            }
+
+            grandTotalScore += scoreValue;
+            validSubjectCount++;
+
+            const gradeInfo = getGradeInfo(scoreValue);
+
+            const _avgVal = subjectAverages[sub];
+            const classAvg =
+              _avgVal !== undefined && _avgVal !== null && !isNaN(_avgVal)
+                ? parseFloat(_avgVal).toFixed(1)
+                : "-";
+
+            if (isMidTerm) {
+              tableRows += `
+                <tr>
+                    <td style="text-align:left; padding-left:10px;">${sub}</td>
+                    <td>100</td>
+                    <td style="font-weight:bold;">${totalDisplay}</td>
+                    <td style="color:#2563eb; font-weight:600;">${classAvg}</td>
+                    <td style="font-weight:bold;">${gradeInfo.g}</td>
+                    <td>${gradeInfo.remark}</td>
+                </tr>`;
+            } else {
+              tableRows += `
+                <tr>
+                    <td style="text-align:left; padding-left:10px;">${sub}</td>
+                    <td>${caDisplay}</td>
+                    <td>${examDisplay}</td>
+                    <td style="font-weight:bold;">${totalDisplay}</td>
+                    <td style="color:#2563eb; font-weight:600; background:#eff6ff;">${classAvg}</td>
+                    <td style="font-weight:bold;">${gradeInfo.g}</td>
+                    <td>${gradeInfo.remark}</td>
+                </tr>`;
+            }
+          });
+
+          const overallPercentage =
+            validSubjectCount > 0
+              ? (grandTotalScore / validSubjectCount).toFixed(1)
+              : 0;
+
+          let principalComment = "";
+          if (overallPercentage >= 80)
+            principalComment = "This is an exceptional performance";
+          else if (overallPercentage >= 70)
+            principalComment = "This is a resourceful child";
+          else if (overallPercentage >= 60)
+            principalComment = "This is an encouraging performance";
+          else if (overallPercentage >= 50)
+            principalComment = "This is a promising child";
+          else if (overallPercentage >= 40)
+            principalComment = "This result is below average";
+          else principalComment = "This is a very poor performance";
+
+          const teacherComments = [
+            "is attentive and eager to learn.",
+            "has shown great potential this term.",
+            "sets an example of excellence in behavior and cooperation.",
+            "shows a positive attitude towards learning.",
+            "is hardworking and dedicated.",
+          ];
+          const randomTeacherComment =
+            teacherComments[Math.floor(Math.random() * teacherComments.length)];
+
+          return `
+                <div class="report-card">
+                    <div class="rp-header" style="display: flex; align-items: center; justify-content: center; margin-bottom: 12px; gap: 20px;">
+                        <img src="img/NSS LOGO.png" alt="Nifty Steps Logo" style="width: 70px; height: 70px; object-fit: contain;">
+                        <div style="text-align: center;">
+                            <h1 style="color: #1e40af; margin: 0 0 4px 0; line-height: 1.1; font-size: 1.6rem;">NIFTY STEPS COLLEGE</h1>
+                            <p style="font-size: 0.85rem; margin: 0; line-height: 1.3;">31 Yinka Ogunfile Street, Igbo Oluwo Estate, Ikorodu, Lagos State</p>
+                            <p style="font-size: 0.8rem; margin: 0;">www.niftysteps.com.ng | admin@niftysteps.com.ng</p>
+                            <h3 style="margin: 8px 0 0 0; text-decoration: underline; text-transform: uppercase; font-size: 0.95rem;">
+                                ${isJSS ? "Junior" : "Senior"} Secondary School ${term.toUpperCase()} TERM REPORT SHEET
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #000; padding: 8px; margin-bottom: 15px; font-size: 0.85rem;">
+                        <div style="line-height: 1.5;">
+                            <strong>NAME:</strong> ${s.name.toUpperCase()}<br>
+                            <strong>CLASS:</strong> ${s.class} ${s.dept ? `(${s.dept})` : ""}
+                        </div>
+                        <div style="line-height: 1.5; text-align: right;">
+                            <strong>ADMIN NO:</strong> NSC-${s.id}<br>
+                            <strong>SESSION:</strong> ${session}
+                        </div>
+                    </div>
+
+                    <table class="rp-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 0.8rem; margin-bottom: 15px;">
+                        <thead>
+                            <tr style="background: #e2e8f0;">
+                                ${
+                                  isMidTerm
+                                    ? `<th style="border: 1px solid #000; padding: 5px; text-align: left;">SUBJECTS</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">MAX(100)</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">SCORE</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">CLASS AVG</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">GRADE</th>
+                                     <th style="border: 1px solid #000; padding: 5px; text-align: left;">COMMENT</th>`
+                                    : `<th style="border: 1px solid #000; padding: 5px; text-align: left;">SUBJECTS</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">CA (40)</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">EXAM (60)</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">TOTAL (100)</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">CLASS AVG</th>
+                                     <th style="border: 1px solid #000; padding: 5px;">GRADE</th>
+                                     <th style="border: 1px solid #000; padding: 5px; text-align: left;">COMMENT</th>`
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                            <tr style="background-color: #f1f5f9; font-weight: bold;">
+                                <td style="border: 1px solid #000; padding: 5px;" colspan="${isMidTerm ? 2 : 3}">GRAND TOTAL / PERCENTAGE</td>
+                                <td style="border: 1px solid #000; padding: 5px; text-align: center;">${grandTotalScore}</td>
+                                <td style="border: 1px solid #000; padding: 5px; text-align: center;" colspan="${isMidTerm ? 1 : 2}">${overallPercentage}%</td>
+                                ${!isMidTerm ? '<td style="border: 1px solid #000; padding: 5px;">-</td>' : ""}
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top: 20px; display: flex; justify-content: space-between; gap: 20px;">
+                        <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 60%;">
+                            <strong>CLASS TEACHER'S COMMENT:</strong><br>
+                            ${s.name} ${randomTeacherComment}
+                        </div>
+                        <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 38%;">
+                            <strong>PRINCIPAL'S COMMENT:</strong><br>
+                            ${principalComment}
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div style="font-size: 0.75rem; border: 1px solid #000; padding: 10px; width: 55%;">
+                            <strong>GRADING KEY:</strong><br>
+                            ${
+                              isJSS
+                                ? "A: 80-100 (Distinction), B: 70-79 (Excellent), BC: 60-69 (Very Good), C: 50-59 (Good), P: 40-49 (Pass), F: 0-39 (Fail)"
+                                : "A1: 80-100, B2: 75-79, B3: 70-74, C4: 65-69, C5: 60-64, C6: 50-59, D7: 45-49, E8: 40-44, F9: 0-39"
+                            }
+                        </div>
+                        <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 38%;">
+                            <strong>Next Term Resumes:</strong><br>
+                            ${nextTermDate}
+                        </div>
+                    </div>
+
+                    ${
+                      useStamp
+                        ? `<div style="margin-top: 5px; text-align: center;">
+                          <img src="img/stamp.svg" 
+                            alt="Official Stamp" 
+                            style="width: 150px; height: 150px; object-fit: contain; opacity: 0.9;">
+                          <p style="font-size: 0.75rem; margin-top: 8px; color: #666; font-style: italic;">Official E-Copy - Valid Without Signature</p>
+                        </div>`
+                        : `<div style="margin-top: 5px; display: flex; justify-content: space-between; align-items: flex-end;">
+                          <div style="text-align: center;">
+                            <div style="border-bottom: 1px solid #000; width: 150px; height: 40px;"></div>
+                            <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Class Teacher's Signature</p>
+                          </div>
+                          <div style="text-align: center;">
+                            <div style="border-bottom: 1px solid #000; width: 150px; height: 40px;"></div>
+                            <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Principal's Signature</p>
+                          </div>
+                        </div>`
+                    }
+                </div>
+            `;
+        },
+
+        generatePrintAllReports: async function () {
+          const session = document.getElementById("printSession").value;
+          const term = document.getElementById("printTerm").value;
+          const nextTermDate = document.getElementById("printNextTerm").value;
+          const cls = this.state.viewContext.cls;
+          const isMidTerm = this.state.viewContext.resultType === "midterm";
+          const mode = isMidTerm ? "midterm" : "exam";
+
+          this.closeModals();
+          this.toggleLoader(true);
+
+          const students = await GoogleSheetService.loadStudents(cls);
+          if (!students || students.length === 0) {
+            this.toggleLoader(false);
+            return this.showToast("No students found in this class", "error");
+          }
+
+          const classData = await GoogleSheetService.getClassScores(
+            cls,
+            mode,
+            session,
+            term,
+          );
+          const subjectAverages = classData.subjectAverages || {};
+
+          let allHtml = "";
+          let processedCount = 0;
+
+          for (let i = 0; i < students.length; i++) {
+            const s = students[i];
+            const res = await GoogleSheetService.getFullResult(s.id);
+            if (!res.info) continue;
+
+            const studentInfo = res.info;
+            const scores = res.scores;
+            const isJSS = studentInfo.class.startsWith("JSS");
+
+            let subjectsList;
+            if (isJSS) {
+              subjectsList = JSS_SUBJECTS;
+            } else {
+              subjectsList =
+                studentInfo.dept && SSS_SUBJECTS[studentInfo.dept]
+                  ? SSS_SUBJECTS[studentInfo.dept]
+                  : SSS_SUBJECTS.All;
+            }
+
+            allHtml += this.buildSingleReportHtml({
+              studentInfo,
+              scores,
+              subjectAverages,
+              subjectsList,
+              isMidTerm,
+              isJSS,
+              session,
+              term,
+              nextTermDate,
+            });
+
+            processedCount++;
+
+            if (i < students.length - 1) {
+              allHtml +=
+                '<div style="page-break-after: always; border: none; margin: 0; padding: 0; height: 0;"></div>';
+            }
+          }
+
+          if (processedCount === 0) {
+            this.toggleLoader(false);
+            return this.showToast(
+              "No student data available to print",
+              "error",
+            );
+          }
+
+          const printArea = document.getElementById("printable-area");
+          printArea.innerHTML = `
+                <style>
+                    @media print {
+                        @page { margin: 12mm; size: A4; }
+                        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        .rp-table td, .rp-table th { font-size: 0.8rem !important; }
+                        .report-card { font-size: 0.85rem; font-family: 'Times New Roman', serif; color: #000; background: #fff; }
+                    }
+                </style>
+                ${allHtml}
+            `;
+
+          this.toggleLoader(false);
+          this.showToast(`Generating ${processedCount} reports...`, "success");
+          setTimeout(() => window.print(), 500);
         },
 
         // Main generation logic
@@ -6978,11 +8147,10 @@ ANSWER: B</pre
             const gradeInfo = getGradeInfo(scoreValue);
 
             // ✅✅✅ Get Class Average for this subject ✅✅✅
+            const _avgVal = subjectAverages[sub];
             const classAvg =
-              subjectAverages[sub] !== undefined &&
-              subjectAverages[sub] !== null &&
-              subjectAverages[sub] > 0
-                ? parseFloat(subjectAverages[sub]).toFixed(1)
+              _avgVal !== undefined && _avgVal !== null && !isNaN(_avgVal)
+                ? parseFloat(_avgVal).toFixed(1)
                 : "-";
 
             if (isMidTerm) {
@@ -7158,6 +8326,708 @@ ANSWER: B</pre
 
           this.toggleLoader(false);
           setTimeout(() => window.print(), 500);
+        },
+
+        // ==========================================
+        // 3RD TERM CUMULATIVE REPORT GENERATOR
+        // ==========================================
+        generatePrintReportCumulative: async function () {
+          // 1. Get Config Values
+          const session = document.getElementById("printSession").value;
+          const term = document.getElementById("printTerm").value; // Should be "3rd"
+          const nextTermDate = document.getElementById("printNextTerm").value;
+          const sid = this.state.viewContext.sid;
+
+          this.closeModals();
+          this.toggleLoader(true);
+
+          try {
+            // 2. Fetch Student Data
+            const res = await GoogleSheetService.getFullResult(sid);
+            if (!res.info) {
+              this.toggleLoader(false);
+              this.showToast("Error loading student data", "error");
+              return;
+            }
+
+            const s = res.info;
+            const isJSS = s.class.startsWith("JSS");
+
+            // 3. Determine Subjects List
+            let subjectsList;
+            if (isJSS) {
+              subjectsList = JSS_SUBJECTS;
+            } else {
+              subjectsList =
+                s.dept && SSS_SUBJECTS[s.dept]
+                  ? SSS_SUBJECTS[s.dept]
+                  : SSS_SUBJECTS.All;
+            }
+
+            // 4. Fetch ALL THREE TERMS DATA
+            const allTermsData = await this.fetchAllTermsData(
+              s.id,
+              s.class,
+              session,
+              subjectsList,
+            );
+
+            // 5. Build CUMULATIVE Report HTML
+            const reportHtml = this.buildThirdTermCumulativeReport({
+              studentInfo: s,
+              allTermsData: allTermsData,
+              subjectsList: subjectsList,
+              isJSS: isJSS,
+              session: session,
+              nextTermDate: nextTermDate,
+              useStamp: false,
+            });
+
+            // 6. Render to printable area
+            const printArea = document.getElementById("printable-area");
+            printArea.innerHTML = `
+            <style>
+                @media print {
+                    @page { margin: 10mm; size: A4 landscape; }
+                    body * { visibility: hidden; }
+                    #printable-area, #printable-area * { visibility: visible; }
+                    #printable-area { 
+                        position: absolute; 
+                        left: 0; 
+                        top: 0; 
+                        width: 100%; 
+                        padding: 10px; 
+                        background: white; 
+                        font-family: 'Times New Roman', serif; 
+                        color: #000; 
+                    }
+                    .cumulative-table { 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                        font-size: 0.75rem; 
+                    }
+                    .cumulative-table th, 
+                    .cumulative-table td { 
+                        border: 1px solid #000; 
+                        padding: 5px 4px; 
+                        text-align: center; 
+                    }
+                    .cumulative-table th { 
+                        background-color: #e2e8f0; 
+                        font-weight: bold; 
+                        font-size: 0.7rem;
+                    }
+                    .subject-col { 
+                        text-align: left !important; 
+                        padding-left: 8px !important;
+                        font-weight: 500;
+                    }
+                    .total-row { 
+                        background-color: #f1f5f9; 
+                        font-weight: bold; 
+                    }
+                }
+            </style>
+            <div class="report-card">${reportHtml}</div>
+        `;
+
+            this.toggleLoader(false);
+            setTimeout(() => window.print(), 500);
+          } catch (error) {
+            console.error("Error generating cumulative report:", error);
+            this.toggleLoader(false);
+            this.showToast("Failed to generate cumulative report", "error");
+          }
+        },
+
+        // Print ALL students with cumulative report (3rd term only)
+        generatePrintAllReportsCumulative: async function (useStamp = false) {
+          const session = document.getElementById("printSession").value;
+          const term = document.getElementById("printTerm").value;
+          const nextTermDate = document.getElementById("printNextTerm").value;
+          const cls = this.state.viewContext.cls;
+
+          this.closeModals();
+          this.toggleLoader(true);
+
+          try {
+            const students = await GoogleSheetService.loadStudents(cls);
+            if (!students || students.length === 0) {
+              this.toggleLoader(false);
+              return this.showToast("No students found in this class", "error");
+            }
+
+            let allHtml = "";
+            let processedCount = 0;
+
+            for (let i = 0; i < students.length; i++) {
+              const s = students[i];
+              const res = await GoogleSheetService.getFullResult(s.id);
+              if (!res.info) continue;
+
+              const studentInfo = res.info;
+              const isJSS = studentInfo.class.startsWith("JSS");
+
+              let subjectsList;
+              if (isJSS) {
+                subjectsList = JSS_SUBJECTS;
+              } else {
+                subjectsList =
+                  studentInfo.dept && SSS_SUBJECTS[studentInfo.dept]
+                    ? SSS_SUBJECTS[studentInfo.dept]
+                    : SSS_SUBJECTS.All;
+              }
+
+              // Fetch all terms data
+              const allTermsData = await this.fetchAllTermsData(
+                s.id,
+                studentInfo.class,
+                session,
+                subjectsList,
+              );
+
+              // Build cumulative report
+              allHtml += this.buildThirdTermCumulativeReport({
+                studentInfo: studentInfo,
+                allTermsData: allTermsData,
+                subjectsList: subjectsList,
+                isJSS: isJSS,
+                session: session,
+                nextTermDate: nextTermDate,
+                useStamp: useStamp,
+              });
+
+              processedCount++;
+
+              if (i < students.length - 1) {
+                allHtml +=
+                  '<div style="page-break-after: always; border: none; margin: 0; padding: 0; height: 0;"></div>';
+              }
+            }
+
+            if (processedCount === 0) {
+              this.toggleLoader(false);
+              return this.showToast(
+                "No student data available to print",
+                "error",
+              );
+            }
+
+            const printArea = document.getElementById("printable-area");
+            printArea.innerHTML = `
+            <style>
+                @media print {
+                    @page { margin: 10mm; size: A4 portrait; }
+                    body * { visibility: hidden; }
+                    #printable-area, #printable-area * { visibility: visible; }
+                    #printable-area { position: absolute; left: 0; top: 0; width: 100%; padding: 10px; background: white; }
+                    .cumulative-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+                    .cumulative-table th, .cumulative-table td { border: 1px solid #000; padding: 5px 4px; text-align: center; }
+                    .cumulative-table th { background-color: #e2e8f0; }
+                }
+            </style>
+            ${allHtml}
+        `;
+
+            this.toggleLoader(false);
+            this.showToast(
+              `Generating ${processedCount} cumulative reports...`,
+              "success",
+            );
+            setTimeout(() => window.print(), 500);
+          } catch (error) {
+            console.error(error);
+            this.toggleLoader(false);
+            this.showToast("Failed to generate cumulative reports", "error");
+          }
+        },
+
+        // Roster print with stamp (cumulative version for 3rd term)
+        generateRosterPrintWithStampCumulative: async function () {
+          const sid = this.state.rosterPrintStudent.id;
+          const studentName = this.state.rosterPrintStudent.name;
+
+          const session = document.getElementById("printSession").value;
+          const term = document.getElementById("printTerm").value;
+          const nextTermDate = document.getElementById("printNextTerm").value;
+
+          this.closeModals();
+          this.toggleLoader(true);
+
+          try {
+            const res = await GoogleSheetService.getFullResult(sid);
+            if (!res.info || !res.scores) {
+              this.toggleLoader(false);
+              return this.showToast(
+                "No result found for this student",
+                "error",
+              );
+            }
+
+            const studentInfo = res.info;
+            const isJSS = studentInfo.class.startsWith("JSS");
+
+            let subjectsList = isJSS
+              ? JSS_SUBJECTS
+              : studentInfo.dept && SSS_SUBJECTS[studentInfo.dept]
+                ? SSS_SUBJECTS[studentInfo.dept]
+                : SSS_SUBJECTS.All;
+
+            // Fetch all terms data
+            const allTermsData = await this.fetchAllTermsData(
+              sid,
+              studentInfo.class,
+              session,
+              subjectsList,
+            );
+
+            // Build report WITH STAMP
+            const reportHtml = this.buildThirdTermCumulativeReport({
+              studentInfo: studentInfo,
+              allTermsData: allTermsData,
+              subjectsList: subjectsList,
+              isJSS: isJSS,
+              session: session,
+              nextTermDate: nextTermDate,
+              useStamp: true, // Shows stamp instead of signatures
+            });
+
+            const printArea = document.getElementById("printable-area");
+            printArea.innerHTML = `
+            <style>
+                @media print {
+                    @page { size: A4 portrait; margin: 10mm; }
+                    body * { visibility: hidden; }
+                    #printable-area, #printable-area * { visibility: visible; }
+                    #printable-area { position: absolute; left: 0; top: 0; width: 100%; padding: 10px; background: white; }
+                    .cumulative-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+                    .cumulative-table th, .cumulative-table td { border: 1px solid #000; padding: 5px 4px; text-align: center; }
+                }
+            </style>
+            <div class="report-card">${reportHtml}</div>
+        `;
+
+            this.toggleLoader(false);
+            this.showToast(
+              `Preparing ${studentName}'s Cumulative Result (E-Copy)...`,
+              "success",
+            );
+            setTimeout(() => window.print(), 700);
+          } catch (err) {
+            console.error(err);
+            this.toggleLoader(false);
+            this.showToast("Failed to generate result", "error");
+          }
+
+          // Clean up state
+          this.state.printFromRoster = false;
+          this.state.rosterPrintStudent = null;
+        },
+
+        buildThirdTermCumulativeReport: function (opts) {
+          const s = opts.studentInfo;
+          const allTermsData = opts.allTermsData;
+          const subjectsList = opts.subjectsList;
+          const isJSS = opts.isJSS;
+          const session = opts.session;
+          const nextTermDate = opts.nextTermDate;
+          const useStamp = opts.useStamp || false;
+
+          // ==========================================
+          // GRADING LOGIC
+          // ==========================================
+          const getGradeInfo = (avgScore) => {
+            const score = parseFloat(avgScore) || 0;
+            if (isJSS) {
+              if (score >= 80) return { g: "A", remark: "Distinction" };
+              if (score >= 70) return { g: "B", remark: "Excellent" };
+              if (score >= 60) return { g: "BC", remark: "Very Good" };
+              if (score >= 50) return { g: "C", remark: "Good" };
+              if (score >= 40) return { g: "P", remark: "Pass" };
+              return { g: "F", remark: "Fail" };
+            } else {
+              if (score >= 80) return { g: "A1", remark: "Excellent" };
+              if (score >= 75) return { g: "B2", remark: "Very Good" };
+              if (score >= 70) return { g: "B3", remark: "Good" };
+              if (score >= 65) return { g: "C4", remark: "Credit" };
+              if (score >= 60) return { g: "C5", remark: "Credit" };
+              if (score >= 50) return { g: "C6", remark: "Credit" };
+              if (score >= 45) return { g: "D7", remark: "Pass" };
+              if (score >= 40) return { g: "E8", remark: "Pass" };
+              return { g: "F9", remark: "Fail" };
+            }
+          };
+
+          // ==========================================
+          // BUILD TABLE ROWS - HYBRID LAYOUT
+          // Columns: Subject | CA | Exam | Total(3rd) | 2nd | 1st | Cl.Avg | Avg% | Grade | Comment
+          // ==========================================
+          let tableRows = "";
+          let grandCumulativeTotal = 0;
+          let validSubjectCount = 0;
+
+          subjectsList.forEach((sub) => {
+            // --- Fetch data from all three terms ---
+
+            // 1ST TERM → JSS_Scores_2025_2026_1st (or SSS equivalent)
+            const firstTerm = allTermsData["1st"].scores[sub] || {
+              total: 0,
+              classAvg: 0,
+            };
+            const t1 = firstTerm.total || 0;
+
+            // 2ND TERM → JSS_Scores_2025_2026_2nd (or SSS equivalent)
+            const secondTerm = allTermsData["2nd"].scores[sub] || {
+              total: 0,
+              classAvg: 0,
+            };
+            const t2 = secondTerm.total || 0;
+
+            // 3RD TERM → JSS_Scores or SSS_Scores (BASE SHEET) - Has CA & Exam breakdown
+            const thirdTerm = allTermsData["3rd"].scores[sub] || {
+              ca: 0,
+              exam: 0,
+              total: 0,
+              classAvg: 0,
+            };
+            const ca3 = thirdTerm.ca || 0; // CA from base sheet
+            const exam3 = thirdTerm.exam || 0; // Exam from base sheet
+            const t3 = thirdTerm.total || 0; // Total = CA + Exam
+
+            // --- CALCULATIONS ---
+
+            // Cumulative Total = 1st + 2nd + 3rd
+            const cumulativeTotal = t1 + t2 + t3;
+
+            // Average = cumulativeTotal / 3 (rounded to 1 decimal)
+            const cumulativeAverage = (cumulativeTotal / 3).toFixed(1);
+
+            // Class Average = average of class averages from all 3 terms
+            const classAvg1 = firstTerm.classAvg || 0;
+            const classAvg2 = secondTerm.classAvg || 0;
+            const classAvg3 = thirdTerm.classAvg || 0;
+            const overallClassAvg = (
+              (classAvg1 + classAvg2 + classAvg3) /
+              3
+            ).toFixed(1);
+
+            // Only include row if at least one term has a score
+            if (t1 > 0 || t2 > 0 || ca3 > 0 || exam3 > 0 || t3 > 0) {
+              grandCumulativeTotal += cumulativeTotal;
+              validSubjectCount++;
+
+              const gradeInfo = getGradeInfo(cumulativeAverage);
+
+              // Display helpers
+              const showCA = ca3 > 0 ? ca3 : "-";
+              const showExam = exam3 > 0 ? exam3 : "-";
+              const showT3 = t3 > 0 ? t3 : "-";
+              const showT1 = t1 > 0 ? t1 : "-";
+              const showT2 = t2 > 0 ? t2 : "-";
+
+              tableRows += `
+                <tr>
+                    <!-- Subject Name -->
+                    <td class="subject-col">${sub}</td>
+                    
+                    <!-- 3RD TERM: CA (from base sheet) -->
+                    <td>${showCA}</td>
+                    
+                    <!-- 3RD TERM: Exam (from base sheet) -->
+                    <td>${showExam}</td>
+                    
+                    <!-- 3RD TERM: Total (bold highlight) -->
+                    <td style="font-weight:bold;">${showT3}</td>
+                    
+                    <!-- 2ND TERM Total -->
+                    <td>${showT2}</td>
+                    
+                    <!-- 1ST TERM Total -->
+                    <td>${showT1}</td>
+                    
+                    <!-- Class Average (blue color) -->
+                    <td style="color:#2563eb; font-weight:600;">${overallClassAvg}</td>
+                    
+                    <!-- Cumulative Average % (yellow highlight) -->
+                    <td style="font-weight:bold; background:#fef3c7;">${cumulativeAverage}%</td>
+                    
+                    <!-- Grade -->
+                    <td style="font-weight:bold;">${gradeInfo.g}</td>
+                    
+                    <!-- Comment -->
+                    <td style="text-align:left; font-size:0.72rem;">${gradeInfo.remark}</td>
+                </tr>
+            `;
+            }
+          });
+
+          // ==========================================
+          // OVERALL STATISTICS
+          // ==========================================
+          const overallPercentage =
+            validSubjectCount > 0
+              ? (grandCumulativeTotal / (validSubjectCount * 3)).toFixed(1)
+              : "0.0";
+
+          // ==========================================
+          // COMMENTS
+          // ==========================================
+          let principalComment = "";
+          if (overallPercentage >= 80)
+            principalComment =
+              "An exceptional performance throughout the academic session. Keep it up!";
+          else if (overallPercentage >= 70)
+            principalComment =
+              "A resourceful and consistent child. Shows great promise.";
+          else if (overallPercentage >= 60)
+            principalComment =
+              "An encouraging performance over three terms. Room for growth.";
+          else if (overallPercentage >= 50)
+            principalComment =
+              "A promising child with room for improvement. Needs more focus.";
+          else if (overallPercentage >= 40)
+            principalComment =
+              "Performance below expected standard. Additional support recommended.";
+          else
+            principalComment =
+              "Needs significant improvement across all subject areas.";
+
+          const teacherComments = [
+            "has shown consistent effort throughout the academic session.",
+            "demonstrates steady progress and positive attitude toward learning.",
+            "is hardworking and dedicated to academic excellence.",
+            "maintains good conduct and cooperates well with teachers and peers.",
+            "shows potential for continued success with sustained effort.",
+          ];
+          const randomTeacherComment =
+            teacherComments[Math.floor(Math.random() * teacherComments.length)];
+
+          // ==========================================
+          // RETURN COMPLETE HTML - HYBRID LAYOUT
+          // ==========================================
+          return `
+        <div class="report-card">
+            <!-- ==================== HEADER ==================== -->
+            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px; gap: 20px;">
+                <img src="img/NSS LOGO.png" alt="Nifty Steps Logo" style="width: 70px; height: 70px; object-fit: contain;">
+                <div style="text-align: center;">
+                    <h1 style="color: #1e40af; margin: 0 0 4px 0; line-height: 1.1; font-size: 1.6rem;">NIFTY STEPS COLLEGE</h1>
+                    <p style="font-size: 0.85rem; margin: 0; line-height: 1.3;">31 Yinka Ogunfile Street, Igbo Oluwo Estate, Ikorodu, Lagos State</p>
+                    <p style="font-size: 0.8rem; margin: 0;">www.niftysteps.com.ng | admin@niftysteps.com.ng</p>
+                    <h3 style="margin: 8px 0 0 0; text-decoration: underline; text-transform: uppercase; font-size: 0.95rem;">
+                        ${isJSS ? "Junior" : "Senior"} Secondary School 3rd TERM REPORT (${session} SESSION)
+                    </h3>
+                </div>
+            </div>
+
+            <!-- ==================== STUDENT INFO GRID ==================== -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #000; padding: 12px; margin-bottom: 18px; font-size: 0.9rem;">
+                <div style="line-height: 1.7;">
+                    <strong>NAME:</strong> ${s.name.toUpperCase()}<br>
+                    <strong>CLASS:</strong> ${s.class} ${s.dept ? `(${s.dept})` : ""}
+                </div>
+                <div style="line-height: 1.7; text-align: right;">
+                    <strong>ADMIN NO:</strong> NSC-${s.id}<br>
+                    <strong>SESSION:</strong> ${session}
+                </div>
+            </div>
+
+            <!-- ==================== MAIN CUMULATIVE TABLE ==================== -->
+            <!-- 
+                COLUMNS: 
+                [Subject] | [CA] | [Exam] | [Total 3rd] | [2nd] | [1st] | [Cl.Avg] | [Average%] | [Grade] | [Comment]
+            -->
+            <table class="cumulative-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" class="subject-col">SUBJECT</th>
+                        <th colspan="3" style="background:#dbeafe; text-align:center;">3RD TERM</th>
+                        <th rowspan="2">2ND<br>TERM</th>
+                        <th rowspan="2">1ST<br>TERM</th>
+                        <th rowspan="2">CL.AVG</th>
+                        <th rowspan="2">AVERAGE<br>(%)</th>
+                        <th rowspan="2">GRADE</th>
+                        <th rowspan="2">COMMENT</th>
+                    </tr>
+                    <tr>
+                        <th>CA</th>
+                        <th>Exam</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tableRows}
+                    
+                    <!-- GRAND TOTAL / CUMULATIVE AVERAGE ROW -->
+                    <tr class="total-row">
+                        <td colspan="4" style="text-align:left; padding-left:10px; font-size:0.85rem;">
+                            <strong>GRAND TOTAL / CUMULATIVE AVERAGE</strong>
+                        </td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td style="background:#fef3c7; font-weight:bold; color:#dc2626;">
+                            ${overallPercentage}%
+                        </td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- ==================== COMMENTS SECTION ==================== -->
+            <div style="margin-top: 20px; display: flex; justify-content: space-between; gap: 20px;">
+                <div style="font-size: 0.85rem; border: 1px solid #000; padding: 12px; width: 58%;">
+                    <strong>CLASS TEACHER'S COMMENT:</strong><br>
+                    ${s.name} ${randomTeacherComment}
+                </div>
+                <div style="font-size: 0.85rem; border: 1px solid #000; padding: 12px; width: 38%;">
+                    <strong>PRINCIPAL'S COMMENT:</strong><br>
+                    ${principalComment}
+                </div>
+            </div>
+
+            <!-- ==================== FOOTER INFO ==================== -->
+            <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
+                <div style="font-size: 0.75rem; border: 1px solid #000; padding: 10px; width: 55%;">
+                    <strong>GRADING KEY:</strong><br>
+                    ${
+                      isJSS
+                        ? "A: 80-100 (Distinction), B: 70-79 (Excellent), BC: 60-69 (Very Good), C: 50-59 (Good), P: 40-49 (Pass), F: 0-39 (Fail)"
+                        : "A1: 80-100, B2: 75-79, B3: 70-74, C4: 65-69, C5: 60-64, C6: 50-59, D7: 45-49, E8: 40-44, F9: 0-39"
+                    }
+                </div>
+                <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 38%;">
+                    <strong>Next Session Resumes:</strong><br>
+                    ${nextTermDate}
+                </div>
+            </div>
+
+            <!-- ==================== SIGNATURE OR STAMP ==================== -->
+            ${
+              useStamp
+                ? `<div style="margin-top: 2px; text-align: center;">
+                    <img src="img/stamp.svg" alt="Official Stamp" style="width: 140px; height: 140px; object-fit: contain; opacity: 0.9;">
+                    <p style="font-size: 0.72rem; margin-top: 8px; color: #666; font-style: italic;">Official E-Copy - Valid Without Signature</p>
+                  </div>`
+                : `<div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 1px solid #000; width: 160px; height: 45px;"></div>
+                            <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Class Teacher's Signature</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 1px solid #000; width: 160px; height: 45px;"></div>
+                            <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Principal's Signature</p>
+                        </div>
+                      </div>`
+            }
+        </div>
+    `;
+        },
+
+        // ==========================================
+        // UPDATED: Fetch All Terms Data with Correct Sheet Names
+        // ==========================================
+        fetchAllTermsData: async function (
+          studentId,
+          className,
+          session,
+          subjectsList,
+        ) {
+          const terms = ["1st", "2nd", "3rd"];
+          const allTermsData = {};
+          const isJSS = className.startsWith("JSS");
+
+          // Base sheet names (from your GAS constants)
+          const baseName = isJSS ? "JSS_Scores" : "SSS_Scores";
+
+          for (const term of terms) {
+            try {
+              let scoreSheetName;
+
+              // CRITICAL: 3rd term uses BASE sheet (no session/term suffix)
+              // 1st and 2nd terms use session-specific sheets
+              if (term === "3rd") {
+                // 3rd Term → JSS_Scores or SSS_Scores (NO suffix)
+                scoreSheetName = baseName;
+              } else {
+                // 1st/2nd Term → JSS_Scores_2025_2026_1st or _2nd
+                const s = String(session).replace(/\//g, "_");
+                const t = String(term).replace(/\s/g, "");
+                scoreSheetName = `${baseName}_${s}_${t}`;
+              }
+
+              console.log(
+                `[DEBUG] Fetching ${term} term from sheet: ${scoreSheetName}`,
+              );
+
+              // Fetch class data for averages (this calls getClassScores which uses correct sheet)
+              const classData = await GoogleSheetService.getClassScores(
+                className,
+                "exam",
+                term === "3rd" ? "" : session, // Empty string for 3rd term
+                term,
+              );
+
+              // Fetch individual student result
+              const studentRes = await GoogleSheetService.getFullResult(
+                studentId,
+                term === "3rd" ? "" : session, // Empty string for 3rd term
+                term,
+              );
+              const scores = studentRes.scores || {};
+
+              // Extract scores for each subject in this term
+              const termScores = {};
+              let termTotal = 0;
+              let validCount = 0;
+
+              subjectsList.forEach((sub) => {
+                const sc = scores[sub] || { ca: "", exam: "", total: "" };
+                const ca = parseInt(sc.ca) || 0;
+                const exam = parseInt(sc.exam) || 0;
+                const total = ca + exam;
+
+                if (total > 0 || ca > 0 || exam > 0) {
+                  termScores[sub] = {
+                    ca: ca,
+                    exam: exam,
+                    total: total,
+                    classAvg: parseFloat(classData.subjectAverages[sub]) || 0,
+                  };
+                  termTotal += total;
+                  validCount++;
+                } else {
+                  termScores[sub] = {
+                    ca: 0,
+                    exam: 0,
+                    total: 0,
+                    classAvg: parseFloat(classData.subjectAverages[sub]) || 0,
+                  };
+                }
+              });
+
+              allTermsData[term] = {
+                scores: termScores,
+                total: termTotal,
+                average:
+                  validCount > 0 ? (termTotal / validCount).toFixed(1) : 0,
+                subjectAverages: classData.subjectAverages || {},
+                sourceSheet: scoreSheetName, // For debugging
+              };
+            } catch (error) {
+              console.error(`Error fetching ${term} term data:`, error);
+              allTermsData[term] = {
+                scores: {},
+                total: 0,
+                average: 0,
+                subjectAverages: {},
+                error: error.message,
+              };
+            }
+          }
+
+          return allTermsData;
         },
 
         getGrade: function (score, isJSS) {
@@ -7459,6 +9329,13 @@ ANSWER: B</pre
           floatBtn.classList.add("show");
           floatBtn.innerHTML = '<i class="fas fa-save"></i> <span>Save</span>';
           floatBtn.setAttribute("onclick", "app.saveAllFeePayments()");
+          this.injectShareBar("section-fees", "fee-tbody");
+
+          // Re-apply search if active
+          const feeSearch = document.getElementById("fee-search");
+          if (feeSearch && feeSearch.value.trim()) {
+            this.filterFeeTable();
+          }
         },
 
         // Handles when user changes the Type dropdown in the table
@@ -8153,12 +10030,347 @@ ANSWER: B</pre
           );
         },
 
+        // ==========================================
+        // SEARCH / FILTER FUNCTIONS
+        // ==========================================
+
+        filterStaffTable: function () {
+          const input = document.getElementById("staff-search");
+          if (!input) return;
+          const filter = input.value.toLowerCase().trim();
+          const rows = document.querySelectorAll("#staff-tbody tr");
+          rows.forEach((row) => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+          });
+        },
+
+        filterFeeTable: function () {
+          const input = document.getElementById("fee-search");
+          if (!input) return;
+          const filter = input.value.toLowerCase().trim();
+          const rows = document.querySelectorAll("#fee-tbody tr");
+          rows.forEach((row) => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+          });
+        },
+
+        filterRosterTable: function () {
+          const input = document.getElementById("roster-search");
+          if (!input) return;
+          const filter = input.value.toLowerCase().trim();
+          const rows = document.querySelectorAll("#admin-roster-tbody tr");
+          rows.forEach((row) => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+          });
+        },
+
+        filterQuestionBankTable: function () {
+          const input = document.getElementById("qb-search");
+          if (!input) return;
+          const filter = input.value.toLowerCase().trim();
+          const rows = document.querySelectorAll("#qb-tbody tr");
+          rows.forEach((row) => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+          });
+        },
+
+        filterAssignmentTable: function () {
+          const input = document.getElementById("assign-search");
+          if (!input) return;
+          const filter = input.value.toLowerCase().trim();
+          const rows = document.querySelectorAll("#assign-tbody tr");
+          rows.forEach((row) => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+          });
+        },
+
+        filterResourceTable: function () {
+          const input = document.getElementById("res-search");
+          if (!input) return;
+          const filter = input.value.toLowerCase().trim();
+          const rows = document.querySelectorAll("#res-tbody tr");
+          rows.forEach((row) => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+          });
+        },
+
+        filterPerformanceTable: function () {
+          const input = document.getElementById("perf-search");
+          if (!input) return;
+          const filter = input.value.toLowerCase().trim();
+          const tbody = document.getElementById("broadsheet-tbody");
+          if (!tbody) return;
+          const rows = tbody.querySelectorAll("tr");
+          rows.forEach((row) => {
+            // Always keep the Class Average row visible
+            const isAvgRow = row.textContent
+              .toLowerCase()
+              .includes("class average");
+            if (isAvgRow) {
+              row.style.display = "";
+              return;
+            }
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+          });
+        },
+
+        filterCBTTable: function () {
+          const searchText = (
+            document.getElementById("cbt-search")?.value || ""
+          )
+            .toLowerCase()
+            .trim();
+
+          // Re-filter from cbtQuestions (the full dropdown-filtered set)
+          let filtered = [...this.state.cbtQuestions];
+
+          if (searchText) {
+            filtered = filtered.filter((q) => {
+              return (
+                String(q.question || "")
+                  .toLowerCase()
+                  .includes(searchText) ||
+                String(q.subject || "")
+                  .toLowerCase()
+                  .includes(searchText) ||
+                String(q.className || "")
+                  .toLowerCase()
+                  .includes(searchText)
+              );
+            });
+          }
+
+          this.state.cbtFilteredQuestions = filtered;
+          this.state.cbtCurrentPage = 1;
+          this.renderCBTStats(filtered);
+          this.renderCBTTable();
+        },
+
+        toggleKebab: function (btn) {
+          const dropdown = btn.nextElementSibling;
+          // Close all other dropdowns
+          document.querySelectorAll(".kebab-dropdown.show").forEach((d) => {
+            if (d !== dropdown) d.classList.remove("show");
+          });
+          dropdown.classList.toggle("show");
+        },
+
+        openPerfStudentModal: function (studentId, studentName) {
+          const data = this.state.currentBroadsheetData;
+          if (!data || !data.students) return;
+
+          const student = data.students.find((s) => s.id === studentId);
+          if (!student) return;
+
+          const isMidTerm = this.state.broadsheetMode === "midterm";
+          const className =
+            document.getElementById("perf-class-select")?.value || "";
+          const isJSS = className.startsWith("JSS");
+          const subjects = data.subjects;
+
+          document.getElementById("perf-modal-student-name").textContent =
+            studentName;
+
+          let html = `<table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+            <thead style="background:#f1f5f9;"><tr><th style="text-align:left; padding:10px;">Subject</th><th style="padding:10px;">Score</th><th style="padding:10px;">Grade</th></tr></thead><tbody>`;
+
+          subjects.forEach((sub) => {
+            const sc = student.scores[sub] || {};
+            const val = isMidTerm
+              ? sc.total || 0
+              : (sc.ca || 0) + (sc.exam || 0);
+            const display = val > 0 ? val : "-";
+            const grade = val > 0 ? this.getGrade(val, isJSS) : "-";
+
+            html += `<tr style="border-bottom:1px solid #eee;">
+              <td style="padding:10px;">${sub}</td>
+              <td style="text-align:center; padding:10px; font-weight:600;">${display}</td>
+              <td style="text-align:center; padding:10px;">${grade}</td>
+            </tr>`;
+          });
+
+          html += `</tbody></table>`;
+          document.getElementById("perf-modal-content").innerHTML = html;
+          document.getElementById("modal-perf-student").style.display = "flex";
+        },
+
         showToast: function (msg, type) {
           const t = document.getElementById("toast");
           t.textContent = msg;
           t.className = `toast show ${type}`;
           setTimeout(() => t.classList.remove("show"), 3000);
         },
+
+        // ==========================================
+        // SHARE BAR LOGIC
+        // ==========================================
+        buildShareBarHTML: function (tbodyId) {
+          return `
+            <div class="share-bar">
+              <span class="share-bar-label"><i class="fas fa-share-nodes"></i> Share</span>
+              <button class="share-btn" onclick="app.copyStudentList('${tbodyId}','names')">
+                <i class="fas fa-copy"></i> Names
+              </button>
+              <button class="share-btn" onclick="app.copyStudentList('${tbodyId}','names-id')">
+                <i class="fas fa-id-card"></i> Names + ID
+              </button>
+              <button class="share-btn" onclick="app.copyStudentList('${tbodyId}','numbered')">
+                <i class="fas fa-list-ol"></i> Numbered
+              </button>
+              <button class="share-btn" onclick="app.copyStudentList('${tbodyId}','csv')">
+                <i class="fas fa-file-csv"></i> CSV
+              </button>
+              <span class="share-divider"></span>
+              <button class="share-btn whatsapp" onclick="app.shareViaWhatsApp('${tbodyId}','numbered')">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+              </button>
+              <button class="share-btn sms" onclick="app.shareViaSMS('${tbodyId}','names-id')">
+                <i class="fas fa-comment-sms"></i> SMS
+              </button>
+              <button class="share-btn email" onclick="app.shareViaEmail('${tbodyId}','numbered')">
+                <i class="fas fa-envelope"></i> Email
+              </button>
+            </div>`;
+        },
+
+        injectShareBar: function (sectionId, tbodyId) {
+          const section = document.getElementById(sectionId);
+          if (!section) return;
+          const existing = section.querySelector(".share-bar");
+          if (existing) existing.remove();
+          const listHeader = section.querySelector(".list-header");
+          if (listHeader) {
+            listHeader.insertAdjacentHTML(
+              "afterend",
+              this.buildShareBarHTML(tbodyId),
+            );
+          }
+        },
+
+        extractStudentNamesFromTable: function (tbodyId) {
+          const tbody = document.getElementById(tbodyId);
+          if (!tbody) return [];
+          const students = [];
+          tbody.querySelectorAll("tr").forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            if (cells.length < 2) return;
+            // Skip summary rows (class average, no-data messages, etc.)
+            const firstTd = cells[0];
+            if (firstTd && firstTd.getAttribute("colspan")) return;
+
+            let adminNo = "",
+              name = "";
+            const smallEl = firstTd.querySelector("small");
+            if (smallEl) {
+              // Fee table format: <strong>Name</strong><br><small>ID</small>
+              name = firstTd.querySelector("strong")?.textContent?.trim() || "";
+              adminNo = smallEl.textContent?.trim() || "";
+            } else if (
+              cells.length >= 3 &&
+              /^\d/.test(cells[0].textContent.trim())
+            ) {
+              // Broadsheet format: Position | Admin | Name
+              adminNo = cells[1].textContent?.trim() || "";
+              name = cells[2].textContent?.trim() || "";
+            } else {
+              // Roster format: Admin | Name
+              adminNo = cells[0].textContent?.trim() || "";
+              name = cells[1].textContent?.trim() || "";
+            }
+            if (
+              name &&
+              !name.includes("No students") &&
+              !name.includes("Loading")
+            ) {
+              students.push({ name, adminNo });
+            }
+          });
+          return students;
+        },
+
+        formatStudentList: function (students, format) {
+          if (!students.length) return "";
+          switch (format) {
+            case "names":
+              return students.map((s) => s.name).join("\n");
+            case "names-id":
+              return students.map((s) => `${s.name} (${s.adminNo})`).join("\n");
+            case "numbered":
+              return students
+                .map((s, i) => `${i + 1}. ${s.name} - ${s.adminNo}`)
+                .join("\n");
+            case "csv":
+              return (
+                "S/N,Name,Admin No\n" +
+                students
+                  .map((s, i) => `${i + 1},"${s.name}","${s.adminNo}"`)
+                  .join("\n")
+              );
+            default:
+              return students.map((s) => s.name).join("\n");
+          }
+        },
+
+        copyStudentList: function (tbodyId, format) {
+          const students = this.extractStudentNamesFromTable(tbodyId);
+          if (!students.length)
+            return this.showToast("No students to copy", "warning");
+          navigator.clipboard
+            .writeText(this.formatStudentList(students, format))
+            .then(() => {
+              this.showToast(
+                `Copied ${students.length} student(s)!`,
+                "success",
+              );
+            })
+            .catch(() => this.showToast("Copy failed", "error"));
+        },
+
+        shareViaWhatsApp: function (tbodyId, format) {
+          const students = this.extractStudentNamesFromTable(tbodyId);
+          if (!students.length)
+            return this.showToast("No students to share", "warning");
+          const cls = this.state.viewContext.cls || "Class";
+          const text =
+            `📋 *${cls} Student List*\n${"—".repeat(20)}\n` +
+            this.formatStudentList(students, format);
+          window.open(
+            "https://wa.me/?text=" + encodeURIComponent(text),
+            "_blank",
+          );
+        },
+
+        shareViaSMS: function (tbodyId, format) {
+          const students = this.extractStudentNamesFromTable(tbodyId);
+          if (!students.length)
+            return this.showToast("No students to share", "warning");
+          const cls = this.state.viewContext.cls || "Class";
+          const text =
+            cls + " Student List:\n" + this.formatStudentList(students, format);
+          window.open("sms:?body=" + encodeURIComponent(text), "_blank");
+        },
+
+        shareViaEmail: function (tbodyId, format) {
+          const students = this.extractStudentNamesFromTable(tbodyId);
+          if (!students.length)
+            return this.showToast("No students to share", "warning");
+          const cls = this.state.viewContext.cls || "Class";
+          window.open(
+            "mailto:?subject=" +
+              encodeURIComponent(cls + " Student List") +
+              "&body=" +
+              encodeURIComponent(this.formatStudentList(students, format)),
+            "_blank",
+          );
+        },
+
         // ==========================================
         // QUESTION BANK LOGIC (FINAL UPDATE)
         // ==========================================
@@ -8427,6 +10639,14 @@ ANSWER: B</pre
       };
 
       document.addEventListener("DOMContentLoaded", () => app.init());
+      // Close kebab menus when clicking outside
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest(".kebab-menu")) {
+          document
+            .querySelectorAll(".kebab-dropdown.show")
+            .forEach((d) => d.classList.remove("show"));
+        }
+      });
     </script>
   </body>
 </html>
