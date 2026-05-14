@@ -192,7 +192,6 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(5px);
         display: none;
         flex-direction: column;
@@ -1366,6 +1365,475 @@
           font-size: 0.9rem;
         }
       }
+      /* =========================================
+     DARK MODE THEME SYSTEM
+     ========================================= */
+
+      /* Smooth transition for theme changes */
+      html {
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+
+      /* Dark Theme Variable Overrides */
+      [data-theme="dark"] {
+        --primary: #38bdf8;
+        --primary-dark: #0ea5e9;
+        --bg: #0f172a;
+        --surface: #1e293b;
+        --text: #e2e8f0;
+        --border: #334155;
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+        --secondary: #94a3b8;
+        --success: #4ade80;
+        --danger: #f87171;
+        --warning: #fbbf24;
+      }
+
+      /* --- Base Dark Overrides --- */
+      [data-theme="dark"] body {
+        background-color: var(--bg);
+        color: var(--text);
+      }
+
+      [data-theme="dark"] .auth-wrapper {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      }
+
+      [data-theme="dark"] .auth-container {
+        background: #1e293b;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0 / 0.5);
+      }
+
+      [data-theme="dark"] .app-title {
+        color: var(--primary);
+      }
+
+      /* --- Header --- */
+      [data-theme="dark"] header {
+        background: var(--surface);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+      }
+
+      /* --- Cards --- */
+      [data-theme="dark"] .card {
+        background: var(--surface);
+        border-color: var(--border);
+        box-shadow: 0 1px 3px rgba(0, 0, 0 / 0.2);
+      }
+
+      [data-theme="dark"] .card:hover {
+        border-color: var(--primary);
+        box-shadow: 0 14px 28px rgba(0, 0, 0 / 0.25);
+      }
+
+      [data-theme="dark"] .card-title {
+        color: var(--text);
+      }
+
+      [data-theme="dark"] .card-meta {
+        color: var(--secondary);
+      }
+
+      /* --- List Container --- */
+      [data-theme="dark"] .list-container {
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      [data-theme="dark"] .list-header {
+        background: #1a2332;
+        border-bottom-color: var(--border);
+      }
+
+      [data-theme="dark"] .list-header h2 {
+        color: var(--text);
+      }
+
+      /* --- Tables --- */
+      [data-theme="dark"] table {
+        color: var(--text);
+      }
+
+      [data-theme="dark"] th {
+        background: #1a2332;
+        color: var(--secondary);
+      }
+
+      [data-theme="dark"] td {
+        border-bottom-color: var(--border);
+      }
+
+      [data-theme="dark"] tr:hover {
+        background-color: #263348;
+      }
+
+      /* --- Forms & Inputs --- */
+      [data-theme="dark"] .form-control {
+        background-color: #0f172a;
+        border-color: var(--border);
+        color: var(--text);
+      }
+
+      [data-theme="dark"] .form-control:focus {
+        border-color: var(--primary);
+        background-color: #1a2332;
+      }
+
+      [data-theme="dark"] .form-control::placeholder {
+        color: #64748b;
+      }
+
+      [data-theme="dark"] .form-group label {
+        color: #cbd5e1;
+      }
+
+      [data-theme="dark"] .search-input {
+        background-color: #0f172a;
+        border-color: var(--border);
+        color: var(--text);
+      }
+
+      [data-theme="dark"] .search-input::placeholder {
+        color: #64748b;
+      }
+
+      [data-theme="dark"] select.form-control {
+        background-color: #0f172a;
+        border-color: var(--border);
+        color: var(--text);
+      }
+
+      [data-theme="dark"] select.form-control option {
+        background-color: #1e293b;
+        color: var(--text);
+      }
+
+      /* --- Buttons --- */
+      [data-theme="dark"] .btn-outline {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+
+      [data-theme="dark"] .btn-outline:hover {
+        background-color: #0c4a6e;
+        color: #e0f2fe;
+      }
+
+      [data-theme="dark"] .btn-filter {
+        background: #334155;
+        color: var(--secondary);
+      }
+
+      [data-theme="dark"] .btn-filter.active {
+        background: var(--primary);
+        color: white;
+      }
+
+      /* --- Modals --- */
+      [data-theme="dark"] .modal {
+        background: var(--surface);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0 / 0.5);
+      }
+
+      [data-theme="dark"] .modal h3 {
+        color: var(--text);
+      }
+
+      [data-theme="dark"] .modal-overlay {
+        background: rgba(0, 0, 0 / 0.7);
+      }
+
+      /* --- Badges --- */
+      [data-theme="dark"] .badge {
+        background: #0c4a6e;
+        color: #7dd3fc;
+      }
+
+      [data-theme="dark"] .badge-disabled {
+        background: #450a0a;
+        color: #fca5a5;
+      }
+
+      [data-theme="dark"] .badge-active {
+        background: #052e16;
+        color: #86efac;
+      }
+
+      /* --- Fee Cards --- */
+      [data-theme="dark"] .fee-stat-card {
+        background: var(--surface);
+      }
+
+      [data-theme="dark"] .fee-stat-title {
+        color: var(--secondary);
+      }
+
+      [data-theme="dark"] .fee-stat-value {
+        color: var(--text);
+      }
+
+      /* --- Fee Status Badges --- */
+      [data-theme="dark"] .status-paid {
+        background-color: #052e16;
+        color: #86efac;
+      }
+
+      [data-theme="dark"] .status-partial {
+        background-color: #422006;
+        color: #fde68a;
+      }
+
+      [data-theme="dark"] .status-owing {
+        background-color: #450a0a;
+        color: #fca5a5;
+      }
+
+      /* --- Subject Builder --- */
+      [data-theme="dark"] .subject-builder {
+        background: #0f172a;
+        border-color: var(--border);
+      }
+
+      [data-theme="dark"] .subject-chip {
+        background: #0c4a6e;
+        color: #7dd3fc;
+      }
+
+      /* --- Custom Fee Group --- */
+      [data-theme="dark"] .custom-fee-group,
+      [data-theme="dark"] .custom-fee-inline {
+        background: #0f172a;
+        border-color: var(--border);
+      }
+
+      /* --- Breadcrumbs --- */
+      [data-theme="dark"] .breadcrumbs {
+        color: var(--secondary);
+      }
+
+      /* --- Kebab Menu --- */
+      [data-theme="dark"] .kebab-trigger {
+        background: var(--surface);
+        border-color: var(--border);
+        color: var(--secondary);
+      }
+
+      [data-theme="dark"] .kebab-trigger:hover,
+      [data-theme="dark"] .kebab-trigger:active {
+        background: #263348;
+        color: var(--primary);
+      }
+
+      [data-theme="dark"] .kebab-dropdown {
+        background: var(--surface);
+        border-color: var(--border);
+        box-shadow: 0 8px 20px rgba(0, 0, 0 / 0.4);
+      }
+
+      [data-theme="dark"] .kebab-dropdown button {
+        background: var(--surface);
+        color: var(--text);
+        border-bottom-color: var(--border);
+      }
+
+      [data-theme="dark"] .kebab-dropdown button:hover {
+        background: #263348;
+      }
+
+      /* --- Share Bar --- */
+      [data-theme="dark"] .share-bar {
+        background: #1a2332;
+        border-bottom-color: var(--border);
+      }
+
+      [data-theme="dark"] .share-btn {
+        background: var(--surface);
+        border-color: var(--border);
+        color: var(--secondary);
+      }
+
+      [data-theme="dark"] .share-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: #0c4a6e;
+      }
+
+      [data-theme="dark"] .share-divider {
+        background: var(--border);
+      }
+
+      /* --- Fee Tab Buttons --- */
+      [data-theme="dark"] .fee-tab-btn {
+        background: var(--surface);
+        border-color: var(--border);
+        color: var(--secondary);
+      }
+
+      [data-theme="dark"] .fee-tab-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      /* --- CBT Options --- */
+      [data-theme="dark"] .cbt-option-a {
+        background: #1e3a5f;
+        color: #93c5fd;
+      }
+      [data-theme="dark"] .cbt-option-b {
+        background: #052e16;
+        color: #86efac;
+      }
+      [data-theme="dark"] .cbt-option-c {
+        background: #422006;
+        color: #fde68a;
+      }
+      [data-theme="dark"] .cbt-option-d {
+        background: #450a0a;
+        color: #fca5a5;
+      }
+      [data-theme="dark"] .cbt-option-e {
+        background: #2e1065;
+        color: #c4b5fd;
+      }
+
+      [data-theme="dark"] .cbt-correct-badge {
+        background: #052e16;
+        color: #86efac;
+      }
+
+      /* --- CBT Pagination --- */
+      [data-theme="dark"] .cbt-page-btn {
+        background: var(--surface);
+        border-color: var(--border);
+        color: var(--text);
+      }
+
+      [data-theme="dark"] .cbt-page-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+
+      [data-theme="dark"] .cbt-page-btn.active {
+        background: var(--primary);
+        color: white;
+      }
+
+      /* --- Upload Zone --- */
+      [data-theme="dark"] .upload-zone {
+        background: #0f172a;
+        border-color: var(--border);
+      }
+
+      [data-theme="dark"] .upload-zone:hover {
+        border-color: var(--primary);
+        background: #0c4a6e;
+      }
+
+      /* --- Resource Cards --- */
+      [data-theme="dark"] .resource-type-card {
+        background: var(--surface);
+        border-color: var(--border);
+      }
+
+      /* --- Password Wrapper --- */
+      [data-theme="dark"] .password-wrapper .toggle-eye {
+        color: var(--secondary);
+      }
+
+      [data-theme="dark"] .password-wrapper .toggle-eye:hover {
+        color: var(--primary);
+      }
+
+      /* --- Broadsheet Scrollbar (Dark) --- */
+      [data-theme="dark"] #broadsheet-container::-webkit-scrollbar-track {
+        background: #1e293b;
+        border-color: var(--border);
+      }
+
+      [data-theme="dark"] #broadsheet-container::-webkit-scrollbar-thumb {
+        background: #475569;
+        border-color: #1e293b;
+      }
+
+      [data-theme="dark"] #broadsheet-container::-webkit-scrollbar-thumb:hover {
+        background: #64748b;
+      }
+
+      [data-theme="dark"] #broadsheet-container {
+        scrollbar-color: #475569 #1e293b;
+        border-color: var(--border);
+      }
+
+      /* --- Fee Table Select/Input --- */
+      [data-theme="dark"] .fee-table-select,
+      [data-theme="dark"] .fee-table-input {
+        background: #0f172a;
+        border-color: var(--border);
+        color: var(--text);
+      }
+
+      /* --- Disable Overlay fix --- */
+      [data-theme="dark"] .disabled-message {
+        background: var(--surface);
+        color: var(--text);
+      }
+
+      /* --- Theme Toggle Button --- */
+      .theme-toggle {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+      }
+
+      .theme-toggle:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: rotate(15deg);
+      }
+
+      .theme-toggle:active {
+        transform: scale(0.95);
+      }
+
+      [data-theme="dark"] .theme-toggle {
+        border-color: #475569;
+        background: #0f172a;
+      }
+
+      /* --- Print: Force Light Mode --- */
+      @media print {
+        [data-theme="dark"] {
+          --bg: #ffffff !important;
+          --surface: #ffffff !important;
+          --text: #000000 !important;
+          --border: #000000 !important;
+          --secondary: #333333 !important;
+        }
+        [data-theme="dark"] body {
+          background: #ffffff !important;
+          color: #000000 !important;
+        }
+        [data-theme="dark"] .list-container,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .modal,
+        [data-theme="dark"] table {
+          background: #ffffff !important;
+          color: #000000 !important;
+        }
+      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -1436,33 +1904,25 @@
           <!-- LOGIN FORM -->
           <form id="form-login" onsubmit="app.handleLogin(event)">
             <div class="form-group">
-              <label>Title</label>
-              <select id="loginTitle" class="form-control">
-                <option value="Mr.">Mr.</option>
-                <option value="Mrs.">Mrs.</option>
-                <option value="Miss">Miss</option>
-                <option value="Dr.">Dr.</option>
-              </select>
-            </div>
-            <div class="grid-2">
-              <div class="form-group">
-                <label>First Name</label>
+              <label>Username</label>
+              <div style="position: relative">
+                <i
+                  class="fas fa-user"
+                  style="
+                    position: absolute;
+                    left: 12px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: var(--secondary);
+                  "
+                ></i>
                 <input
                   type="text"
-                  id="loginFirstName"
+                  id="loginUsername"
                   class="form-control"
-                  placeholder="First"
+                  placeholder="Enter your username"
                   required
-                />
-              </div>
-              <div class="form-group">
-                <label>Last Name</label>
-                <input
-                  type="text"
-                  id="loginLastName"
-                  class="form-control"
-                  placeholder="Last"
-                  required
+                  style="padding-left: 40px"
                 />
               </div>
             </div>
@@ -1498,59 +1958,63 @@
             <button type="submit" class="btn btn-primary w-full">
               Access Dashboard
             </button>
+
+            <!-- LEGACY LOGIN TOGGLE -->
+            <div style="text-align: center; margin-top: 15px">
+              <button
+                type="button"
+                id="toggleLegacyLogin"
+                onclick="app.toggleLegacyLogin()"
+                style="
+                  background: none;
+                  border: none;
+                  color: var(--secondary);
+                  font-size: 0.82rem;
+                  cursor: pointer;
+                  text-decoration: underline;
+                  padding: 5px;
+                "
+              >
+                Use first and last name to login
+              </button>
+            </div>
           </form>
 
-          <!-- SIGNUP FORM -->
-          <form
-            id="form-signup"
+          <!-- ✅ FIX: Move legacy form OUTSIDE of form-login -->
+          <div
+            id="legacy-login-form"
             class="hidden"
-            onsubmit="app.handleSignup(event)"
+            style="
+              margin-top: 15px;
+              padding-top: 15px;
+              border-top: 1px dashed var(--border);
+            "
           >
+            <p
+              style="
+                font-size: 0.8rem;
+                color: var(--secondary);
+                margin-bottom: 10px;
+              "
+            >
+              <i class="fas fa-info-circle"></i> For existing accounts without a
+              username
+            </p>
             <div class="form-group">
-              <label>Role</label>
-              <select
-                id="signupRole"
-                class="form-control"
-                onchange="app.handleRoleChange()"
-                required
-              >
-                <option value="Teacher">Teacher</option>
-                <option value="Admin">Admin</option>
-                <option value="Head">Head</option>
+              <label>Title</label>
+              <select id="loginTitle" class="form-control">
+                <option value="Mr.">Mr.</option>
+                <option value="Mrs.">Mrs.</option>
+                <option value="Miss">Miss</option>
+                <option value="Dr.">Dr.</option>
               </select>
-            </div>
-            <div class="grid-2">
-              <div class="form-group">
-                <label>Title</label>
-                <select id="signupTitle" class="form-control">
-                  <option value="Mr.">Mr.</option>
-                  <option value="Mrs.">Mrs.</option>
-                  <option value="Miss">Miss</option>
-                  <option value="Dr.">Dr.</option>
-                </select>
-              </div>
-              <div class="password-wrapper">
-                <input
-                  type="password"
-                  id="signupPass"
-                  class="form-control"
-                  required
-                />
-                <button
-                  type="button"
-                  class="toggle-eye"
-                  onclick="app.togglePassword('signupPass', this)"
-                >
-                  <i class="fas fa-eye"></i>
-                </button>
-              </div>
             </div>
             <div class="grid-2">
               <div class="form-group">
                 <label>First Name</label>
                 <input
                   type="text"
-                  id="signupFirstName"
+                  id="loginFirstName"
                   class="form-control"
                   placeholder="First"
                   required
@@ -1560,60 +2024,46 @@
                 <label>Last Name</label>
                 <input
                   type="text"
-                  id="signupLastName"
+                  id="loginLastName"
                   class="form-control"
                   placeholder="Last"
                   required
                 />
               </div>
             </div>
-
-            <div id="subject-group">
-              <div class="subject-builder">
-                <label style="margin-bottom: 8px; display: block"
-                  >Subjects Taught</label
-                >
-                <div class="chip flex gap-2" style="flex-wrap: wrap">
-                  <select
-                    id="subjectLevel"
-                    class="form-control"
-                    onchange="app.populateSubjects()"
-                    style="flex: 1"
-                  >
-                    <option value="" disabled selected>Level</option>
-                    <option value="JSS">JSS</option>
-                    <option value="SSS">SSS</option>
-                  </select>
-                  <select id="subjectName" class="form-control" style="flex: 1">
-                    <option value="" disabled selected>Subject</option>
-                  </select>
-                  <select
-                    id="subjectClass"
-                    class="form-control"
-                    style="flex: 1"
-                  >
-                    <option value="" disabled selected>Class</option>
-                  </select>
-                  <button
-                    type="button"
-                    class="btn btn-primary"
-                    onclick="app.addSubject()"
-                  >
-                    +
-                  </button>
-                </div>
-                <div id="chipList" class="chip-list"></div>
-                <small
-                  id="subjectError"
-                  style="color: var(--danger); display: none"
-                  >Add at least one subject</small
-                >
-              </div>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="loginPassLegacy"
+                class="form-control"
+                placeholder="•••••"
+                required
+              />
+              <button
+                type="button"
+                class="toggle-eye"
+                onclick="app.togglePassword('loginPassLegacy', this)"
+              >
+                <i class="fas fa-eye"></i>
+              </button>
             </div>
-
-            <button type="submit" class="btn btn-primary w-full">
-              Create Account
+            <button
+              type="button"
+              class="btn btn-outline w-full"
+              onclick="app.handleLegacyLogin()"
+              style="margin-top: 10px"
+            >
+              Login with Name
             </button>
+          </div>
+
+          <!-- SIGNUP FORM -->
+          <form
+            id="form-signup"
+            class="hidden"
+            onsubmit="app.handleSignup(event)"
+          >
+            <!-- ... signup fields remain the same ... -->
           </form>
         </div>
       </div>
@@ -1653,6 +2103,16 @@
           </div>
         </div>
         <div class="flex items-center gap-4">
+          <!-- ✅ ADD THIS THEME TOGGLE BUTTON -->
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            onclick="app.toggleTheme()"
+            title="Toggle Dark Mode"
+          >
+            <i class="fas fa-moon" id="themeIcon"></i>
+          </button>
+
           <div class="text-right hidden-mobile">
             <div id="user-name" class="font-bold">User Name</div>
             <div
@@ -3558,6 +4018,95 @@ ANSWER: B</pre
       </div>
     </div>
 
+    <!-- USERNAME MIGRATION MODAL -->
+    <div id="modal-migration" class="modal-overlay">
+      <div class="modal">
+        <div style="text-align: center; margin-bottom: 20px">
+          <i
+            class="fas fa-user-plus"
+            style="
+              font-size: 2.5rem;
+              color: var(--primary);
+              margin-bottom: 10px;
+            "
+          ></i>
+          <h3 style="margin: 0">Create Your Username</h3>
+          <p
+            style="color: var(--secondary); font-size: 0.85rem; margin-top: 5px"
+          >
+            Your account requires a username to continue. This is a one-time
+            setup.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label>Your Name</label>
+          <input
+            type="text"
+            id="migrationName"
+            class="form-control"
+            readonly
+            style="background: #f1f5f9"
+          />
+        </div>
+
+        <div class="form-group">
+          <label
+            >Choose Username <span style="color: var(--danger)">*</span></label
+          >
+          <div style="position: relative">
+            <i
+              class="fas fa-at"
+              style="
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--secondary);
+              "
+            ></i>
+            <input
+              type="text"
+              id="migrationUsername"
+              class="form-control"
+              placeholder="Enter username"
+              required
+              style="padding-left: 40px"
+              oninput="app.generateMigrationSuggestions()"
+            />
+          </div>
+          <small
+            style="
+              color: var(--secondary);
+              font-size: 0.78rem;
+              display: block;
+              margin-top: 4px;
+            "
+          >
+            Letters, numbers, underscores, and dots only
+          </small>
+          <div id="migration-suggestions" style="margin-top: 8px"></div>
+        </div>
+
+        <div
+          id="migration-error"
+          style="
+            display: none;
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+          "
+        ></div>
+
+        <button
+          class="btn btn-primary w-full"
+          onclick="app.saveMigrationUsername()"
+        >
+          <i class="fas fa-check"></i> Save Username & Continue
+        </button>
+      </div>
+    </div>
+
     <!-- ================= MODALS ================= -->
 
     <!-- Payment Modal -->
@@ -4097,7 +4646,7 @@ ANSWER: B</pre
       // --- 3. GOOGLE SHEET SERVICE (With Cache) ---
       // --- 3. GOOGLE SHEET SERVICE (With Cache) ---
       const GoogleSheetService = {
-        URL: "https://script.google.com/macros/s/AKfycbzTt8Fnpua38ZnPkj0NcHPCzxVOXJjuju6Kt6mM929MS8pGL325-5o2SeArNtH3PKgV/exec",
+        URL: "https://script.google.com/macros/s/AKfycbxOSnnx7d_B5Lr9Qne2KcjxQdauxNq55UKSctw8XiYp6ELbFqHdIVkjuQ99ZF5LmuRA/exec",
 
         // Simple in-memory cache
         cache: {
@@ -4142,6 +4691,32 @@ ANSWER: B</pre
         },
         signup: async function (userObj) {
           const res = await this._post("signup", userObj);
+          return res;
+        },
+
+        loginByUsername: async function (username, pass) {
+          const res = await this._post("loginByUsername", {
+            username,
+            password: pass,
+          });
+          return res.status === "success" ? res.user : null;
+        },
+
+        loginByName: async function (name, pass) {
+          const res = await this._post("login", { name, password: pass });
+          return res.status === "success" ? res.user : null;
+        },
+
+        checkUsernameUnique: async function (username, excludeUserId) {
+          const res = await this._post("checkUsernameUnique", {
+            username,
+            excludeUserId,
+          });
+          return res.status === "success" && res.unique === true;
+        },
+
+        updateUsername: async function (userId, username) {
+          const res = await this._post("updateUsername", { userId, username });
           return res;
         },
 
@@ -4357,6 +4932,311 @@ ANSWER: B</pre
         },
       };
 
+      // ==========================================
+      // DRAFT AUTO-SAVE SYSTEM
+      // ==========================================
+      const DraftManager = {
+        // Debounce timer storage
+        _timers: {},
+
+        // Debounce utility - delays function execution
+        debounce: function (key, fn, delay = 300) {
+          if (this._timers[key]) {
+            clearTimeout(this._timers[key]);
+          }
+          this._timers[key] = setTimeout(() => {
+            fn();
+            delete this._timers[key];
+          }, delay);
+        },
+
+        // Generate draft key for scores
+        getScoreDraftKey: function (className, subject, type) {
+          return `draft_scores_${className}_${subject}_${type}`;
+        },
+
+        // Generate draft key for fees
+        getFeeDraftKey: function (className, session, term) {
+          return `draft_fees_${className}_${session}_${term}`;
+        },
+
+        // Save score draft to localStorage
+        saveScoreDraft: function (className, subject, type) {
+          const draftKey = this.getScoreDraftKey(className, subject, type);
+          const isMidTerm = type === "midterm";
+          const data = [];
+
+          const rows = document.querySelectorAll("#batch-rows tr");
+          rows.forEach((row) => {
+            const sid = row.dataset.sid;
+            if (!sid) return;
+
+            if (isMidTerm) {
+              const totalInput = row.querySelector(".input-total");
+              data.push({
+                studentId: sid,
+                total: totalInput ? totalInput.value : "",
+              });
+            } else {
+              const caInput = row.querySelector(".input-ca");
+              const examInput = row.querySelector(".input-exam");
+              data.push({
+                studentId: sid,
+                ca: caInput ? caInput.value : "",
+                exam: examInput ? examInput.value : "",
+              });
+            }
+          });
+
+          try {
+            localStorage.setItem(draftKey, JSON.stringify(data));
+          } catch (e) {
+            console.warn("Draft save failed:", e);
+          }
+        },
+
+        // Restore score draft from localStorage
+        restoreScoreDraft: function (className, subject, type) {
+          const draftKey = this.getScoreDraftKey(className, subject, type);
+          const isMidTerm = type === "midterm";
+
+          try {
+            const stored = localStorage.getItem(draftKey);
+            if (!stored) return false;
+
+            const data = JSON.parse(stored);
+            if (!Array.isArray(data) || data.length === 0) return false;
+
+            let restored = 0;
+            data.forEach((item) => {
+              const row = document.querySelector(
+                `#batch-rows tr[data-sid="${item.studentId}"]`,
+              );
+              if (!row) return;
+
+              if (isMidTerm) {
+                const totalInput = row.querySelector(".input-total");
+                if (
+                  totalInput &&
+                  item.total !== "" &&
+                  item.total !== undefined
+                ) {
+                  totalInput.value = item.total;
+                  // Trigger grade update event
+                  totalInput.dispatchEvent(
+                    new Event("input", { bubbles: true }),
+                  );
+                  restored++;
+                }
+              } else {
+                const caInput = row.querySelector(".input-ca");
+                const examInput = row.querySelector(".input-exam");
+                if (caInput && item.ca !== "" && item.ca !== undefined) {
+                  caInput.value = item.ca;
+                  restored++;
+                }
+                if (examInput && item.exam !== "" && item.exam !== undefined) {
+                  examInput.value = item.exam;
+                  restored++;
+                }
+                // Trigger total calculation events
+                if (caInput)
+                  caInput.dispatchEvent(new Event("input", { bubbles: true }));
+                if (examInput)
+                  examInput.dispatchEvent(
+                    new Event("input", { bubbles: true }),
+                  );
+              }
+            });
+
+            return restored > 0;
+          } catch (e) {
+            console.warn("Draft restore failed:", e);
+            return false;
+          }
+        },
+
+        // Save fee draft to localStorage
+        saveFeeDraft: function (className, session, term) {
+          const draftKey = this.getFeeDraftKey(className, session, term);
+          const data = [];
+
+          const rows = document.querySelectorAll("#fee-tbody tr");
+          rows.forEach((row) => {
+            const sid = row.dataset.sid;
+            if (!sid) return;
+
+            const paymentInput = row.querySelector(".payment-entry");
+            if (paymentInput && paymentInput.value) {
+              data.push({
+                studentId: sid,
+                amount: paymentInput.value,
+              });
+            }
+          });
+
+          try {
+            localStorage.setItem(draftKey, JSON.stringify(data));
+          } catch (e) {
+            console.warn("Fee draft save failed:", e);
+          }
+        },
+
+        // Restore fee draft from localStorage
+        restoreFeeDraft: function (className, session, term) {
+          const draftKey = this.getFeeDraftKey(className, session, term);
+
+          try {
+            const stored = localStorage.getItem(draftKey);
+            if (!stored) return false;
+
+            const data = JSON.parse(stored);
+            if (!Array.isArray(data) || data.length === 0) return false;
+
+            let restored = 0;
+            data.forEach((item) => {
+              const row = document.querySelector(
+                `#fee-tbody tr[data-sid="${item.studentId}"]`,
+              );
+              if (!row) return;
+
+              const paymentInput = row.querySelector(".payment-entry");
+              if (paymentInput && item.amount) {
+                paymentInput.value = item.amount;
+                restored++;
+              }
+            });
+
+            return restored > 0;
+          } catch (e) {
+            console.warn("Fee draft restore failed:", e);
+            return false;
+          }
+        },
+
+        // Destroy score draft
+        destroyScoreDraft: function (className, subject, type) {
+          const draftKey = this.getScoreDraftKey(className, subject, type);
+          localStorage.removeItem(draftKey);
+        },
+
+        // Destroy fee draft
+        destroyFeeDraft: function (className, session, term) {
+          const draftKey = this.getFeeDraftKey(className, session, term);
+          localStorage.removeItem(draftKey);
+        },
+
+        // Check if draft exists (for UI indicator)
+        hasScoreDraft: function (className, subject, type) {
+          return (
+            localStorage.getItem(
+              this.getScoreDraftKey(className, subject, type),
+            ) !== null
+          );
+        },
+
+        hasFeeDraft: function (className, session, term) {
+          return (
+            localStorage.getItem(
+              this.getFeeDraftKey(className, session, term),
+            ) !== null
+          );
+        },
+
+        // Attach auto-save listeners to score inputs
+        attachScoreListeners: function (className, subject, type) {
+          const selector =
+            type === "midterm" ? ".input-total" : ".score-input-mini";
+          const inputs = document.querySelectorAll(`#batch-rows ${selector}`);
+
+          inputs.forEach((input) => {
+            // Remove existing listener to prevent duplicates
+            input.removeEventListener("input", input._draftHandler);
+
+            // Create and store handler reference
+            input._draftHandler = () => {
+              this.debounce(
+                `score_${className}_${subject}`,
+                () => this.saveScoreDraft(className, subject, type),
+                300,
+              );
+            };
+
+            input.addEventListener("input", input._draftHandler);
+          });
+        },
+
+        // Attach auto-save listeners to fee inputs
+        attachFeeListeners: function (className, session, term) {
+          const inputs = document.querySelectorAll("#fee-tbody .payment-entry");
+
+          inputs.forEach((input) => {
+            // Remove existing listener to prevent duplicates
+            input.removeEventListener("input", input._draftHandler);
+
+            // Create and store handler reference
+            input._draftHandler = () => {
+              this.debounce(
+                `fee_${className}`,
+                () => this.saveFeeDraft(className, session, term),
+                300,
+              );
+            };
+
+            input.addEventListener("input", input._draftHandler);
+          });
+        },
+      };
+
+      // ==========================================
+      // SESSION RESUME / STATE PERSISTENCE
+      // ==========================================
+      const StateManager = {
+        STORAGE_KEY: "app_last_state",
+
+        save: function (data) {
+          try {
+            const state = {
+              sectionId: data.sectionId || "",
+              cls: data.cls || "",
+              sub: data.sub || "",
+              mode: data.mode || "",
+              resultType: data.resultType || "",
+              sid: data.sid || "",
+              feeSchool: data.feeSchool || "sec",
+              timestamp: Date.now(),
+            };
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
+          } catch (e) {
+            /* silent */
+          }
+        },
+
+        get: function () {
+          try {
+            const raw = localStorage.getItem(this.STORAGE_KEY);
+            if (!raw) return null;
+            const state = JSON.parse(raw);
+            // Expire after 24 hours to avoid stale state
+            if (Date.now() - state.timestamp > 24 * 60 * 60 * 1000) {
+              this.clear();
+              return null;
+            }
+            return state;
+          } catch (e) {
+            return null;
+          }
+        },
+
+        clear: function () {
+          try {
+            localStorage.removeItem(this.STORAGE_KEY);
+          } catch (e) {
+            /* silent */
+          }
+        },
+      };
+
       let isInitialLoad = true;
 
       window.addEventListener("popstate", (event) => {
@@ -4419,6 +5299,120 @@ ANSWER: B</pre
           }
         },
 
+        // ==========================================
+        // SESSION RESUME: State Restoration
+        // ==========================================
+        restoreState: async function (state) {
+          // Persist target immediately so a crash mid-restore doesn't lose it
+          StateManager.save(state);
+
+          // Reset transient flags that could cause unexpected behavior
+          this.state.printFromRoster = false;
+          this.state.printAllWithStampMode = false;
+          this.state.printAllMode = false;
+          this.state.downloadMode = false;
+
+          // Pre-set viewContext so downstream functions read correct values
+          if (state.mode) this.state.viewContext.mode = state.mode;
+          if (state.resultType)
+            this.state.viewContext.resultType = state.resultType;
+          if (state.cls) this.state.viewContext.cls = state.cls;
+          if (state.sub) this.state.viewContext.sub = state.sub;
+          if (state.sid) this.state.viewContext.sid = state.sid;
+          if (state.feeSchool) this.state.feeSchool = state.feeSchool;
+
+          switch (state.sectionId) {
+            case "section-staff":
+              await this.loadStaffList();
+              break;
+
+            case "section-performance":
+              // Pre-set the class dropdown (element exists in DOM, just hidden)
+              var perfSelect = document.getElementById("perf-class-select");
+              if (perfSelect && state.cls) perfSelect.value = state.cls;
+              if (state.mode === "midterm")
+                this.state.broadsheetMode = "midterm";
+              else this.state.broadsheetMode = "exam";
+              await this.loadPerformance();
+              // loadPerformance builds the DOM but doesn't auto-load data;
+              // trigger it explicitly if a class was saved
+              if (state.cls) {
+                this.renderBroadsheet(
+                  state.cls,
+                  state.mode === "midterm" ? "midterm" : "exam",
+                );
+              }
+              break;
+
+            case "section-fees":
+              // Pre-set class filter BEFORE loadFees rebuilds the options
+              var feeClsFilter = document.getElementById("feeClassFilter");
+              if (feeClsFilter && state.cls) feeClsFilter.value = state.cls;
+              // loadFees reads the pre-set value and auto-renders if valid
+              await this.loadFees();
+              break;
+
+            case "section-batch-entry":
+              if (state.cls && state.sub) {
+                // Deepest restore: exact score entry screen
+                await this.loadBatchEntry(state.cls, state.sub);
+              } else if (state.cls) {
+                // Restore to subject list for that class
+                await this.loadSubjectList(state.cls);
+              } else {
+                // Restore to class directory
+                await this.loadClassList(state.mode || "exam");
+              }
+              break;
+
+            case "section-admin-roster":
+              if (state.cls) {
+                await this.loadAdminRoster(
+                  state.cls,
+                  state.resultType || "exam",
+                );
+              } else {
+                await this.loadClassSelectionForAdmin(
+                  state.resultType || "exam",
+                );
+              }
+              break;
+
+            case "section-student-detail":
+              if (state.sid) {
+                await this.loadStudentDetail(state.sid);
+              } else {
+                this.renderLanding();
+              }
+              break;
+
+            case "section-cbt-upload":
+              await this.loadCBTUploadSection();
+              break;
+
+            case "section-question-bank":
+              await this.loadQuestionBank();
+              break;
+
+            case "section-timetable":
+              await this.loadTimetableSection();
+              break;
+
+            case "section-assignments":
+              await this.loadAssignmentSection();
+              break;
+
+            case "section-elearning":
+              await this.loadElearningSection();
+              break;
+
+            default:
+              // Unknown or landing — fall back to dashboard
+              this.renderLanding();
+              break;
+          }
+        },
+
         togglePassword: function (inputId, btn) {
           const input = document.getElementById(inputId);
           const icon = btn.querySelector("i");
@@ -4431,12 +5425,390 @@ ANSWER: B</pre
           }
         },
 
+        // ==========================================
+        // THEME SYSTEM
+        // ==========================================
+        toggleTheme: function () {
+          const current =
+            document.documentElement.getAttribute("data-theme") || "light";
+          const next = current === "dark" ? "light" : "dark";
+          this.setTheme(next);
+        },
+
+        setTheme: function (theme) {
+          document.documentElement.setAttribute("data-theme", theme);
+          localStorage.setItem("themePreference", theme);
+          this.updateThemeIcon(theme);
+        },
+
+        getSavedTheme: function () {
+          return localStorage.getItem("themePreference") || "light";
+        },
+
+        updateThemeIcon: function (theme) {
+          const icon = document.getElementById("themeIcon");
+          if (!icon) return;
+          if (theme === "dark") {
+            icon.className = "fas fa-sun";
+            document.getElementById("themeToggle").title =
+              "Switch to Light Mode";
+          } else {
+            icon.className = "fas fa-moon";
+            document.getElementById("themeToggle").title =
+              "Switch to Dark Mode";
+          }
+        },
+
+        initTheme: function () {
+          const saved = this.getSavedTheme();
+          this.setTheme(saved);
+        },
+
+        // ==========================================
+        // USERNAME AUTHENTICATION SYSTEM
+        // ==========================================
+
+        validateUsername: function (username) {
+          if (!username || username.length < 3) {
+            return {
+              valid: false,
+              error: "Username must be at least 3 characters",
+            };
+          }
+          if (username.length > 20) {
+            return {
+              valid: false,
+              error: "Username must be 20 characters or less",
+            };
+          }
+          const pattern = /^[a-zA-Z0-9._]+$/;
+          if (!pattern.test(username)) {
+            return {
+              valid: false,
+              error: "Only letters, numbers, underscores, and dots allowed",
+            };
+          }
+          if (/^[._]|[._]$/.test(username)) {
+            return {
+              valid: false,
+              error: "Cannot start or end with dot or underscore",
+            };
+          }
+          if (/\.{2,}|_{2,}/.test(username)) {
+            return {
+              valid: false,
+              error: "Cannot have consecutive dots or underscores",
+            };
+          }
+          return { valid: true, error: "" };
+        },
+
+        generateUsernameSuggestions: function () {
+          const firstName = (
+            document.getElementById("signupFirstName")?.value || ""
+          )
+            .trim()
+            .toLowerCase();
+          const lastName = (
+            document.getElementById("signupLastName")?.value || ""
+          )
+            .trim()
+            .toLowerCase();
+          const container = document.getElementById("username-suggestions");
+
+          if (!firstName && !lastName) {
+            container.style.display = "none";
+            return;
+          }
+
+          const suggestions = this._createUsernameSuggestions(
+            firstName,
+            lastName,
+          );
+          this._renderSuggestions(suggestions, container, "signupUsername");
+        },
+
+        generateMigrationSuggestions: function () {
+          const nameField = document.getElementById("migrationName");
+          const nameParts = (nameField?.value || "").trim().split(" ");
+          const firstName = (nameParts[1] || nameParts[0] || "").toLowerCase();
+          const lastName = (
+            nameParts[nameParts.length - 1] || ""
+          ).toLowerCase();
+          const container = document.getElementById("migration-suggestions");
+
+          const suggestions = this._createUsernameSuggestions(
+            firstName,
+            lastName,
+          );
+          this._renderSuggestions(suggestions, container, "migrationUsername");
+        },
+
+        _createUsernameSuggestions: function (firstName, lastName) {
+          const suggestions = [];
+          const rand = Math.floor(Math.random() * 100);
+          const rand2 = Math.floor(Math.random() * 100);
+
+          if (firstName && lastName) {
+            suggestions.push({
+              text: `${firstName}.${lastName}`,
+              label: `${firstName}.${lastName}`,
+            });
+            suggestions.push({
+              text: `${firstName}${lastName}`,
+              label: `${firstName}${lastName}`,
+            });
+            suggestions.push({
+              text: `${firstName}_${lastName}`,
+              label: `${firstName}_${lastName}`,
+            });
+            suggestions.push({
+              text: `${firstName[0]}_${lastName}${rand}`,
+              label: `${firstName[0]}_${lastName}${rand}`,
+            });
+            suggestions.push({
+              text: `${lastName}_${firstName}${rand2}`,
+              label: `${lastName}_${firstName}${rand2}`,
+            });
+          } else if (firstName) {
+            suggestions.push({
+              text: `${firstName}${rand}`,
+              label: `${firstName}${rand}`,
+            });
+            suggestions.push({
+              text: `${firstName}_${rand2}`,
+              label: `${firstName}_${rand2}`,
+            });
+          }
+
+          return suggestions.slice(0, 4);
+        },
+
+        _renderSuggestions: function (suggestions, container, targetInputId) {
+          if (suggestions.length === 0) {
+            container.style.display = "none";
+            return;
+          }
+
+          let html = '<div style="display: flex; flex-wrap: wrap; gap: 6px;">';
+          suggestions.forEach((s) => {
+            html += `<button type="button" onclick="app.selectUsernameSuggestion('${targetInputId}', '${s.text}')" 
+              style="padding: 4px 10px; border: 1px solid var(--primary); border-radius: 15px; 
+                     background: #f0f9ff; color: var(--primary); font-size: 0.8rem; cursor: pointer;
+                     transition: all 0.2s;"
+              onmouseover="this.style.background='var(--primary)'; this.style.color='white';"
+              onmouseout="this.style.background='#f0f9ff'; this.style.color='var(--primary)';">
+              ${s.label}
+            </button>`;
+          });
+          html += "</div>";
+
+          container.innerHTML = html;
+          container.style.display = "block";
+        },
+
+        selectUsernameSuggestion: function (inputId, username) {
+          document.getElementById(inputId).value = username;
+          const container =
+            inputId === "signupUsername"
+              ? document.getElementById("username-suggestions")
+              : document.getElementById("migration-suggestions");
+          if (container) container.style.display = "none";
+        },
+
+        toggleLegacyLogin: function () {
+          const form = document.getElementById("legacy-login-form");
+          const toggleBtn = document.getElementById("toggleLegacyLogin");
+
+          if (form.classList.contains("hidden")) {
+            form.classList.remove("hidden");
+            toggleBtn.textContent = "Hide legacy login";
+            toggleBtn.style.color = "var(--primary)";
+          } else {
+            form.classList.add("hidden");
+            toggleBtn.textContent = "Use first and last name to login";
+            toggleBtn.style.color = "var(--secondary)";
+          }
+        },
+
+        handleLogin: async function (e) {
+          e.preventDefault();
+          const username = document
+            .getElementById("loginUsername")
+            .value.trim();
+          const pass = document.getElementById("loginPass").value;
+
+          if (!username || !pass) {
+            return this.showToast(
+              "Please enter username and password",
+              "warning",
+            );
+          }
+
+          const u = await GoogleSheetService.loginByUsername(username, pass);
+          if (u) {
+            if (u.disabled) {
+              document
+                .getElementById("disabled-overlay")
+                .classList.remove("hidden");
+              return;
+            }
+
+            this.state.currentUser = u;
+            sessionStorage.setItem("currentUser", JSON.stringify(u));
+
+            if (document.getElementById("rememberMe").checked) {
+              localStorage.setItem(
+                "rememberedUser",
+                JSON.stringify({ username, pass }),
+              );
+            } else {
+              localStorage.removeItem("rememberedUser");
+            }
+
+            this.showDashboard();
+          } else {
+            this.showToast("Invalid username or password", "error");
+          }
+        },
+
+        handleLegacyLogin: async function () {
+          const title = document.getElementById("loginTitle").value;
+          const fname = document.getElementById("loginFirstName").value.trim();
+          const lname = document.getElementById("loginLastName").value.trim();
+          const pass = document.getElementById("loginPassLegacy").value;
+
+          if (!fname || !lname || !pass) {
+            return this.showToast("Fill all fields", "warning");
+          }
+
+          const name = `${title} ${fname} ${lname}`.trim();
+          const u = await GoogleSheetService.loginByName(name, pass);
+
+          if (!u) {
+            return this.showToast("Invalid credentials", "error");
+          }
+
+          if (u.disabled) {
+            document
+              .getElementById("disabled-overlay")
+              .classList.remove("hidden");
+            return;
+          }
+
+          // CHECK IF USER HAS USERNAME - IF NOT, FORCE MIGRATION
+          if (!u.username || u.username.trim() === "") {
+            this.state.pendingMigrationUser = u;
+            this.showMigrationModal(u.name, u.id);
+            return;
+          }
+
+          this.state.currentUser = u;
+          sessionStorage.setItem("currentUser", JSON.stringify(u));
+
+          if (document.getElementById("rememberMe").checked) {
+            localStorage.setItem(
+              "rememberedUser",
+              JSON.stringify({ username: u.username, pass }),
+            );
+          } else {
+            localStorage.removeItem("rememberedUser");
+          }
+
+          this.showDashboard();
+        },
+
+        showMigrationModal: function (name, userId) {
+          document.getElementById("migrationName").value = name;
+          document.getElementById("migrationUsername").value = "";
+          document.getElementById("migration-error").style.display = "none";
+          document.getElementById("migration-suggestions").innerHTML = "";
+
+          const nameParts = name.split(" ");
+          const firstName = (nameParts[1] || nameParts[0] || "").toLowerCase();
+          const lastName = (
+            nameParts[nameParts.length - 1] || ""
+          ).toLowerCase();
+          const suggestions = this._createUsernameSuggestions(
+            firstName,
+            lastName,
+          );
+          this._renderSuggestions(
+            suggestions,
+            document.getElementById("migration-suggestions"),
+            "migrationUsername",
+          );
+
+          document.getElementById("modal-migration").style.display = "flex";
+        },
+
+        saveMigrationUsername: async function () {
+          const username = document
+            .getElementById("migrationUsername")
+            .value.trim();
+          const userId = this.state.pendingMigrationUser.id;
+          const errorEl = document.getElementById("migration-error");
+
+          const validation = this.validateUsername(username);
+          if (!validation.valid) {
+            errorEl.textContent = validation.error;
+            errorEl.style.display = "block";
+            return;
+          }
+
+          this.toggleLoader(true);
+          const isUnique = await GoogleSheetService.checkUsernameUnique(
+            username,
+            userId,
+          );
+
+          if (!isUnique) {
+            this.toggleLoader(false);
+            errorEl.textContent =
+              "This username is already taken. Please choose another.";
+            errorEl.style.display = "block";
+            return;
+          }
+
+          const result = await GoogleSheetService.updateUsername(
+            userId,
+            username,
+          );
+          this.toggleLoader(false);
+
+          if (result.status === "success") {
+            this.closeModals();
+
+            this.state.pendingMigrationUser.username = username;
+            this.state.currentUser = this.state.pendingMigrationUser;
+            sessionStorage.setItem(
+              "currentUser",
+              JSON.stringify(this.state.currentUser),
+            );
+
+            this.showToast("Username created successfully!", "success");
+            this.showDashboard();
+          } else {
+            errorEl.textContent = result.message || "Failed to save username";
+            errorEl.style.display = "block";
+          }
+        },
+
         init: function () {
+          // ✅ ADD THIS LINE FIRST - Load theme before anything renders
+          this.initTheme();
+
           const remembered = localStorage.getItem("rememberedUser");
+          // ... rest of existing code unchanged ...
           if (remembered) {
             try {
               const user = JSON.parse(remembered);
-              GoogleSheetService.login(user.name, user.pass).then((u) => {
+              // Support both old format (name) and new format (username)
+              const loginPromise = user.username
+                ? GoogleSheetService.loginByUsername(user.username, user.pass)
+                : GoogleSheetService.loginByName(user.name, user.pass);
+
+              loginPromise.then((u) => {
                 if (u) {
                   if (u.disabled) {
                     document
@@ -6138,70 +7510,96 @@ ANSWER: B</pre
         handleSignup: async function (e) {
           e.preventDefault();
           const title = document.getElementById("signupTitle").value;
-          const fname = document.getElementById("signupFirstName").value;
-          const lname = document.getElementById("signupLastName").value;
+          const fname = document.getElementById("signupFirstName").value.trim();
+          const lname = document.getElementById("signupLastName").value.trim();
+          const username = document
+            .getElementById("signupUsername")
+            .value.trim();
           const role = document.getElementById("signupRole").value;
 
-          if (role === "Teacher" && this.state.draftSubjects.length === 0)
+          if (!username) {
+            return this.showToast("Username is required", "error");
+          }
+
+          const usernameValidation = this.validateUsername(username);
+          if (!usernameValidation.valid) {
+            return this.showToast(usernameValidation.error, "error");
+          }
+
+          if (role === "Teacher" && this.state.draftSubjects.length === 0) {
             return this.showToast("Add at least one subject", "error");
+          }
 
           const u = {
             title,
             firstName: fname,
             lastName: lname,
+            username: username,
             pass: document.getElementById("signupPass").value,
             role,
             assignedClass: "",
             subjects: [...this.state.draftSubjects],
           };
+
+          this.toggleLoader(true);
           const res = await GoogleSheetService.signup(u);
+          this.toggleLoader(false);
+
           if (res.status === "success") {
             this.showToast("Account created! Please login.", "success");
-            this.switchAuthTab("login");
+
             document.getElementById("form-signup").reset();
             this.state.draftSubjects = [];
             this.renderChips();
+            document.getElementById("username-suggestions").style.display =
+              "none";
+
+            // Switch to login and prefill username
+            this.switchAuthTab("login");
+            document.getElementById("loginUsername").value = username;
+            document.getElementById("loginPass").focus();
           } else {
             this.showToast(res.message || "Signup failed", "error");
           }
         },
-        handleLogin: async function (e) {
-          e.preventDefault();
-          const title = document.getElementById("loginTitle").value;
-          const fname = document.getElementById("loginFirstName").value;
-          const lname = document.getElementById("loginLastName").value;
-          const name = `${title} ${fname} ${lname}`.trim();
-          const pass = document.getElementById("loginPass").value;
+        // handleLogin: async function (e) {
+        //   e.preventDefault();
+        //   const title = document.getElementById("loginTitle").value;
+        //   const fname = document.getElementById("loginFirstName").value;
+        //   const lname = document.getElementById("loginLastName").value;
+        //   const name = `${title} ${fname} ${lname}`.trim();
+        //   const pass = document.getElementById("loginPass").value;
 
-          const u = await GoogleSheetService.login(name, pass);
-          if (u) {
-            if (u.disabled) {
-              document
-                .getElementById("disabled-overlay")
-                .classList.remove("hidden");
-              return;
-            }
+        //   const u = await GoogleSheetService.login(name, pass);
+        //   if (u) {
+        //     if (u.disabled) {
+        //       document
+        //         .getElementById("disabled-overlay")
+        //         .classList.remove("hidden");
+        //       return;
+        //     }
 
-            this.state.currentUser = u;
-            sessionStorage.setItem("currentUser", JSON.stringify(u));
+        //     this.state.currentUser = u;
+        //     sessionStorage.setItem("currentUser", JSON.stringify(u));
 
-            if (document.getElementById("rememberMe").checked) {
-              localStorage.setItem(
-                "rememberedUser",
-                JSON.stringify({ name, pass }),
-              );
-            } else {
-              localStorage.removeItem("rememberedUser");
-            }
+        //     if (document.getElementById("rememberMe").checked) {
+        //       localStorage.setItem(
+        //         "rememberedUser",
+        //         JSON.stringify({ name, pass }),
+        //       );
+        //     } else {
+        //       localStorage.removeItem("rememberedUser");
+        //     }
 
-            this.showDashboard();
-          } else {
-            this.showToast("Invalid credentials", "error");
-          }
-        },
+        //     this.showDashboard();
+        //   } else {
+        //     this.showToast("Invalid credentials", "error");
+        //   }
+        // },
         logout: function () {
           sessionStorage.removeItem("currentUser");
           localStorage.removeItem("rememberedUser");
+          StateManager.clear(); // <-- ADD THIS LINE
           window.location.reload();
         },
 
@@ -6213,6 +7611,19 @@ ANSWER: B</pre
             this.state.currentUser.name;
           document.getElementById("user-role").textContent =
             this.state.currentUser.role;
+
+          // --- SESSION RESUME: Restore last active section ---
+          const savedState = StateManager.get();
+          if (
+            savedState &&
+            savedState.sectionId &&
+            savedState.sectionId !== "section-landing"
+          ) {
+            this.restoreState(savedState);
+            return; // Skip normal landing render
+          }
+          // --- END SESSION RESUME ---
+
           if (!history.state || history.state.section !== "dashboard") {
             history.replaceState(
               { section: "dashboard" },
@@ -6373,6 +7784,20 @@ ANSWER: B</pre
 
         // --- NAVIGATION ---
         showSection: function (id) {
+          // --- SESSION RESUME: Auto-save on every section change (skip landing) ---
+          if (id !== "section-landing") {
+            StateManager.save({
+              sectionId: id,
+              cls: this.state.viewContext.cls || "",
+              sub: this.state.viewContext.sub || "",
+              mode: this.state.viewContext.mode || "",
+              resultType: this.state.viewContext.resultType || "",
+              sid: this.state.viewContext.sid || "",
+              feeSchool: this.state.feeSchool || "sec",
+            });
+          }
+          // --- END SESSION RESUME ---
+
           document
             .querySelectorAll("main section")
             .forEach((s) => s.classList.add("hidden"));
@@ -6578,6 +8003,15 @@ ANSWER: B</pre
           // Store data for modal access
           this.state.currentBroadsheetData = data;
 
+          // --- SESSION RESUME: Save performance context ---
+          StateManager.save({
+            sectionId: "section-performance",
+            cls: className,
+            mode: type,
+            feeSchool: this.state.feeSchool || "sec",
+          });
+          // --- END SESSION RESUME ---
+
           // ... REST OF THE FUNCTION REMAINS THE SAME ...
           // (No changes needed to the calculation logic, just the data fetch above)
 
@@ -6661,7 +8095,7 @@ ANSWER: B</pre
             const positionStr = app.getOrdinal(rank);
 
             // Start Row
-            let cells = `<td style="font-weight:bold; background:#f8fafc;">${positionStr}</td>`;
+            let cells = `<td style="font-weight:bold;">${positionStr}</td>`;
             cells += `<td class="hide-mobile">${student.id}</td><td class="perf-name-cell"><strong>${student.name}</strong></td>`;
 
             // Subject Scores
@@ -6701,7 +8135,7 @@ ANSWER: B</pre
 
           // 5. Class Average Row
           let avgRow =
-            '<tr style="background:#f1f5f9;font-weight:600;"><td colspan="1">Avg</td><td class="hide-mobile"></td><td></td>';
+            '<tr style="font-weight:600;"><td colspan="1">Avg</td><td class="hide-mobile"></td><td></td>';
           subjects.forEach((sub) => {
             const avg = data.subjectAverages[sub] || 0;
             avgRow += `<td style="text-align:center;" class="hide-mobile">${avg.toFixed(1)}</td>`;
@@ -6715,8 +8149,7 @@ ANSWER: B</pre
             "%</td></tr>";
 
           // 6. Stats HTML
-          let statsHtml =
-            '<div style="padding:1rem; background:#eff6ff; border-radius:8px;">';
+          let statsHtml = '<div style="padding:1rem; border-radius:8px;">';
           statsHtml +=
             "<strong>Overall Class Average:</strong> " +
             overallAvg.toFixed(1) +
@@ -7255,8 +8688,28 @@ ANSWER: B</pre
             });
           }
 
+          // ... existing code above (before the closing brace of loadBatchEntry)
+
           this.pushHistory("section-batch-entry", `${cls} - ${sub}`);
           this.showSection("section-batch-entry");
+
+          // ════════════════════════════════════════════════════════════
+          // DRAFT AUTO-SAVE: Restore draft and attach listeners
+          // ════════════════════════════════════════════════════════════
+          setTimeout(() => {
+            // Attempt to restore any existing draft
+            const draftRestored = DraftManager.restoreScoreDraft(
+              cls,
+              sub,
+              mode,
+            );
+            if (draftRestored) {
+              app.showToast("Draft restored!", "warning");
+            }
+
+            // Attach auto-save listeners to all score inputs
+            DraftManager.attachScoreListeners(cls, sub, mode);
+          }, 100); // Small delay to ensure DOM is ready
         },
 
         filterBatchStudents: function () {
@@ -7321,6 +8774,15 @@ ANSWER: B</pre
 
           if (res && res.status === "success") {
             this.showToast("Scores Saved Successfully", "success");
+
+            // ════════════════════════════════════════════════════════════
+            // DRAFT AUTO-SAVE: Destroy draft after successful save
+            // ════════════════════════════════════════════════════════════
+            DraftManager.destroyScoreDraft(
+              this.state.viewContext.cls,
+              this.state.viewContext.sub,
+              this.state.viewContext.mode,
+            );
           } else {
             this.showToast("Error saving", "error");
           }
@@ -7535,11 +8997,7 @@ ANSWER: B</pre
             const isJSS = studentInfo.class.startsWith("JSS");
             const isMidTerm = this.state.viewContext.resultType === "midterm";
 
-            let subjectsList = isJSS
-              ? JSS_SUBJECTS
-              : studentInfo.dept && SSS_SUBJECTS[studentInfo.dept]
-                ? SSS_SUBJECTS[studentInfo.dept]
-                : SSS_SUBJECTS.All;
+            let subjectsList = isJSS ? JSS_SUBJECTS : SSS_SUBJECTS.All;
 
             const classData = await GoogleSheetService.getClassScores(
               studentInfo.class,
@@ -7659,11 +9117,7 @@ ANSWER: B</pre
               const isJSS = studentInfo.class.startsWith("JSS");
               const isMidTerm = this.state.viewContext.resultType === "midterm";
 
-              let subjectsList = isJSS
-                ? JSS_SUBJECTS
-                : studentInfo.dept && SSS_SUBJECTS[studentInfo.dept]
-                  ? SSS_SUBJECTS[studentInfo.dept]
-                  : SSS_SUBJECTS.All;
+              let subjectsList = isJSS ? JSS_SUBJECTS : SSS_SUBJECTS.All;
 
               const classData = await GoogleSheetService.getClassScores(
                 studentInfo.class,
@@ -7749,11 +9203,80 @@ ANSWER: B</pre
           // Add this at the beginning of the function:
           const useStamp = opts.useStamp || false;
 
+          // ════════════════════════════════════════════════════════════
+          // 🔧 FIX: Build normalized lookup map for class averages
+          //     Handles trailing spaces, case mismatches from Google Sheets
+          // ════════════════════════════════════════════════════════════
+          const avgLookup = {};
+          if (subjectAverages && typeof subjectAverages === "object") {
+            for (const rawKey in subjectAverages) {
+              const cleanKey = String(rawKey).trim();
+              const rawVal = subjectAverages[rawKey];
+
+              // Store with multiple key formats for robust lookup
+              avgLookup[cleanKey] = rawVal;
+              avgLookup[rawKey] = rawVal;
+              // Also store lowercase version
+              avgLookup[cleanKey.toLowerCase()] = rawVal;
+            }
+          }
+
+          /**
+           * Safe lookup for class average
+           * @param {string} subjectName - The subject name from subjectsList
+           * @returns {string} Formatted average (e.g. "67.1") or "N/A"
+           */
+          const getAvg = function (subjectName) {
+            const name = String(subjectName || "").trim();
+
+            // Try multiple lookup strategies
+            let val = undefined;
+
+            // Strategy 1: Exact match (cleaned)
+            if (avgLookup[name] !== undefined) val = avgLookup[name];
+
+            // Strategy 2: Original casing
+            if (val === undefined && avgLookup[subjectName] !== undefined) {
+              val = avgLookup[subjectName];
+            }
+
+            // Strategy 3: Lowercase comparison
+            if (val === undefined) {
+              const lowerName = name.toLowerCase();
+              for (const key in avgLookup) {
+                if (key.toLowerCase() === lowerName) {
+                  val = avgLookup[key];
+                  break;
+                }
+              }
+            }
+
+            // Strategy 4: Direct object access as last resort
+            if (val === undefined && subjectAverages) {
+              val = subjectAverages[subjectName] || subjectAverages[name];
+            }
+
+            // null = subject column doesn't exist in the sheet at all
+            if (val === null || val === undefined) {
+              return "N/A";
+            }
+
+            // Convert to number and format
+            const numVal = Number(val);
+            if (isNaN(numVal)) {
+              return "N/A";
+            }
+
+            // Return formatted average (including "0.0" if all students scored 0)
+            return numVal.toFixed(1);
+          };
+          // ════════════════════════════════════════════════════════════
+
           let grandTotalScore = 0;
           let validSubjectCount = 0;
           let tableRows = "";
 
-          const getGradeInfo = (total) => {
+          const getGradeInfo = function (total) {
             if (isJSS) {
               if (total >= 80) return { g: "A", remark: "Distinction" };
               if (total >= 70) return { g: "B", remark: "Excellent" };
@@ -7774,7 +9297,7 @@ ANSWER: B</pre
             }
           };
 
-          subjectsList.forEach((sub) => {
+          subjectsList.forEach(function (sub) {
             const sc = scores[sub] || { ca: "", exam: "", total: "" };
             let scoreValue = 0;
             let caDisplay = "-";
@@ -7793,8 +9316,23 @@ ANSWER: B</pre
               totalDisplay = scoreValue > 0 ? scoreValue : "-";
             }
 
-            if (scoreValue === 0 || scoreValue === null || isNaN(scoreValue)) {
-              return;
+            // ✅ Only skip when BOTH CA and Exam are zero
+            if (isMidTerm) {
+              if (
+                scoreValue === 0 ||
+                scoreValue === null ||
+                isNaN(scoreValue)
+              ) {
+                return;
+              }
+            } else {
+              const rawCa = parseInt(sc.ca);
+              const rawExam = parseInt(sc.exam);
+              const caIsZero = (!rawCa && rawCa !== 0) || rawCa === 0;
+              const examIsZero = (!rawExam && rawExam !== 0) || rawExam === 0;
+              if (caIsZero && examIsZero) {
+                return;
+              }
             }
 
             grandTotalScore += scoreValue;
@@ -7802,33 +9340,29 @@ ANSWER: B</pre
 
             const gradeInfo = getGradeInfo(scoreValue);
 
-            const _avgVal = subjectAverages[sub];
-            const classAvg =
-              _avgVal !== undefined && _avgVal !== null && !isNaN(_avgVal)
-                ? parseFloat(_avgVal).toFixed(1)
-                : "-";
+            // ✅✅✅ FIXED: Use safe getAvg() instead of direct subjectAverages[sub]
+            const classAvg = getAvg(sub);
 
             if (isMidTerm) {
               tableRows += `
-                <tr>
-                    <td style="text-align:left; padding-left:10px;">${sub}</td>
-                    <td>100</td>
-                    <td style="font-weight:bold;">${totalDisplay}</td>
-                    <td style="color:#2563eb; font-weight:600;">${classAvg}</td>
-                    <td style="font-weight:bold;">${gradeInfo.g}</td>
-                    <td>${gradeInfo.remark}</td>
-                </tr>`;
+        <tr>
+            <td style="text-align:left; padding-left:10px;">${sub}</td>
+            <td>100</td>
+            <td style="font-weight:bold;">${totalDisplay}</td>
+            <td style="color:#2563eb; font-weight:600;">${classAvg}</td>
+            <td style="font-weight:bold;">${gradeInfo.g}</td>
+            <td>${gradeInfo.remark}</td>
+        </tr>`;
             } else {
               tableRows += `
-                <tr>
-                    <td style="text-align:left; padding-left:10px;">${sub}</td>
-                    <td>${caDisplay}</td>
-                    <td>${examDisplay}</td>
-                    <td style="font-weight:bold;">${totalDisplay}</td>
-                    <td style="color:#2563eb; font-weight:600; background:#eff6ff;">${classAvg}</td>
-                    <td style="font-weight:bold;">${gradeInfo.g}</td>
-                    <td>${gradeInfo.remark}</td>
-                </tr>`;
+        <tr>
+            <td style="text-align:left; padding-left:10px;">${sub}</td>
+            <td>${caDisplay}</td>
+            <td>${examDisplay}</td>
+            <td style="font-weight:bold;">${totalDisplay}</td> 
+            <td style="font-weight:bold;">${gradeInfo.g}</td>
+            <td>${gradeInfo.remark}</td>
+        </tr>`;
             }
           });
 
@@ -7837,6 +9371,7 @@ ANSWER: B</pre
               ? (grandTotalScore / validSubjectCount).toFixed(1)
               : 0;
 
+          // Comments logic
           let principalComment = "";
           if (overallPercentage >= 80)
             principalComment = "This is an exceptional performance";
@@ -7860,110 +9395,116 @@ ANSWER: B</pre
           const randomTeacherComment =
             teacherComments[Math.floor(Math.random() * teacherComments.length)];
 
+          // ════════════════════════════════════════════════════════════
+          // RETURN COMPLETE HTML
+          // ════════════════════════════════════════════════════════════
           return `
-                <div class="report-card">
-                    <div class="rp-header" style="display: flex; align-items: center; justify-content: center; margin-bottom: 12px; gap: 20px;">
-                        <img src="img/NSS LOGO.png" alt="Nifty Steps Logo" style="width: 70px; height: 70px; object-fit: contain;">
-                        <div style="text-align: center;">
-                            <h1 style="color: #1e40af; margin: 0 0 4px 0; line-height: 1.1; font-size: 1.6rem;">NIFTY STEPS COLLEGE</h1>
-                            <p style="font-size: 0.85rem; margin: 0; line-height: 1.3;">31 Yinka Ogunfile Street, Igbo Oluwo Estate, Ikorodu, Lagos State</p>
-                            <p style="font-size: 0.8rem; margin: 0;">www.niftysteps.com.ng | admin@niftysteps.com.ng</p>
-                            <h3 style="margin: 8px 0 0 0; text-decoration: underline; text-transform: uppercase; font-size: 0.95rem;">
-                                ${isJSS ? "Junior" : "Senior"} Secondary School ${term.toUpperCase()} TERM REPORT SHEET
-                            </h3>
-                        </div>
-                    </div>
+    <div class="report-card">
+        <!-- HEADER -->
+        <div class="rp-header" style="display: flex; align-items: center; justify-content: center; margin-bottom: 12px; gap: 20px;">
+            <img src="img/NSS LOGO.png" alt="Nifty Steps Logo" style="width: 70px; height: 70px; object-fit: contain;">
+            <div style="text-align: center;">
+                <h1 style="color: #1e40af; margin: 0 0 4px 0; line-height: 1.1; font-size: 1.6rem;">NIFTY STEPS COLLEGE</h1>
+                <p style="font-size: 0.85rem; margin: 0; line-height: 1.3;">31 Yinka Ogunfile Street, Igbo Oluwo Estate, Ikorodu, Lagos State</p>
+                <p style="font-size: 0.8rem; margin: 0;">www.niftysteps.com.ng | admin@niftysteps.com.ng</p>
+                <h3 style="margin: 8px 0 0 0; text-decoration: underline; text-transform: uppercase; font-size: 0.95rem;">
+                    ${isJSS ? "Junior" : "Senior"} Secondary School ${term.toUpperCase()} TERM REPORT SHEET
+                </h3>
+            </div>
+        </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #000; padding: 8px; margin-bottom: 15px; font-size: 0.85rem;">
-                        <div style="line-height: 1.5;">
-                            <strong>NAME:</strong> ${s.name.toUpperCase()}<br>
-                            <strong>CLASS:</strong> ${s.class} ${s.dept ? `(${s.dept})` : ""}
-                        </div>
-                        <div style="line-height: 1.5; text-align: right;">
-                            <strong>ADMIN NO:</strong> NSC-${s.id}<br>
-                            <strong>SESSION:</strong> ${session}
-                        </div>
-                    </div>
+        <!-- STUDENT INFO -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #000; padding: 8px; margin-bottom: 15px; font-size: 0.85rem;">
+            <div style="line-height: 1.5;">
+                <strong>NAME:</strong> ${s.name.toUpperCase()}<br>
+                <strong>CLASS:</strong> ${s.class} ${s.dept ? "(" + s.dept + ")" : ""}
+            </div>
+            <div style="line-height: 1.5; text-align: right;">
+                <strong>ADMIN NO:</strong> NSC-${s.id}<br>
+                <strong>SESSION:</strong> ${session}
+            </div>
+        </div>
 
-                    <table class="rp-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 0.8rem; margin-bottom: 15px;">
-                        <thead>
-                            <tr style="background: #e2e8f0;">
-                                ${
-                                  isMidTerm
-                                    ? `<th style="border: 1px solid #000; padding: 5px; text-align: left;">SUBJECTS</th>
-                                     <th style="border: 1px solid #000; padding: 5px;">MAX(100)</th>
-                                     <th style="border: 1px solid #000; padding: 5px;">SCORE</th>
-                                     <th style="border: 1px solid #000; padding: 5px;">CLASS AVG</th>
-                                     <th style="border: 1px solid #000; padding: 5px;">GRADE</th>
-                                     <th style="border: 1px solid #000; padding: 5px; text-align: left;">COMMENT</th>`
-                                    : `<th style="border: 1px solid #000; padding: 5px; text-align: left;">SUBJECTS</th>
-                                     <th style="border: 1px solid #000; padding: 5px;">CA (40)</th>
-                                     <th style="border: 1px solid #000; padding: 5px;">EXAM (60)</th>
-                                     <th style="border: 1px solid #000; padding: 5px;">TOTAL (100)</th>
-                                     <th style="border: 1px solid #000; padding: 5px;">CLASS AVG</th>
-                                     <th style="border: 1px solid #000; padding: 5px;">GRADE</th>
-                                     <th style="border: 1px solid #000; padding: 5px; text-align: left;">COMMENT</th>`
-                                }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${tableRows}
-                            <tr style="background-color: #f1f5f9; font-weight: bold;">
-                                <td style="border: 1px solid #000; padding: 5px;" colspan="${isMidTerm ? 2 : 3}">GRAND TOTAL / PERCENTAGE</td>
-                                <td style="border: 1px solid #000; padding: 5px; text-align: center;">${grandTotalScore}</td>
-                                <td style="border: 1px solid #000; padding: 5px; text-align: center;" colspan="${isMidTerm ? 1 : 2}">${overallPercentage}%</td>
-                                ${!isMidTerm ? '<td style="border: 1px solid #000; padding: 5px;">-</td>' : ""}
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div style="margin-top: 20px; display: flex; justify-content: space-between; gap: 20px;">
-                        <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 60%;">
-                            <strong>CLASS TEACHER'S COMMENT:</strong><br>
-                            ${s.name} ${randomTeacherComment}
-                        </div>
-                        <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 38%;">
-                            <strong>PRINCIPAL'S COMMENT:</strong><br>
-                            ${principalComment}
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
-                        <div style="font-size: 0.75rem; border: 1px solid #000; padding: 10px; width: 55%;">
-                            <strong>GRADING KEY:</strong><br>
-                            ${
-                              isJSS
-                                ? "A: 80-100 (Distinction), B: 70-79 (Excellent), BC: 60-69 (Very Good), C: 50-59 (Good), P: 40-49 (Pass), F: 0-39 (Fail)"
-                                : "A1: 80-100, B2: 75-79, B3: 70-74, C4: 65-69, C5: 60-64, C6: 50-59, D7: 45-49, E8: 40-44, F9: 0-39"
-                            }
-                        </div>
-                        <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 38%;">
-                            <strong>Next Term Resumes:</strong><br>
-                            ${nextTermDate}
-                        </div>
-                    </div>
-
+        <!-- MAIN TABLE -->
+        <table class="rp-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 0.8rem; margin-bottom: 15px;">
+            <thead>
+                <tr style="background: #e2e8f0;">
                     ${
-                      useStamp
-                        ? `<div style="margin-top: 5px; text-align: center;">
-                          <img src="img/stamp.svg" 
-                            alt="Official Stamp" 
-                            style="width: 150px; height: 150px; object-fit: contain; opacity: 0.9;">
-                          <p style="font-size: 0.75rem; margin-top: 8px; color: #666; font-style: italic;">Official E-Copy - Valid Without Signature</p>
-                        </div>`
-                        : `<div style="margin-top: 5px; display: flex; justify-content: space-between; align-items: flex-end;">
-                          <div style="text-align: center;">
-                            <div style="border-bottom: 1px solid #000; width: 150px; height: 40px;"></div>
-                            <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Class Teacher's Signature</p>
-                          </div>
-                          <div style="text-align: center;">
-                            <div style="border-bottom: 1px solid #000; width: 150px; height: 40px;"></div>
-                            <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Principal's Signature</p>
-                          </div>
-                        </div>`
+                      isMidTerm
+                        ? `<th style="border: 1px solid #000; padding: 5px; text-align: left;">SUBJECTS</th>
+                         <th style="border: 1px solid #000; padding: 5px;">MAX(100)</th>
+                         <th style="border: 1px solid #000; padding: 5px;">SCORE</th>
+                         <th style="border: 1px solid #000; padding: 5px;">CLASS AVG</th>
+                         <th style="border: 1px solid #000; padding: 5px;">GRADE</th>
+                         <th style="border: 1px solid #000; padding: 5px; text-align: left;">COMMENT</th>`
+                        : `<th style="border: 1px solid #000; padding: 5px; text-align: left;">SUBJECTS</th>
+                         <th style="border: 1px solid #000; padding: 5px;">CA (40)</th>
+                         <th style="border: 1px solid #000; padding: 5px;">EXAM (60)</th>
+                         <th style="border: 1px solid #000; padding: 5px;">TOTAL (100)</th>
+                         
+                         <th style="border: 1px solid #000; padding: 5px;">GRADE</th>
+                         <th style="border: 1px solid #000; padding: 5px; text-align: left;">COMMENT</th>`
                     }
+                </tr>
+            </thead>
+            <tbody>
+                ${tableRows}
+                <tr style="background-color: #f1f5f9; font-weight: bold;">
+                    <td style="border: 1px solid #000; padding: 5px;" colspan="${isMidTerm ? 2 : 3}">GRAND TOTAL / PERCENTAGE</td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;">${grandTotalScore}</td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;" colspan="${isMidTerm ? 1 : 2}">${overallPercentage}%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- COMMENTS -->
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; gap: 20px;">
+            <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 60%;">
+                <strong>CLASS TEACHER'S COMMENT:</strong><br>
+                ${s.name} ${randomTeacherComment}
+            </div>
+            <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 38%;">
+                <strong>PRINCIPAL'S COMMENT:</strong><br>
+                ${principalComment}
+            </div>
+        </div>
+
+        <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="font-size: 0.75rem; border: 1px solid #000; padding: 10px; width: 55%;">
+                <strong>GRADING KEY:</strong><br>
+                ${
+                  isJSS
+                    ? "A: 80-100 (Distinction), B: 70-79 (Excellent), BC: 60-69 (Very Good), C: 50-59 (Good), P: 40-49 (Pass), F: 0-39 (Fail)"
+                    : "A1: 80-100, B2: 75-79, B3: 70-74, C4: 65-69, C5: 60-64, C6: 50-59, D7: 45-49, E8: 40-44, F9: 0-39"
+                }
+            </div>
+            <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 38%;">
+                <strong>Next Term Resumes:</strong><br>
+                ${nextTermDate}
+            </div>
+        </div>
+
+        ${
+          useStamp
+            ? `<div style="margin-top: 5px; text-align: center;">
+                <img src="img/stamp.svg" 
+                  alt="Official Stamp" 
+                  style="width: 150px; height: 150px; object-fit: contain; opacity: 0.9;">
+                <p style="font-size: 0.75rem; margin-top: 8px; color: #666; font-style: italic;">Official E-Copy - Valid Without Signature</p>
+              </div>`
+            : `<div style="margin-top: 5px; display: flex; justify-content: space-between; align-items: flex-end;">
+                <div style="text-align: center;">
+                    <div style="border-bottom: 1px solid #000; width: 150px; height: 40px;"></div>
+                    <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Class Teacher's Signature</p>
                 </div>
-            `;
+                <div style="text-align: center;">
+                    <div style="border-bottom: 1px solid #000; width: 150px; height: 40px;"></div>
+                    <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Principal's Signature</p>
+                </div>
+              </div>`
+        }
+    </div>
+  `;
         },
 
         generatePrintAllReports: async function () {
@@ -8003,14 +9544,12 @@ ANSWER: B</pre
             const scores = res.scores;
             const isJSS = studentInfo.class.startsWith("JSS");
 
+            // 4. Determine Subjects List — always ALL subjects for SSS printing
             let subjectsList;
             if (isJSS) {
               subjectsList = JSS_SUBJECTS;
             } else {
-              subjectsList =
-                studentInfo.dept && SSS_SUBJECTS[studentInfo.dept]
-                  ? SSS_SUBJECTS[studentInfo.dept]
-                  : SSS_SUBJECTS.All;
+              subjectsList = SSS_SUBJECTS.All;
             }
 
             allHtml += this.buildSingleReportHtml({
@@ -8086,24 +9625,52 @@ ANSWER: B</pre
           const isMidTerm = this.state.viewContext.resultType === "midterm";
           const mode = isMidTerm ? "midterm" : "exam";
 
-          // 3. Fetch Class Data for Averages
-          const classData = await GoogleSheetService.getClassScores(
-            s.class,
-            mode,
-            session,
-            term,
-          );
+          // 3. Fetch Class Data for Averages (with error handling)
+          let classData;
+          try {
+            classData = await GoogleSheetService.getClassScores(
+              s.class,
+              mode,
+              session,
+              term,
+            );
+
+            // ✅ NEW: Validate response
+            if (!classData || !classData.subjectAverages) {
+              console.error("Invalid getClassScores response:", classData);
+              classData = { subjectAverages: {} };
+            }
+
+            // ✅ NEW: Log warning if meta indicates issues
+            if (
+              classData._meta &&
+              classData._meta.missingSubjectAverages?.length > 0
+            ) {
+              console.warn(
+                `⚠️ Some subjects missing averages: ${classData._meta.missingSubjectAverages.join(", ")}`,
+              );
+            }
+          } catch (error) {
+            console.error("Error fetching class averages:", error);
+            classData = { subjectAverages: {} };
+          }
+
           const subjectAverages = classData.subjectAverages || {};
 
-          // 4. Determine Subjects List
+          // ✅ NEW: Debug log for verification
+          console.log(`📊 Class Averages for ${s.class}:`, {
+            subjectCount: Object.keys(subjectAverages).length,
+            sample: Object.entries(subjectAverages)
+              .slice(0, 3)
+              .map(([k, v]) => `${k}:${v}`),
+          });
+
+          // 4. Determine Subjects List — always ALL subjects for SSS printing
           let subjectsList;
           if (isJSS) {
             subjectsList = JSS_SUBJECTS;
           } else {
-            subjectsList =
-              s.dept && SSS_SUBJECTS[s.dept]
-                ? SSS_SUBJECTS[s.dept]
-                : SSS_SUBJECTS.All;
+            subjectsList = SSS_SUBJECTS.All;
           }
 
           // 5. Calculate Totals
@@ -8153,9 +9720,23 @@ ANSWER: B</pre
               totalDisplay = scoreValue > 0 ? scoreValue : "-";
             }
 
-            // ✅✅✅ SKIP subjects with ZERO scores entirely ✅✅✅
-            if (scoreValue === 0 || scoreValue === null || isNaN(scoreValue)) {
-              return;
+            // ✅ Only skip when BOTH CA and Exam are zero
+            if (isMidTerm) {
+              if (
+                scoreValue === 0 ||
+                scoreValue === null ||
+                isNaN(scoreValue)
+              ) {
+                return;
+              }
+            } else {
+              const rawCa = parseInt(sc.ca);
+              const rawExam = parseInt(sc.exam);
+              const caIsZero = (!rawCa && rawCa !== 0) || rawCa === 0;
+              const examIsZero = (!rawExam && rawExam !== 0) || rawExam === 0;
+              if (caIsZero && examIsZero) {
+                return;
+              }
             }
 
             // Only count subjects that actually have scores
@@ -8191,7 +9772,6 @@ ANSWER: B</pre
                     <td>${caDisplay}</td>
                     <td>${examDisplay}</td>
                     <td style="font-weight:bold;">${totalDisplay}</td>
-                    <td style="color:#2563eb; font-weight:600; background:#eff6ff;">${classAvg}</td>
                     <td style="font-weight:bold;">${gradeInfo.g}</td>
                     <td>${gradeInfo.remark}</td>
                 </tr>
@@ -8283,7 +9863,6 @@ ANSWER: B</pre
                                      <th style="border: 1px solid #000; padding: 5px;">CA (40)</th>
                                      <th style="border: 1px solid #000; padding: 5px;">EXAM (60)</th>
                                      <th style="border: 1px solid #000; padding: 5px;">TOTAL (100)</th>
-                                     <th style="border: 1px solid #000; padding: 5px;">CLASS AVG</th>
                                      <th style="border: 1px solid #000; padding: 5px;">GRADE</th>
                                      <th style="border: 1px solid #000; padding: 5px; text-align: left;">COMMENT</th>`
                                 }
@@ -8295,7 +9874,6 @@ ANSWER: B</pre
                                 <td style="border: 1px solid #000; padding: 5px;" colspan="${isMidTerm ? 2 : 3}">GRAND TOTAL / PERCENTAGE</td>
                                 <td style="border: 1px solid #000; padding: 5px; text-align: center;">${grandTotalScore}</td>
                                 <td style="border: 1px solid #000; padding: 5px; text-align: center;" colspan="${isMidTerm ? 1 : 2}">${overallPercentage}%</td>
-                                ${!isMidTerm ? '<td style="border: 1px solid #000; padding: 5px;">-</td>' : ""}
                             </tr>
                         </tbody>
                     </table>
@@ -8376,10 +9954,7 @@ ANSWER: B</pre
             if (isJSS) {
               subjectsList = JSS_SUBJECTS;
             } else {
-              subjectsList =
-                s.dept && SSS_SUBJECTS[s.dept]
-                  ? SSS_SUBJECTS[s.dept]
-                  : SSS_SUBJECTS.All;
+              subjectsList = SSS_SUBJECTS.All;
             }
 
             // 4. Fetch ALL THREE TERMS DATA
@@ -8585,11 +10160,7 @@ ANSWER: B</pre
             const studentInfo = res.info;
             const isJSS = studentInfo.class.startsWith("JSS");
 
-            let subjectsList = isJSS
-              ? JSS_SUBJECTS
-              : studentInfo.dept && SSS_SUBJECTS[studentInfo.dept]
-                ? SSS_SUBJECTS[studentInfo.dept]
-                : SSS_SUBJECTS.All;
+            let subjectsList = isJSS ? JSS_SUBJECTS : SSS_SUBJECTS.All;
 
             // Fetch all terms data
             const allTermsData = await this.fetchAllTermsData(
@@ -8651,10 +10222,47 @@ ANSWER: B</pre
           const nextTermDate = opts.nextTermDate;
           const useStamp = opts.useStamp || false;
 
-          // ==========================================
-          // GRADING LOGIC
-          // ==========================================
-          const getGradeInfo = (avgScore) => {
+          // ════════════════════════════════════════════════════════════
+          // 🔧 FIX: Normalized lookup for cumulative report too
+          // ════════════════════════════════════════════════════════════
+          const avgLookup = {};
+
+          // Build lookup from all terms data
+          ["1st", "2nd", "3rd"].forEach(function (term) {
+            const termData = allTermsData[term];
+            if (termData && termData.subjectAverages) {
+              for (const rawKey in termData.subjectAverages) {
+                const cleanKey = String(rawKey).trim();
+                if (!avgLookup[cleanKey]) {
+                  avgLookup[cleanKey] = termData.subjectAverages[rawKey];
+                }
+                avgLookup[rawKey] = termData.subjectAverages[rawKey];
+              }
+            }
+          });
+
+          const getAvg = function (subjectName) {
+            const name = String(subjectName || "").trim();
+            let val = avgLookup[name];
+            if (val === undefined) val = avgLookup[subjectName];
+
+            // null = column doesn't exist
+            if (val === null || val === undefined) {
+              return "N/A";
+            }
+
+            const numVal = Number(val);
+            if (isNaN(numVal)) {
+              return "N/A";
+            }
+
+            // Return formatted average (including "0.0" if all scored 0)
+            return numVal.toFixed(1);
+          };
+          // ════════════════════════════════════════════════════════════
+
+          // Grading Logic
+          const getGradeInfo = function (avgScore) {
             const score = parseFloat(avgScore) || 0;
             if (isJSS) {
               if (score >= 80) return { g: "A", remark: "Distinction" };
@@ -8676,62 +10284,45 @@ ANSWER: B</pre
             }
           };
 
-          // ==========================================
-          // BUILD TABLE ROWS - HYBRID LAYOUT
-          // Columns: Subject | CA | Exam | Total(3rd) | 2nd | 1st | Cl.Avg | Avg% | Grade | Comment
-          // ==========================================
+          // BUILD TABLE ROWS
           let tableRows = "";
           let grandCumulativeTotal = 0;
           let validSubjectCount = 0;
 
-          subjectsList.forEach((sub) => {
-            // --- Fetch data from all three terms ---
-
-            // 1ST TERM → JSS_Scores_2025_2026_1st (or SSS equivalent)
+          subjectsList.forEach(function (sub) {
+            // Fetch data from all three terms
             const firstTerm = allTermsData["1st"].scores[sub] || {
               total: 0,
               classAvg: 0,
             };
             const t1 = firstTerm.total || 0;
 
-            // 2ND TERM → JSS_Scores_2025_2026_2nd (or SSS equivalent)
             const secondTerm = allTermsData["2nd"].scores[sub] || {
               total: 0,
               classAvg: 0,
             };
             const t2 = secondTerm.total || 0;
 
-            // 3RD TERM → JSS_Scores or SSS_Scores (BASE SHEET) - Has CA & Exam breakdown
             const thirdTerm = allTermsData["3rd"].scores[sub] || {
               ca: 0,
               exam: 0,
               total: 0,
               classAvg: 0,
             };
-            const ca3 = thirdTerm.ca || 0; // CA from base sheet
-            const exam3 = thirdTerm.exam || 0; // Exam from base sheet
-            const t3 = thirdTerm.total || 0; // Total = CA + Exam
+            const ca3 = thirdTerm.ca || 0;
+            const exam3 = thirdTerm.exam || 0;
+            const t3 = thirdTerm.total || 0;
 
-            // --- CALCULATIONS ---
-
-            // Cumulative Total = 1st + 2nd + 3rd
+            // CALCULATIONS
             const cumulativeTotal = t1 + t2 + t3;
-
-            // Average = cumulativeTotal / 3 (rounded to 1 decimal)
             const cumulativeAverage = (cumulativeTotal / 3).toFixed(1);
 
-            // Class Average = average of class averages from all 3 terms
-            const classAvg1 = firstTerm.classAvg || 0;
-            const classAvg2 = secondTerm.classAvg || 0;
-            const classAvg3 = thirdTerm.classAvg || 0;
-            const overallClassAvg = (
-              (classAvg1 + classAvg2 + classAvg3) /
-              3
-            ).toFixed(1);
+            // ✅ FIXED: Use getAvg() for robust class average lookup
+            const overallClassAvg = getAvg(sub);
 
             // Only include row if at least one term has a score
             if (t1 > 0 || t2 > 0 || ca3 > 0 || exam3 > 0 || t3 > 0) {
-              grandCumulativeTotal += cumulativeTotal;
+              grandCumulativeTotal += parseFloat(cumulativeTotal);
               validSubjectCount++;
 
               const gradeInfo = getGradeInfo(cumulativeAverage);
@@ -8744,52 +10335,29 @@ ANSWER: B</pre
               const showT2 = t2 > 0 ? t2 : "-";
 
               tableRows += `
-                <tr>
-                    <!-- Subject Name -->
-                    <td class="subject-col">${sub}</td>
-                    
-                    <!-- 3RD TERM: CA (from base sheet) -->
-                    <td>${showCA}</td>
-                    
-                    <!-- 3RD TERM: Exam (from base sheet) -->
-                    <td>${showExam}</td>
-                    
-                    <!-- 3RD TERM: Total (bold highlight) -->
-                    <td style="font-weight:bold;">${showT3}</td>
-                    
-                    <!-- 2ND TERM Total -->
-                    <td>${showT2}</td>
-                    
-                    <!-- 1ST TERM Total -->
-                    <td>${showT1}</td>
-                    
-                    <!-- Class Average (blue color) -->
-                    <td style="color:#2563eb; font-weight:600;">${overallClassAvg}</td>
-                    
-                    <!-- Cumulative Average % (yellow highlight) -->
-                    <td style="font-weight:bold; background:#fef3c7;">${cumulativeAverage}%</td>
-                    
-                    <!-- Grade -->
-                    <td style="font-weight:bold;">${gradeInfo.g}</td>
-                    
-                    <!-- Comment -->
-                    <td style="text-align:left; font-size:0.72rem;">${gradeInfo.remark}</td>
-                </tr>
-            `;
+        <tr>
+            <td class="subject-col">${sub}</td>
+            <td>${showCA}</td>
+            <td>${showExam}</td>
+            <td style="font-weight:bold;">${showT3}</td>
+            <td>${showT2}</td>
+            <td>${showT1}</td>
+            <td style="color:#2563eb; font-weight:600;">${overallClassAvg}</td>
+            <td style="font-weight:bold; background:#fef3c7;">${cumulativeAverage}%</td>
+            <td style="font-weight:bold;">${gradeInfo.g}</td>
+            <td style="text-align:left; font-size:0.72rem;">${gradeInfo.remark}</td>
+        </tr>
+      `;
             }
           });
 
-          // ==========================================
           // OVERALL STATISTICS
-          // ==========================================
           const overallPercentage =
             validSubjectCount > 0
               ? (grandCumulativeTotal / (validSubjectCount * 3)).toFixed(1)
               : "0.0";
 
-          // ==========================================
           // COMMENTS
-          // ==========================================
           let principalComment = "";
           if (overallPercentage >= 80)
             principalComment =
@@ -8820,127 +10388,123 @@ ANSWER: B</pre
           const randomTeacherComment =
             teacherComments[Math.floor(Math.random() * teacherComments.length)];
 
-          // ==========================================
-          // RETURN COMPLETE HTML - HYBRID LAYOUT
-          // ==========================================
+          // ════════════════════════════════════════════════════════════
+          // RETURN COMPLETE HTML
+          // ════════════════════════════════════════════════════════════
           return `
-        <div class="report-card">
-            <!-- ==================== HEADER ==================== -->
-            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px; gap: 20px;">
-                <img src="img/NSS LOGO.png" alt="Nifty Steps Logo" style="width: 70px; height: 70px; object-fit: contain;">
-                <div style="text-align: center;">
-                    <h1 style="color: #1e40af; margin: 0 0 4px 0; line-height: 1.1; font-size: 1.6rem;">NIFTY STEPS COLLEGE</h1>
-                    <p style="font-size: 0.85rem; margin: 0; line-height: 1.3;">31 Yinka Ogunfile Street, Igbo Oluwo Estate, Ikorodu, Lagos State</p>
-                    <p style="font-size: 0.8rem; margin: 0;">www.niftysteps.com.ng | admin@niftysteps.com.ng</p>
-                    <h3 style="margin: 8px 0 0 0; text-decoration: underline; text-transform: uppercase; font-size: 0.95rem;">
-                        ${isJSS ? "Junior" : "Senior"} Secondary School 3rd TERM REPORT (${session} SESSION)
-                    </h3>
-                </div>
+    <div class="report-card">
+        <!-- HEADER -->
+        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px; gap: 20px;">
+            <img src="img/NSS LOGO.png" alt="Nifty Steps Logo" style="width: 70px; height: 70px; object-fit: contain;">
+            <div style="text-align: center">
+                <h1 style="color: #1e40af; margin: 0 0 4px 0; line-height: 1.1; font-size: 1.6rem;">NIFTY STEPS COLLEGE</h1>
+                <p style="font-size: 0.85rem; margin: 0; line-height: 1.3;">31 Yinka Ogunfile Street, Igbo Oluwo Estate, Ikorodu, Lagos State</p>
+                <p style="font-size: 0.8rem; margin: 0;">www.niftysteps.com.ng | admin@niftysteps.com.ng</p>
+                <h3 style="margin: 8px 0 0 0; text-decoration: underline; text-transform: uppercase; font-size: 0.95rem;">
+                    ${isJSS ? "Junior" : "Senior"} Secondary School 3rd TERM REPORT (${session} SESSION)
+                </h3>
             </div>
-
-            <!-- ==================== STUDENT INFO GRID ==================== -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #000; padding: 12px; margin-bottom: 18px; font-size: 0.9rem;">
-                <div style="line-height: 1.7;">
-                    <strong>NAME:</strong> ${s.name.toUpperCase()}<br>
-                    <strong>CLASS:</strong> ${s.class} ${s.dept ? `(${s.dept})` : ""}
-                </div>
-                <div style="line-height: 1.7; text-align: right;">
-                    <strong>ADMIN NO:</strong> NSC-${s.id}<br>
-                    <strong>SESSION:</strong> ${session}
-                </div>
-            </div>
-
-            <!-- ==================== MAIN CUMULATIVE TABLE ==================== -->
-            <!-- 
-                COLUMNS: 
-                [Subject] | [CA] | [Exam] | [Total 3rd] | [2nd] | [1st] | [Cl.Avg] | [Average%] | [Grade] | [Comment]
-            -->
-            <table class="cumulative-table">
-                <thead>
-                    <tr>
-                        <th rowspan="2" class="subject-col">SUBJECT</th>
-                        <th colspan="3" style="background:#dbeafe; text-align:center;">3RD TERM</th>
-                        <th rowspan="2">2ND<br>TERM</th>
-                        <th rowspan="2">1ST<br>TERM</th>
-                        <th rowspan="2">CL.AVG</th>
-                        <th rowspan="2">AVERAGE<br>(%)</th>
-                        <th rowspan="2">GRADE</th>
-                        <th rowspan="2">COMMENT</th>
-                    </tr>
-                    <tr>
-                        <th>CA</th>
-                        <th>Exam</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${tableRows}
-                    
-                    <!-- GRAND TOTAL / CUMULATIVE AVERAGE ROW -->
-                    <tr class="total-row">
-                        <td colspan="4" style="text-align:left; padding-left:10px; font-size:0.85rem;">
-                            <strong>GRAND TOTAL / CUMULATIVE AVERAGE</strong>
-                        </td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td style="background:#fef3c7; font-weight:bold; color:#dc2626;">
-                            ${overallPercentage}%
-                        </td>
-                        <td>-</td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- ==================== COMMENTS SECTION ==================== -->
-            <div style="margin-top: 20px; display: flex; justify-content: space-between; gap: 20px;">
-                <div style="font-size: 0.85rem; border: 1px solid #000; padding: 12px; width: 58%;">
-                    <strong>CLASS TEACHER'S COMMENT:</strong><br>
-                    ${s.name} ${randomTeacherComment}
-                </div>
-                <div style="font-size: 0.85rem; border: 1px solid #000; padding: 12px; width: 38%;">
-                    <strong>PRINCIPAL'S COMMENT:</strong><br>
-                    ${principalComment}
-                </div>
-            </div>
-
-            <!-- ==================== FOOTER INFO ==================== -->
-            <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
-                <div style="font-size: 0.75rem; border: 1px solid #000; padding: 10px; width: 55%;">
-                    <strong>GRADING KEY:</strong><br>
-                    ${
-                      isJSS
-                        ? "A: 80-100 (Distinction), B: 70-79 (Excellent), BC: 60-69 (Very Good), C: 50-59 (Good), P: 40-49 (Pass), F: 0-39 (Fail)"
-                        : "A1: 80-100, B2: 75-79, B3: 70-74, C4: 65-69, C5: 60-64, C6: 50-59, D7: 45-49, E8: 40-44, F9: 0-39"
-                    }
-                </div>
-                <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 38%;">
-                    <strong>Next Session Resumes:</strong><br>
-                    ${nextTermDate}
-                </div>
-            </div>
-
-            <!-- ==================== SIGNATURE OR STAMP ==================== -->
-            ${
-              useStamp
-                ? `<div style="margin-top: 2px; text-align: center;">
-                    <img src="img/stamp.svg" alt="Official Stamp" style="width: 140px; height: 140px; object-fit: contain; opacity: 0.9;">
-                    <p style="font-size: 0.72rem; margin-top: 8px; color: #666; font-style: italic;">Official E-Copy - Valid Without Signature</p>
-                  </div>`
-                : `<div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
-                        <div style="text-align: center;">
-                            <div style="border-bottom: 1px solid #000; width: 160px; height: 45px;"></div>
-                            <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Class Teacher's Signature</p>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="border-bottom: 1px solid #000; width: 160px; height: 45px;"></div>
-                            <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Principal's Signature</p>
-                        </div>
-                      </div>`
-            }
         </div>
-    `;
+
+        <!-- STUDENT INFO GRID -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #000; padding: 12px; margin-bottom: 18px; font-size: 0.9rem;">
+            <div style="line-height: 1.7;">
+                <strong>NAME:</strong> ${s.name.toUpperCase()}<br>
+                <strong>CLASS:</strong> ${s.class} ${s.dept ? "(" + s.dept + ")" : ""}
+            </div>
+            <div style="line-height: 1.7; text-align: right;">
+                <strong>ADMIN NO:</strong> NSC-${s.id}<br>
+                <strong>SESSION:</strong> ${session}
+            </div>
+        </div>
+
+        <!-- MAIN CUMULATIVE TABLE -->
+        <table class="cumulative-table">
+            <thead>
+                <tr>
+                    <th rowspan="2" class="subject-col">SUBJECT</th>
+                    <th colspan="3" style="background:#dbeafe; text-align:center;">3RD TERM</th>
+                    <th rowspan="2">2ND<br>TERM</th>
+                    <th rowspan="2">1ST<br>TERM</th>
+                    <th rowspan="2">CL.AVG</th>
+                    <th rowspan="2">AVERAGE<br>(%)</th>
+                    <th rowspan="2">GRADE</th>
+                    <th rowspan="2">COMMENT</th>
+                </tr>
+                <tr>
+                    <th>CA</th>
+                    <th>Exam</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${tableRows}
+                
+                <!-- GRAND TOTAL ROW -->
+                <tr class="total-row">
+                    <td colspan="4" style="text-align:left; padding-left:10px; font-size:0.85rem;">
+                        <strong>GRAND TOTAL / CUMULATIVE AVERAGE</strong>
+                    </td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td style="background:#fef3c7; font-weight:bold; color:#dc2626;">
+                        ${overallPercentage}%
+                    </td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- COMMENTS SECTION -->
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; gap: 20px;">
+            <div style="font-size: 0.85rem; border: 1px solid #000; padding: 12px; width: 58%;">
+                <strong>CLASS TEACHER'S COMMENT:</strong><br>
+                ${s.name} ${randomTeacherComment}
+            </div>
+            <div style="font-size: 0.85rem; border: 1px solid #000; padding: 12px; width: 38%;">
+                <strong>PRINCIPAL'S COMMENT:</strong><br>
+                ${principalComment}
+            </div>
+        </div>
+
+        <!-- FOOTER INFO -->
+        <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="font-size: 0.75rem; border: 1px solid #000; padding: 10px; width: 55%;">
+                <strong>GRADING KEY:</strong><br>
+                ${
+                  isJSS
+                    ? "A: 80-100 (Distinction), B: 70-79 (Excellent), BC: 60-69 (Very Good), C: 50-59 (Good), P: 40-49 (Pass), F: 0-39 (Fail)"
+                    : "A1: 80-100, B2: 75-79, B3: 70-74, C4: 65-69, C5: 60-64, C6: 50-59, D7: 45-49, E8: 40-44, F9: 0-39"
+                }
+            </div>
+            <div style="font-size: 0.85rem; border: 1px solid #000; padding: 10px; width: 38%;">
+                <strong>Next Session Resumes:</strong><br>
+                ${nextTermDate}
+            </div>
+        </div>
+
+        <!-- SIGNATURE OR STAMP -->
+        ${
+          useStamp
+            ? `<div style="margin-top: 2px; text-align: center;">
+                <img src="img/stamp.svg" alt="Official Stamp" style="width: 140px; height: 140px; object-fit: contain; opacity: 0.9;">
+                <p style="font-size: 0.72rem; margin-top: 8px; color: #666; font-style: italic;">Official E-Copy - Valid Without Signature</p>
+              </div>`
+            : `<div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div style="text-align: center;">
+                        <div style="border-bottom: 1px solid #000; width: 160px; height: 45px;"></div>
+                        <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Class Teacher's Signature</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="border-bottom: 1px solid #000; width: 160px; height: 45px;"></div>
+                        <p style="font-size: 0.8rem; margin-top: 5px; font-weight: bold;">Principal's Signature</p>
+                    </div>
+                  </div>`
+        }
+    </div>
+  `;
         },
 
         // ==========================================
@@ -9131,6 +10695,13 @@ ANSWER: B</pre
 
           // Reload Data
           this.loadFees();
+
+          // --- SESSION RESUME: Save school toggle ---
+          StateManager.save({
+            sectionId: "section-fees",
+            feeSchool: school,
+          });
+          // --- END SESSION RESUME ---
         },
 
         loadFees: async function () {
@@ -9187,6 +10758,14 @@ ANSWER: B</pre
           const term = document.getElementById("feeTermSelect").value;
           const tbody = document.getElementById("fee-tbody");
           tbody.innerHTML = "";
+
+          // --- SESSION RESUME: Save fee context with class ---
+          StateManager.save({
+            sectionId: "section-fees",
+            cls: cls,
+            feeSchool: this.state.feeSchool || "sec",
+          });
+          // --- END SESSION RESUME ---
 
           if (!stds || stds.length === 0) {
             tbody.innerHTML =
@@ -9281,8 +10860,8 @@ ANSWER: B</pre
             const totalDue = currentTermFee + outstandingBalance;
             const balance = totalDue - paidThisTerm;
 
-            // Stats (We only count current term expected fees for the top cards)
-            stats.exp += currentTermFee;
+            // Stats: Total Expected includes current term fees + outstanding from previous terms
+            stats.exp += totalDue;
             stats.col += paidThisTerm;
             stats.out += balance;
 
@@ -9354,6 +10933,27 @@ ANSWER: B</pre
           if (feeSearch && feeSearch.value.trim()) {
             this.filterFeeTable();
           }
+
+          // ════════════════════════════════════════════════════════════
+          // DRAFT AUTO-SAVE: Restore fee draft and attach listeners
+          // ════════════════════════════════════════════════════════════
+          const feeSession = document.getElementById("feeSessionSelect").value;
+          const feeTerm = document.getElementById("feeTermSelect").value;
+
+          setTimeout(() => {
+            // Attempt to restore any existing fee draft
+            const draftRestored = DraftManager.restoreFeeDraft(
+              cls,
+              feeSession,
+              feeTerm,
+            );
+            if (draftRestored) {
+              app.showToast("Fee draft restored!", "warning");
+            }
+
+            // Attach auto-save listeners to all fee payment inputs
+            DraftManager.attachFeeListeners(cls, feeSession, feeTerm);
+          }, 100);
         },
 
         // Handles when user changes the Type dropdown in the table
@@ -9503,6 +11103,10 @@ ANSWER: B</pre
               `${updatesCount} updates saved successfully!`,
               "success",
             );
+            // ════════════════════════════════════════════════════════════
+            // DRAFT AUTO-SAVE: Destroy fee draft after successful save
+            // ════════════════════════════════════════════════════════════
+            DraftManager.destroyFeeDraft(cls, session, term);
             GoogleSheetService.clearCache();
             this.renderFeeTable(
               document.getElementById("feeClassFilter").value,
