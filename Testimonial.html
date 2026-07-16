@@ -600,7 +600,7 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
               Enter details below, one student per line. Use commas to separate
               the fields:
               <br /><strong class="text-amber-400"
-                >Name, Admission No, Gender, DOB (YYYY-MM-DD)</strong
+                >Name, Admission No, Gender</strong
               >
             </p>
             <textarea
@@ -1027,7 +1027,6 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
           adm: "NSC/2023/2405",
           admitted: "2023-09",
           left: "2026-07",
-          dob: "2012-04-18",
           sub4: "Basic Science",
           sub5: "Basic Technology",
           sub6: "Social Studies",
@@ -1046,7 +1045,6 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
           adm: "NSC/2020/1094",
           admitted: "2020-09",
           left: "2026-07",
-          dob: "2009-11-23",
           sub4: "Physics",
           sub5: "Chemistry",
           sub6: "Biology",
@@ -2552,15 +2550,6 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
         }
       }
 
-      // Formatted Date Converter Functions
-      function updateDOB(val) {
-        if (!val) return;
-        const dobField = document.getElementById("field-dob");
-        if (dobField) {
-          dobField.innerText = formatReadableDate(val);
-        }
-      }
-
       function formatReadableDate(dateString) {
         if (!dateString) return "....................";
         const d = new Date(dateString);
@@ -2736,7 +2725,6 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
         document.getElementById("input-adm").value = data.adm;
         document.getElementById("input-admitted").value = data.admitted;
         document.getElementById("input-left").value = data.left;
-        document.getElementById("input-dob").value = data.dob;
 
         if (category === "SSS3") {
           document.getElementById("sub-4").value = data.sub4;
@@ -2766,7 +2754,6 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
         // Dynamically recreate proper subjects list layout
         renderSubjects();
 
-        updateDOB(data.dob);
         updateAdmitDate(data.admitted);
         updateLeftDate(data.left);
       }
@@ -2798,7 +2785,7 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
         }
       }
 
-      // Process Canva Bulk Names, Admission Nos, Gender, and DOB Input
+      // Process Canva Bulk Names, Admission Nos, and Gender Input
       function processBulkNames() {
         const textarea = document.getElementById("bulk-names-input");
         const container = document.getElementById("bulk-students-container");
@@ -2831,7 +2818,6 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
             adm:
               cols[1] || `NSC/2023/${2400 + Math.floor(Math.random() * 500)}`,
             gender: cols[2] || "Female",
-            dob: cols[3] || "2012-04-18",
           };
           bulkStudents.push(studentObj);
         });
@@ -2847,7 +2833,6 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
                 <div class="flex flex-col truncate pr-2">
                   <span class="font-bold text-slate-200 truncate text-xs">${st.name}</span>
                   <span class="text-[10px] text-slate-500 font-mono">ID: ${st.adm} | ${st.gender}</span>
-                  <span class="text-[10px] text-slate-400">DOB: ${st.dob}</span>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">
                   <button
@@ -2907,13 +2892,11 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
         document.getElementById("input-name").value = student.name;
         document.getElementById("input-adm").value = student.adm;
         document.getElementById("input-gender").value = student.gender;
-        document.getElementById("input-dob").value = student.dob;
 
         // Synchronously update preview sheet layers
         updateField("name", student.name);
         updateField("adm", student.adm);
         updateField("gender", student.gender);
-        updateDOB(student.dob);
       }
 
       // Individual Bulk Item single exporter
@@ -3066,7 +3049,6 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
       // Page initial state initialization
       window.onload = function () {
         selectCategory("JSS3");
-        updateDOB(document.getElementById("input-dob").value);
         updateAdmitDate(document.getElementById("input-admitted").value);
         updateLeftDate(document.getElementById("input-left").value);
         updateTestimonialDate(document.getElementById("input-tdate").value);
