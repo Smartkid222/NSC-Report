@@ -678,6 +678,19 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
             <!-- SVG markup dynamically injected by Javascript -->
           </div>
 
+          <!-- Subtle Crest Watermark Background (Inline SVG prevents CORS/tainting canvas bugs) -->
+          <div
+            class="absolute inset-0 flex items-center justify-center opacity-[0.1] pointer-events-none select-none"
+          >
+            <img
+              src="NSS LOGO.png"
+              alt="school logo"
+              height="500"
+              width="500"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+
           <!-- Inner Layer Body Content wrapper -->
           <div
             id="cert-inner-layer"
@@ -921,54 +934,15 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
 
               <!-- Gold Stamp / Seal Graphic representation in the exact center -->
               <div class="flex justify-center relative">
-                <!-- Premium Vector Gold Crest Stamp -->
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 100 100"
-                  class="w-16 h-16 text-amber-500 drop-shadow-md"
-                >
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-dasharray="3,3"
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    fill="currentColor"
-                    fill-opacity="0.1"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  />
-                  <path
-                    d="M50 22 L55 35 L68 35 L58 43 L62 56 L50 48 L38 56 L42 43 L32 35 L45 35 Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M 28 65 Q 50 82 72 65"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                  />
-                  <text
-                    x="50"
-                    y="78"
-                    font-size="6"
-                    font-family="sans-serif"
-                    font-weight="bold"
-                    fill="currentColor"
-                    text-anchor="middle"
-                    letter-spacing="1"
-                  >
-                    APPROVED
-                  </text>
-                </svg>
+                <img
+                  src="jyqm201.svg"
+                  alt="Official Seal"
+                  class="w-20 h-20 object-contain"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/80x80/d97706/ffffff?text=SEAL'
+                  "
+                />
               </div>
 
               <!-- Date -->
