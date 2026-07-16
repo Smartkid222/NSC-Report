@@ -154,14 +154,14 @@
           <button
             id="tab-single"
             onclick="switchMode('single')"
-            class="flex-1 py-2 text-center text-sm font-semibold border-b-2 border-amber-500 text-amber-400 transition-all"
+            class="flex-1 py-2 text-center text-sm font-semibold border-amber-500 text-amber-400 transition-all"
           >
             Single Student
           </button>
           <button
             id="tab-bulk"
             onclick="switchMode('bulk')"
-            class="flex-1 py-2 text-center text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition-all"
+            class="flex-1 py-2 text-center text-sm font-semibold border-transparent text-slate-400 hover:text-slate-200 transition-all"
           >
             Bulk Canva Mode
           </button>
@@ -750,10 +750,10 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
                 This is to certify that:
                 <span
                   id="field-name"
-                  class="font-student-name text-3xl text-rose-950 border-b-2 border-dotted border-slate-400 px-2 pb-0.5 inline-block min-w-[320px]"
+                  class="font-student-name text-3xl text-rose-950 border-slate-400 px-2 pb-0.5 inline-block min-w-[320px] mt-0.05"
                   >ADEDAYO, Temitope Elizabeth</span
                 >
-                <span class="text-[10px] italic text-slate-400 block mt-0.5"
+                <span class="text-[10px] italic text-slate-400 block mt-0.05"
                   >(Surname First)</span
                 >
               </div>
@@ -764,7 +764,7 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
                   <span>Admission No:</span>
                   <span
                     id="field-adm"
-                    class="font-semibold text-rose-950 border-b border-dotted border-slate-400 flex-1 ml-2 px-1"
+                    class="font-semibold text-rose-950 flex-1 ml-2 px-1"
                     >NSC/2023/2405</span
                   >
                 </div>
@@ -772,7 +772,7 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
                   <span>Gender:</span>
                   <span
                     id="field-gender"
-                    class="font-semibold text-rose-950 border-b border-dotted border-slate-400 flex-1 ml-2 px-1"
+                    class="font-semibold text-rose-950 flex-1 ml-2 px-1"
                     >Female</span
                   >
                 </div>
@@ -783,13 +783,11 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
                 Was admitted into this school on:
                 <span
                   id="field-admitted"
-                  class="font-semibold text-rose-950 border-b border-dotted border-slate-400 px-2"
+                  class="font-semibold text-rose-950 px-2"
                   >September, 2023</span
                 >
                 and left on:
-                <span
-                  id="field-left"
-                  class="font-semibold text-rose-950 border-b border-dotted border-slate-400 px-2"
+                <span id="field-left" class="font-semibold text-rose-950 px-2"
                   >July, 2026</span
                 >.
               </div>
@@ -799,7 +797,7 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
                 Having completed the approved course of study for:
                 <span
                   id="field-course"
-                  class="font-bold text-rose-950 bg-amber-100/50 border border-amber-300 rounded px-3 py-0.5 text-xs tracking-wider"
+                  class="font-bold text-rose-950 px-3 py-0.5 text-xs tracking-wider"
                   >JSS 3</span
                 >.
               </div>
@@ -809,7 +807,7 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
                   <span>Final Examination Taken:</span>
                   <span
                     id="field-exam"
-                    class="font-semibold text-rose-950 border-b border-dotted border-slate-400 flex-1 ml-2 px-1"
+                    class="font-semibold text-rose-950 flex-1 ml-2 px-1"
                     >BECE</span
                   >
                 </div>
@@ -817,7 +815,7 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
             </div>
 
             <!-- Subjects Table (Optimized Layout Margins) -->
-            <div class="mt-4">
+            <div class="mt-2">
               <div
                 id="subjects-header"
                 class="bg-rose-950 text-white text-center py-1 text-[10.5px] uppercase font-bold tracking-widest rounded-t-md"
@@ -833,7 +831,7 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
             </div>
 
             <!-- Student Performance Profile (Optimized Layout Margins) -->
-            <div class="mt-4">
+            <div class="mt-2">
               <div
                 id="profile-header"
                 class="bg-rose-950 text-white text-center py-1 text-[10.5px] uppercase font-bold tracking-widest rounded-t-md"
@@ -887,7 +885,7 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
             </div>
 
             <!-- Bottom Signs / Seal / Stamp area -->
-            <div class="mt-6 grid grid-cols-3 gap-4 items-end px-4 relative">
+            <div class="mt-2 grid grid-cols-3 gap-4 items-end px-4 relative">
               <!-- Signature area -->
               <div class="text-center">
                 <div
@@ -896,8 +894,7 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
                   <span
                     id="field-pname-sig"
                     class="font-signature text-3xl text-rose-900 transform -rotate-2 select-none"
-                    >Dr. Olusegun A. Alabi</span
-                  >
+                  ></span>
                   <div class="w-full border-t border-slate-400 mt-1"></div>
                 </div>
                 <p
@@ -2546,12 +2543,12 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
       function updateSubject(index, value) {
         const element = document.getElementById("field-sub" + index);
         if (element) {
-          element.innerText = value || "....................";
+          element.innerText = value || "";
         }
       }
 
       function formatReadableDate(dateString) {
-        if (!dateString) return "....................";
+        if (!dateString) return "";
         const d = new Date(dateString);
         if (isNaN(d.getTime())) return dateString; // fallback if text is typed
         const day = d.getDate();
@@ -2770,16 +2767,16 @@ A brilliant and well-behaved pupil who has shown high levels of accountability a
 
         if (mode === "single") {
           tabSingle.className =
-            "flex-1 py-2 text-center text-sm font-semibold border-b-2 border-amber-500 text-amber-400 transition-all";
+            "flex-1 py-2 text-center text-sm font-semibold  border-amber-500 text-amber-400 transition-all";
           tabBulk.className =
-            "flex-1 py-2 text-center text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition-all";
+            "flex-1 py-2 text-center text-sm font-semibold  border-transparent text-slate-400 hover:text-slate-200 transition-all";
           singleControls.classList.remove("hidden");
           bulkControls.classList.add("hidden");
         } else {
           tabBulk.className =
-            "flex-1 py-2 text-center text-sm font-semibold border-b-2 border-amber-500 text-amber-400 transition-all";
+            "flex-1 py-2 text-center text-sm font-semibold  border-amber-500 text-amber-400 transition-all";
           tabSingle.className =
-            "flex-1 py-2 text-center text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition-all";
+            "flex-1 py-2 text-center text-sm font-semibold  border-transparent text-slate-400 hover:text-slate-200 transition-all";
           bulkControls.classList.remove("hidden");
           singleControls.classList.add("hidden");
         }
