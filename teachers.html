@@ -185,6 +185,43 @@
         font-size: 1.2rem;
       }
 
+      /* --- NEW: SCROLL TO TOP BUTTON --- */
+      .scroll-to-top-btn {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        z-index: 999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.25s ease;
+        opacity: 0.9;
+      }
+      .scroll-to-top-btn.show {
+        display: flex;
+      }
+      .scroll-to-top-btn:hover {
+        transform: translateY(-3px);
+        opacity: 1;
+      }
+      @media (max-width: 640px) {
+        .scroll-to-top-btn {
+          bottom: 90px;
+          left: 16px;
+          width: 42px;
+          height: 42px;
+        }
+      }
+
       /* --- LOADING OVERLAY --- */
       .loader-overlay {
         position: fixed;
@@ -1834,6 +1871,383 @@
           color: #000000 !important;
         }
       }
+      /* =========================================
+     MOBILE NAVIGATION ADAPTATION
+   ========================================= */
+      .nav-mobile-trigger {
+        display: none;
+      }
+
+      @media (max-width: 600px) {
+        /* Hide text writeup leaving only the NS logo block */
+        .logo .logo-text {
+          display: none !important;
+        }
+
+        /* Render and format the 3-dot trigger context */
+        .nav-mobile-trigger {
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: 1px solid var(--border);
+          background: var(--surface);
+          color: var(--text);
+          font-size: 1.2rem;
+          cursor: pointer;
+          transition: background 0.2s ease;
+        }
+        .nav-mobile-trigger:active {
+          background: var(--border);
+        }
+
+        /* Transform action container bar layout into an absolute dropdown overlay menu */
+        .nav-actions {
+          display: none !important; /* Hide layout state implicitly */
+          flex-direction: column !important;
+          position: absolute;
+          right: 0;
+          top: 48px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          padding: 12px;
+          box-shadow: var(--shadow);
+          gap: 10px !important;
+          min-width: 160px;
+          z-index: 1000;
+        }
+
+        /* Class dynamically toggled by the inline script when clicked */
+        .nav-actions.show {
+          display: flex !important;
+        }
+
+        /* Restructure child buttons inside the dropdown list grid seamlessly */
+        .nav-actions .btn,
+        .nav-actions .theme-toggle {
+          width: 100%;
+          justify-content: flex-start;
+          box-sizing: border-box;
+        }
+
+        .nav-actions .theme-toggle {
+          border-radius: var(--radius);
+          height: 38px;
+        }
+      }
+      /* STREAMING_CHUNK:Defining responsive layout rules for Subject Requests and Teacher Modifications... /
+/ ==========================================================================
+MOBILE CSS FOR "SUBJECT REQUESTS & TEACHER MODIFICATIONS" SECTION
+========================================================================== */
+
+      @media (max-width: 768px) {
+        /* STREAMING_CHUNK:Stacking grid layout to place Teacher Directory under Subject Modifications... /
+/ Override inline 2-column grid-template-columns to a stacked single-column layout */
+        #section-admin-requests .grid-2 {
+          grid-template-columns: 1fr !important;
+          gap: 1.25rem !important;
+        }
+
+        /* STREAMING_CHUNK:Styling breadcrumb navigation and list header for mobile... */
+        #section-admin-requests .breadcrumbs {
+          font-size: 0.85rem;
+          margin-bottom: 12px;
+          line-height: 1.4;
+        }
+
+        #section-admin-requests .list-header {
+          padding: 14px 16px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+        }
+
+        #section-admin-requests .list-header h2 {
+          font-size: 1.1rem;
+          line-height: 1.3;
+        }
+
+        #section-admin-requests .list-header p {
+          font-size: 0.8rem;
+        }
+
+        /* STREAMING_CHUNK:Configuring table scrollability and responsive cell dimensions... */
+        #section-admin-requests .list-container {
+          border-radius: 12px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        #section-admin-requests table {
+          min-width: 520px; /* Guarantees clean horizontal scroll on narrow viewports */
+        }
+
+        #section-admin-requests th,
+        #section-admin-requests td {
+          padding: 10px 12px;
+          font-size: 0.85rem;
+          white-space: nowrap;
+        }
+
+        /* STREAMING_CHUNK:Optimizing action button touch targets and badge formatting... */
+        #section-admin-requests td .btn,
+        #section-admin-requests td .btn-sm {
+          padding: 6px 12px;
+          font-size: 0.8rem;
+          min-height: 36px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        #section-admin-requests td .action-cell {
+          display: flex;
+          gap: 6px;
+          align-items: center;
+        }
+
+        /* Request Status Badges */
+        #section-admin-requests .badge-pending {
+          background-color: #fef3c7;
+          color: #92400e;
+        }
+
+        #section-admin-requests .badge-approved {
+          background-color: #dcfce7;
+          color: #15803d;
+        }
+
+        #section-admin-requests .badge-rejected {
+          background-color: #fee2e2;
+          color: #b91c1c;
+        }
+
+        /* STREAMING_CHUNK:Setting scroll heights for the Teacher Directory panel... /
+/ Constrain vertical overflow height for Teacher Directory on smaller screens /
+#section-admin-requests .list-container:last-child div[style="overflow-y"] {
+max-height: 350px !important;
+}
+}
+
+/* STREAMING_CHUNK:Adding micro-screen adaptations for small mobile devices... */
+        @media (max-width: 480px) {
+          #section-admin-requests .list-header {
+            padding: 12px;
+          }
+
+          #section-admin-requests th,
+          #section-admin-requests td {
+            padding: 8px 10px;
+            font-size: 0.8rem;
+          }
+
+          #section-admin-requests table {
+            min-width: 460px;
+          }
+        }
+
+        /* STREAMING_CHUNK:Applying dark theme overrides for mobile subject requests... */
+        [data-theme="dark"] #section-admin-requests .list-container {
+          border-color: var(--border);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] #section-admin-requests .badge-pending {
+          background-color: #422006;
+          color: #fde68a;
+        }
+      }
+
+      /* --- TOUR GUIDE SYSTEM STYLES --- */
+      .tour-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.75);
+        z-index: 99998;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        visibility: hidden;
+      }
+      .tour-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+        visibility: visible;
+      }
+      .tour-spotlight {
+        position: absolute;
+        box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.75);
+        border: 3px solid var(--primary);
+        border-radius: var(--radius);
+        z-index: 99999;
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        visibility: hidden;
+      }
+      .tour-spotlight.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      .tour-card {
+        position: fixed;
+        width: 320px;
+        max-width: 90vw;
+        background: var(--surface);
+        color: var(--text);
+        border: 2px solid var(--primary);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        z-index: 100000;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        transform: scale(0.9) translate(-50%, -50%);
+        pointer-events: none;
+        top: 50%;
+        left: 50%;
+      }
+      .tour-card.active {
+        opacity: 1;
+        transform: scale(1) translate(0, 0);
+        pointer-events: auto;
+        visibility: visible;
+      }
+      .tour-card.centered {
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) scale(1) !important;
+        visibility: visible;
+      }
+      .tour-card h4 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--primary-dark);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .tour-card p {
+        font-size: 0.88rem;
+        color: var(--secondary);
+        margin-bottom: 16px;
+        line-height: 1.45;
+      }
+      .tour-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .tour-arrow {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: var(--surface);
+        border-top: 2px solid var(--primary);
+        border-left: 2px solid var(--primary);
+        transform: rotate(45deg);
+        display: none;
+      }
+      /* Base Icon Button Styling */
+      .btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #334155;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .btn-icon:hover {
+        background: #f1f5f9;
+        border-color: #94a3b8;
+      }
+
+      .btn-icon.btn-view:hover {
+        color: #0284c7;
+      }
+      .btn-icon.btn-edit:hover {
+        color: #d97706;
+      }
+      .btn-icon.btn-delete:hover {
+        color: #dc2626;
+      }
+
+      /* Desktop View (Default) */
+      .action-buttons-desktop {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .kebab-menu-container {
+        display: none; /* Hidden on large screens */
+        position: relative;
+      }
+
+      /* Mobile View Breakdown */
+      @media (max-width: 768px) {
+        .action-buttons-desktop {
+          display: none; /* Hide inline buttons on mobile */
+        }
+        .kebab-menu-container {
+          display: inline-block; /* Show kebab menu on mobile */
+        }
+      }
+
+      /* Kebab Dropdown Menu */
+      .kebab-dropdown {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        min-width: 140px;
+        padding: 4px 0;
+        margin-top: 4px;
+      }
+
+      .kebab-dropdown button {
+        width: 100%;
+        padding: 8px 12px;
+        border: none;
+        background: transparent;
+        text-align: left;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #334155;
+        cursor: pointer;
+      }
+
+      .kebab-dropdown button:hover {
+        background: #f8fafc;
+      }
+
+      .kebab-dropdown button.btn-delete-item {
+        color: #dc2626;
+      }
+
+      .kebab-dropdown button.btn-delete-item:hover {
+        background: #fef2f2;
+      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -1859,6 +2273,43 @@
     <!-- TOAST -->
     <div id="toast" class="toast"></div>
 
+    <!-- INTERACTIVE TOUR BACKDROP & PORTALS -->
+    <div
+      id="tourBackdrop"
+      class="tour-backdrop"
+      onclick="app.tour.exit()"
+    ></div>
+    <div id="tourSpotlight" class="tour-spotlight"></div>
+    <div id="tourCard" class="tour-card">
+      <div id="tourArrow" class="tour-arrow"></div>
+      <h4>
+        <i class="fas fa-graduation-cap"></i>
+        <span id="tourTitle">Tour Step</span>
+      </h4>
+      <p id="tourDesc">Tour Step Description</p>
+      <div class="tour-actions">
+        <button
+          class="btn btn-outline btn-sm"
+          id="btnTourPrev"
+          onclick="app.tour.prev()"
+        >
+          Back
+        </button>
+        <span
+          style="font-size: 0.75rem; color: var(--secondary); font-weight: 600"
+          id="tourIndicator"
+          >1 / 5</span
+        >
+        <button
+          class="btn btn-primary btn-sm"
+          id="btnTourNext"
+          onclick="app.tour.next()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
     <!-- FLOATING SAVE BUTTON -->
     <button
       id="floatingSaveBtn"
@@ -1867,6 +2318,16 @@
     >
       <i class="fas fa-save"></i>
       <span>Save All Scores</span>
+    </button>
+
+    <!-- NEW: SCROLL TO TOP BUTTON -->
+    <button
+      id="scrollToTopBtn"
+      class="scroll-to-top-btn"
+      onclick="scrollPageToTop()"
+      title="Back to top"
+    >
+      <i class="fas fa-arrow-up"></i>
     </button>
 
     <!-- DISABLED USER OVERLAY -->
@@ -2058,13 +2519,125 @@
           </div>
 
           <!-- SIGNUP FORM -->
-          <form
+          <!-- <form
             id="form-signup"
             class="hidden"
             onsubmit="app.handleSignup(event)"
           >
-            <!-- ... signup fields remain the same ... -->
-          </form>
+            <div class="form-group">
+              <label>Title</label>
+              <select id="signupTitle" class="form-control">
+                <option value="Mr.">Mr.</option>
+                <option value="Mrs.">Mrs.</option>
+                <option value="Miss">Miss</option>
+                <option value="Dr.">Dr.</option>
+              </select>
+            </div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label>First Name</label>
+                <input
+                  type="text"
+                  id="signupFirstName"
+                  class="form-control"
+                  placeholder="First Name"
+                  required
+                  oninput="app.generateUsernameSuggestions()"
+                />
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  id="signupLastName"
+                  class="form-control"
+                  placeholder="Last Name"
+                  required
+                  oninput="app.generateUsernameSuggestions()"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input
+                type="text"
+                id="signupUsername"
+                class="form-control"
+                placeholder="Choose a unique username"
+                required
+              />
+              <div
+                id="username-suggestions"
+                style="margin-top: 8px; display: none"
+              ></div>
+            </div>
+            <div class="form-group">
+              <label>Role</label>
+              <select
+                id="signupRole"
+                class="form-control"
+                onchange="app.handleRoleChange()"
+              >
+                <option value="Teacher">Teacher</option>
+                <option value="Head">Head</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+            <div id="subject-group">
+              <div class="subject-builder">
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label>Level</label>
+                    <select
+                      id="subjectLevel"
+                      class="form-control"
+                      onchange="app.populateSubjects()"
+                    >
+                      <option value="">Select Level</option>
+                      <option value="JSS">JSS</option>
+                      <option value="SSS">SSS</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Subject</label>
+                    <select id="subjectName" class="form-control">
+                      <option disabled selected>Subject</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Class</label>
+                  <select id="subjectClass" class="form-control">
+                    <option disabled selected>Class</option>
+                  </select>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-outline w-full"
+                  onclick="app.addSubject()"
+                >
+                  Add Assignment
+                </button>
+              </div>
+              <div id="chipList" class="chip-list"></div>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                id="signupPass"
+                class="form-control"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary w-full"
+              style="margin-top: 20px"
+            >
+              Sign Up Account
+            </button>
+          </form> -->
         </div>
       </div>
     </div>
@@ -2088,6 +2661,7 @@
           >
             NS
           </div>
+          <!-- Wrapped writeup inside a class container -->
           <div>
             <div style="line-height: 1; font-size: 1.2rem">Nifty Steps</div>
             <div
@@ -2102,30 +2676,67 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center gap-4">
-          <!-- ✅ ADD THIS THEME TOGGLE BUTTON -->
+
+        <!-- Grouped navigation container targeting mobile logic -->
+        <div class="flex items-center gap-4" style="position: relative">
+          <!-- Horizontal three-dot kebab trigger button -->
           <button
-            class="theme-toggle"
-            id="themeToggle"
-            onclick="app.toggleTheme()"
-            title="Toggle Dark Mode"
+            class="nav-mobile-trigger"
+            onclick="
+              document
+                .getElementById('navActionsDropdown')
+                .classList.toggle('show')
+            "
+            title="Open Menu"
           >
-            <i class="fas fa-moon" id="themeIcon"></i>
+            <i class="fas fa-ellipsis-h"></i>
           </button>
 
-          <div class="text-right hidden-mobile">
-            <div id="user-name" class="font-bold">User Name</div>
-            <div
-              id="user-role"
-              class="text-sm text-secondary"
-              style="font-size: 0.8rem"
+          <!-- Wrapped control menu components -->
+          <div
+            class="flex items-center gap-4 nav-actions"
+            id="navActionsDropdown"
+          >
+            <button
+              class="btn btn-outline btn-sm"
+              onclick="app.tour.start()"
+              style="border-color: var(--warning); color: var(--warning)"
+              id="btnHelpTour"
+              title="Interactive walkthrough guide"
             >
-              Role
+              <i class="fas fa-circle-question"></i> Help Tour
+            </button>
+
+            <button
+              class="theme-toggle"
+              id="themeToggle"
+              onclick="app.toggleTheme()"
+              title="Toggle Dark Mode"
+            >
+              <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+
+            <div class="text-right hidden-mobile">
+              <div id="user-name" class="font-bold">User Name</div>
+              <div
+                id="user-role"
+                class="text-sm text-secondary"
+                style="font-size: 0.8rem"
+              >
+                Role
+              </div>
             </div>
+
+            <button
+              class="btn btn-outline btn-sm"
+              onclick="app.openSettingsModal()"
+            >
+              <i class="fas fa-cog"></i> Settings
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="app.logout()">
+              Logout
+            </button>
           </div>
-          <button class="btn btn-outline btn-sm" onclick="app.logout()">
-            Logout
-          </button>
         </div>
       </header>
 
@@ -2473,6 +3084,727 @@
             </div>
           </div>
         </section>
+        <!-- 8. ADMIN DASHBOARD: NEW PANEL - SUBJECT CHANGE REQUESTS -->
+        <section id="section-admin-requests" class="hidden">
+          <div class="breadcrumbs">
+            <span onclick="app.goHome()">Home</span> >
+            <span class="font-bold"
+              >Subject Requests & Teacher Modifications</span
+            >
+          </div>
+
+          <div
+            class="grid-2"
+            style="grid-template-columns: 1.2fr 0.8fr; gap: 20px"
+          >
+            <!-- Left Panel: Subject Requests List -->
+            <div class="list-container">
+              <div class="list-header">
+                <div>
+                  <h2>Subject Modifications Queue</h2>
+                  <p class="text-sm text-secondary">
+                    Approve or reject subject change requests
+                  </p>
+                </div>
+              </div>
+              <div style="overflow-x: auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Teacher Name</th>
+                      <th>Requested Subjects</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-requests-tbody">
+                    <tr>
+                      <td
+                        colspan="5"
+                        class="text-center"
+                        style="padding: 20px; color: var(--secondary)"
+                      >
+                        No requests available.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Right Panel: Teachers Accounts Modifications -->
+            <div class="list-container">
+              <div class="list-header">
+                <div>
+                  <h2>Teacher Directory & Quick Config</h2>
+                  <p class="text-sm text-secondary">
+                    Click modify to update assigned classes or subjects
+                  </p>
+                </div>
+              </div>
+              <div style="overflow-y: auto; max-height: 500px">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Teacher Name</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-teachers-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- 9. ADMIN DASHBOARD: NEW PANEL - STUDENT REGISTRY & IDENTIFICATION -->
+        <section id="section-admin-students-id" class="hidden">
+          <div class="breadcrumbs">
+            <span onclick="app.goHome()">Home</span> >
+            <span class="font-bold"
+              >Student Identification & Registry Directory</span
+            >
+          </div>
+
+          <!-- STUDENT REGISTRY DIRECTORY SECTION -->
+          <div id="section-student-directory" class="dashboard-section">
+            <div
+              class="list-header"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+              "
+            >
+              <div>
+                <h2>
+                  <i class="fas fa-id-card"></i> Student Registry Directory
+                </h2>
+                <p>
+                  Automatic student roster sorted by Admission Number
+                  (Ascending)
+                </p>
+              </div>
+              <button
+                class="btn btn-primary"
+                onclick="studentRegistryOpenAdd()"
+              >
+                <i class="fas fa-user-plus"></i> Add New Student
+              </button>
+            </div>
+
+            <!-- Search & Stats Bar -->
+            <div
+              style="
+                display: flex;
+                gap: 10px;
+                margin-bottom: 1rem;
+                align-items: center;
+                flex-wrap: wrap;
+              "
+            >
+              <input
+                type="text"
+                id="student-search-input"
+                class="form-control"
+                placeholder="Search student by Name or Admin No..."
+                oninput="filterStudentRegistryTable()"
+                style="flex: 1; min-width: 200px"
+              />
+              <!-- NEW: Gender / Class filter -->
+              <select
+                id="student-registry-filter-select"
+                class="form-control"
+                style="width: 180px"
+                onchange="filterStudentRegistryTable()"
+              >
+                <option value="all">All Students</option>
+                <option value="Male">Male Only</option>
+                <option value="Female">Female Only</option>
+                <optgroup
+                  label="Secondary Classes"
+                  id="registry-filter-sec-group"
+                ></optgroup>
+                <optgroup
+                  label="Primary Classes"
+                  id="registry-filter-pry-group"
+                ></optgroup>
+              </select>
+              <!-- NEW: Male / Female counts, shown before Total -->
+              <span
+                class="badge"
+                id="male-student-count-badge"
+                style="
+                  padding: 10px 14px;
+                  background: #0284c7;
+                  color: #fff;
+                  border-radius: 8px;
+                "
+              >
+                Male: 0
+              </span>
+              <span
+                class="badge"
+                id="female-student-count-badge"
+                style="
+                  padding: 10px 14px;
+                  background: #db2777;
+                  color: #fff;
+                  border-radius: 8px;
+                "
+              >
+                Female: 0
+              </span>
+              <span
+                class="badge"
+                id="total-student-count-badge"
+                style="
+                  padding: 10px 14px;
+                  background: var(--primary);
+                  color: #fff;
+                  border-radius: 8px;
+                "
+              >
+                Total: 0
+              </span>
+            </div>
+
+            <!-- Table Container -->
+            <div class="list-container" style="overflow-x: auto">
+              <table class="table" style="width: 100%">
+                <thead>
+                  <tr>
+                    <th>Admin No</th>
+                    <th>Student Name</th>
+                    <th>Class</th>
+                    <th>Gender</th>
+                    <th>Dept</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="student-registry-tbody">
+                  <tr>
+                    <td colspan="7" style="text-align: center; padding: 20px">
+                      Loading student directory...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- MODAL: STUDENT REGISTRY (ADD / EDIT) -->
+          <!-- Uniquely named/id'd so it never collides with the
+               app-wide Add/Edit Student modal (#modal-add-student)
+               used elsewhere (e.g. per-class roster in Result Management). -->
+          <!-- MODAL OVERLAY WRAPPER -->
+          <div
+            id="modal-student-registry-overlay"
+            class="modal-overlay"
+            style="
+              display: none;
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100vw;
+              height: 100vh;
+              background: rgba(0, 0, 0, 0.5);
+              backdrop-filter: blur(4px);
+              z-index: 9999;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <!-- MODAL CARD CONTENT -->
+            <div
+              id="modal-student-registry"
+              class="modal"
+              style="
+                max-width: 450px;
+                width: 90%;
+                padding: 24px;
+                background: var(--surface, #fff);
+                border-radius: 12px;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+                max-height: 90vh;
+                overflow-y: auto;
+              "
+            >
+              <h3 id="student-registry-modal-title" style="margin-bottom: 15px">
+                <i class="fas fa-user-plus"></i> Register New Student
+              </h3>
+              <form
+                id="form-student-registry"
+                onsubmit="handleStudentRegistrySubmit(event)"
+                style="display: flex; flex-direction: column; gap: 12px"
+              >
+                <input type="hidden" id="reg-student-editing-id" value="" />
+                <div>
+                  <label
+                    style="display: block; font-weight: 600; margin-bottom: 4px"
+                    >Admission Number (Auto-assigned):</label
+                  >
+                  <input
+                    type="text"
+                    id="reg-student-adm"
+                    class="form-control"
+                    readonly
+                    required
+                    style="background: #f1f5f9; font-weight: bold"
+                  />
+                </div>
+                <div>
+                  <label
+                    style="display: block; font-weight: 600; margin-bottom: 4px"
+                    >Full Name:</label
+                  >
+                  <input
+                    type="text"
+                    id="reg-student-name"
+                    class="form-control"
+                    placeholder="e.g. John Doe"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    style="display: block; font-weight: 600; margin-bottom: 4px"
+                    >Class:</label
+                  >
+                  <select id="reg-student-class" class="form-control" required>
+                    <option value="JSS1">JSS1</option>
+                    <option value="JSS2">JSS2</option>
+                    <option value="JSS3">JSS3</option>
+                    <option value="SSS1">SSS1</option>
+                    <option value="SSS2">SSS2</option>
+                    <option value="SSS3">SSS3</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    style="display: block; font-weight: 600; margin-bottom: 4px"
+                    >Gender:</label
+                  >
+                  <select id="reg-student-gender" class="form-control" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    style="display: block; font-weight: 600; margin-bottom: 4px"
+                    >Department (Optional for Senior Secondary):</label
+                  >
+                  <select id="reg-student-dept" class="form-control">
+                    <option value="General">General / Junior</option>
+                    <option value="Science">Science</option>
+                    <option value="Arts">Arts</option>
+                    <option value="Commercial">Commercial</option>
+                  </select>
+                </div>
+                <div id="reg-student-status-group">
+                  <label
+                    style="display: block; font-weight: 600; margin-bottom: 4px"
+                    >Status:</label
+                  >
+                  <select id="reg-student-status" class="form-control">
+                    <option value="New">New</option>
+                    <option value="Old">Old</option>
+                  </select>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 10px;
+                    margin-top: 15px;
+                  "
+                >
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="closeStudentRegistryModal()"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    id="reg-student-save-btn"
+                    class="btn btn-success"
+                  >
+                    Save Student
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- MODAL: STUDENT REGISTRY - DELETE CONFIRMATION -->
+          <div
+            id="modal-student-registry-delete"
+            class="modal-overlay"
+            style="
+              display: none;
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100vw;
+              height: 100vh;
+              background: rgba(0, 0, 0, 0.5);
+              backdrop-filter: blur(4px);
+              z-index: 9999;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <div
+              class="modal-content"
+              style="
+                max-width: 420px;
+                width: 90%;
+                padding: 20px;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+                max-height: 90vh;
+                overflow-y: auto;
+              "
+            >
+              <h3 style="color: #b91c1c; margin-top: 0">
+                <i class="fas fa-triangle-exclamation"></i> Delete Student
+              </h3>
+              <p style="margin-top: 10px">
+                Are you sure you want to delete this student?
+              </p>
+              <p
+                style="
+                  background: #f8fafc;
+                  border-radius: 8px;
+                  padding: 10px 14px;
+                  font-size: 0.9rem;
+                  line-height: 1.6;
+                "
+              >
+                ADM: <strong id="reg-delete-adm"></strong><br />
+                Name: <strong id="reg-delete-name"></strong><br />
+                Class: <strong id="reg-delete-class"></strong>
+              </p>
+              <p style="color: #b91c1c; font-size: 0.85rem">
+                This action cannot be undone.
+              </p>
+              <div
+                style="
+                  display: flex;
+                  justify-content: flex-end;
+                  gap: 10px;
+                  margin-top: 15px;
+                "
+              >
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  onclick="closeStudentRegistryDeleteModal()"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  onclick="confirmStudentRegistryDelete()"
+                >
+                  Delete Student
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODAL: ACADEMIC PERFORMANCE & STRENGTH/WEAKNESS PROFILE -->
+          <div
+            id="modal-student-profile"
+            class="modal-overlay"
+            style="
+              display: none;
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100vw;
+              height: 100vh;
+              background: rgba(0, 0, 0, 0.5);
+              backdrop-filter: blur(4px);
+              z-index: 9999;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <div
+              class="modal-content"
+              style="
+                max-width: 650px;
+                width: 90%;
+                padding: 24px;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+                max-height: 85vh;
+                overflow-y: auto;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: flex-start;
+                  border-bottom: 1px solid #e2e8f0;
+                  padding-bottom: 12px;
+                "
+              >
+                <div>
+                  <h3
+                    id="profile-student-name"
+                    style="margin: 0; color: #1e293b"
+                  >
+                    Student Name
+                  </h3>
+                  <p style="margin: 4px 0 0; color: #64748b; font-size: 0.9rem">
+                    Admin No:
+                    <span
+                      id="profile-admin-no"
+                      style="font-weight: bold; color: #0284c7"
+                      >--</span
+                    >
+                    | Class: <span id="profile-class">--</span>
+                  </p>
+                </div>
+                <button
+                  class="btn btn-sm"
+                  onclick="closeStudentProfileModal()"
+                  style="
+                    font-size: 1.2rem;
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+                  "
+                >
+                  &times;
+                </button>
+              </div>
+
+              <!-- NEW: Session / Term selector for the report -->
+              <div
+                style="
+                  display: flex;
+                  gap: 10px;
+                  align-items: center;
+                  flex-wrap: wrap;
+                  margin: 14px 0 4px;
+                  padding: 10px;
+                  background: #f8fafc;
+                  border-radius: 8px;
+                  border: 1px solid #e2e8f0;
+                "
+              >
+                <label style="font-size: 0.85rem; font-weight: 600; margin: 0"
+                  >Report for:</label
+                >
+                <select
+                  id="profile-session-select"
+                  class="form-control"
+                  style="width: 140px"
+                  onchange="handleProfileReportFilterChange()"
+                >
+                  <option value="2027/2028">2027/2028</option>
+                  <option value="2026/2027">2026/2027</option>
+                  <option value="2025/2026">2025/2026</option>
+                </select>
+                <select
+                  id="profile-term-select"
+                  class="form-control"
+                  style="width: 110px"
+                  onchange="handleProfileReportFilterChange()"
+                >
+                  <option value="1st">1st Term</option>
+                  <option value="2nd">2nd Term</option>
+                  <option value="3rd">3rd Term</option>
+                </select>
+                <button
+                  class="btn btn-outline btn-sm"
+                  onclick="printStudentAcademicProfile()"
+                  style="margin-left: auto"
+                >
+                  <i class="fas fa-print"></i> Print Report
+                </button>
+              </div>
+
+              <!-- Overall Summary Cards -->
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(3, 1fr);
+                  gap: 12px;
+                  margin: 16px 0;
+                "
+              >
+                <div
+                  style="
+                    background: #f8fafc;
+                    padding: 12px;
+                    border-radius: 8px;
+                    text-align: center;
+                    border: 1px solid #e2e8f0;
+                  "
+                >
+                  <span style="font-size: 0.8rem; color: #64748b"
+                    >Overall Total</span
+                  >
+                  <h4
+                    id="profile-overall-score"
+                    style="margin: 4px 0 0; font-size: 1.2rem; color: #0f172a"
+                  >
+                    0
+                  </h4>
+                </div>
+                <div
+                  style="
+                    background: #eff6ff;
+                    padding: 12px;
+                    border-radius: 8px;
+                    text-align: center;
+                    border: 1px solid #bfdbfe;
+                  "
+                >
+                  <span style="font-size: 0.8rem; color: #1e40af"
+                    >Average %</span
+                  >
+                  <h4
+                    id="profile-overall-percentage"
+                    style="margin: 4px 0 0; font-size: 1.2rem; color: #1d4ed8"
+                  >
+                    0%
+                  </h4>
+                </div>
+                <div
+                  style="
+                    background: #f0fdf4;
+                    padding: 12px;
+                    border-radius: 8px;
+                    text-align: center;
+                    border: 1px solid #bbf7d0;
+                  "
+                >
+                  <span style="font-size: 0.8rem; color: #166534"
+                    >Performance Rating</span
+                  >
+                  <h4
+                    id="profile-rating"
+                    style="margin: 4px 0 0; font-size: 1rem; color: #15803d"
+                  >
+                    --
+                  </h4>
+                </div>
+              </div>
+
+              <!-- Strengths & Weaknesses Panel -->
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 12px;
+                  margin-bottom: 20px;
+                "
+              >
+                <!-- Strengths -->
+                <div
+                  style="
+                    background: #f0fdf4;
+                    border: 1px solid #86efac;
+                    padding: 12px;
+                    border-radius: 8px;
+                  "
+                >
+                  <h5 style="margin: 0 0 8px 0; color: #15803d">
+                    <i class="fas fa-check-circle"></i> Key Strengths
+                  </h5>
+                  <ul
+                    id="profile-strengths-list"
+                    style="
+                      margin: 0;
+                      padding-left: 18px;
+                      font-size: 0.85rem;
+                      color: #166534;
+                    "
+                  >
+                    <li>Loading strengths...</li>
+                  </ul>
+                </div>
+
+                <!-- Weaknesses -->
+                <div
+                  style="
+                    background: #fef2f2;
+                    border: 1px solid #fca5a5;
+                    padding: 12px;
+                    border-radius: 8px;
+                  "
+                >
+                  <h5 style="margin: 0 0 8px 0; color: #b91c1c">
+                    <i class="fas fa-exclamation-triangle"></i> Areas for
+                    Improvement
+                  </h5>
+                  <ul
+                    id="profile-weaknesses-list"
+                    style="
+                      margin: 0;
+                      padding-left: 18px;
+                      font-size: 0.85rem;
+                      color: #991b1b;
+                    "
+                  >
+                    <li>Loading weaknesses...</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Full Score Sheet Breakdown -->
+              <h5 style="margin-bottom: 8px">
+                <i class="fas fa-list-alt"></i> Subject Scoresheet Breakdown
+              </h5>
+              <table class="table" style="width: 100%; font-size: 0.85rem">
+                <thead>
+                  <tr style="background: #f8fafc">
+                    <th>Subject</th>
+                    <th>CA</th>
+                    <th>Exam</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="profile-scores-tbody">
+                  <tr>
+                    <td colspan="4" style="text-align: center">
+                      No score records loaded.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div
+                style="
+                  display: flex;
+                  justify-content: flex-end;
+                  margin-top: 16px;
+                "
+              >
+                <button
+                  class="btn btn-secondary"
+                  onclick="closeStudentProfileModal()"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
         <!-- AI QUESTION GENERATOR -->
         <section id="section-ai" class="hidden">
           <div class="breadcrumbs">
@@ -2803,6 +4135,45 @@
                 <tbody id="res-tbody"></tbody>
               </table>
             </div>
+          </div>
+        </section>
+        <!-- 10. ADMIN DASHBOARD: NEW PANEL - EMPTY RESERVED SECTION -->
+        <section id="section-admin-empty" class="hidden">
+          <div class="breadcrumbs">
+            <span onclick="app.goHome()">Home</span> >
+            <span class="font-bold">Reserved Admin Panel</span>
+          </div>
+
+          <div class="list-container" style="padding: 50px; text-align: center">
+            <i
+              class="fas fa-boxes"
+              style="
+                font-size: 3.5rem;
+                color: var(--secondary);
+                opacity: 0.4;
+                margin-bottom: 20px;
+              "
+            ></i>
+            <h2>Reserved Section (Empty)</h2>
+            <p
+              class="text-sm text-secondary"
+              style="
+                margin-top: 10px;
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+              "
+            >
+              This section is reserved for future admin expansions, database
+              migrations, or customized metrics reporting systems.
+            </p>
+            <button
+              class="btn btn-outline"
+              style="margin-top: 25px"
+              onclick="app.goHome()"
+            >
+              Return to Dashboard
+            </button>
           </div>
         </section>
 
@@ -3954,6 +5325,279 @@ ANSWER: B</pre
         </div>
       </main>
     </div>
+    <!-- USER INTERACTION: Settings Modal -->
+    <div id="modal-settings" class="modal-overlay">
+      <div class="modal" style="max-width: 600px">
+        <div
+          class="flex justify-between items-center"
+          style="margin-bottom: 20px"
+        >
+          <h3><i class="fas fa-cog"></i> Account Settings</h3>
+          <button class="btn btn-sm btn-outline" onclick="app.closeModals()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="tabs" style="margin-bottom: 20px">
+          <button
+            class="tab-btn active"
+            id="settings-tab-pass"
+            onclick="app.switchSettingsTab('password')"
+          >
+            Change Password
+          </button>
+          <button
+            class="tab-btn"
+            id="settings-tab-sub"
+            onclick="app.switchSettingsTab('subjects')"
+          >
+            Request Subject Change
+          </button>
+        </div>
+
+        <!-- Tab 1: Change Password -->
+        <div id="settings-pane-password">
+          <form onsubmit="app.handleChangePassword(event)">
+            <div
+              class="form-group password-wrapper"
+              style="position: relative; margin-bottom: 15px"
+            >
+              <label>Current Password</label>
+              <input
+                type="password"
+                id="settingsCurrentPass"
+                class="form-control"
+                required
+                placeholder="Enter current password"
+              />
+              <button
+                type="button"
+                class="toggle-eye"
+                onclick="app.togglePassword('settingsCurrentPass', this)"
+                style="
+                  position: absolute;
+                  right: 15px;
+                  top: 38px;
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                "
+              >
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div
+              class="form-group password-wrapper"
+              style="position: relative; margin-bottom: 15px"
+            >
+              <label>New Password</label>
+              <input
+                type="password"
+                id="settingsNewPass"
+                class="form-control"
+                required
+                placeholder="Enter new password"
+              />
+              <button
+                type="button"
+                class="toggle-eye"
+                onclick="app.togglePassword('settingsNewPass', this)"
+                style="
+                  position: absolute;
+                  right: 15px;
+                  top: 38px;
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                "
+              >
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div
+              class="form-group password-wrapper"
+              style="position: relative; margin-bottom: 15px"
+            >
+              <label>Confirm New Password</label>
+              <input
+                type="password"
+                id="settingsConfirmNewPass"
+                class="form-control"
+                required
+                placeholder="Confirm new password"
+              />
+              <button
+                type="button"
+                class="toggle-eye"
+                onclick="app.togglePassword('settingsConfirmNewPass', this)"
+                style="
+                  position: absolute;
+                  right: 15px;
+                  top: 38px;
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                "
+              >
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary w-full"
+              style="margin-top: 20px"
+            >
+              Update Password
+            </button>
+          </form>
+        </div>
+
+        <!-- Tab 2: Request Subject Change -->
+        <div id="settings-pane-subjects" class="hidden">
+          <p
+            style="
+              font-size: 0.85rem;
+              color: var(--secondary);
+              margin-bottom: 15px;
+            "
+          >
+            Select your desired subjects and classes. Your request will be sent
+            to the school administrators or management for approval. To speed up
+            the approval process, you may also send them a private message.
+          </p>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Level</label>
+              <select
+                id="settingsSubjectLevel"
+                class="form-control"
+                onchange="app.populateSettingsSubjects()"
+              >
+                <option value="">Select Level</option>
+                <option value="JSS">JSS</option>
+                <option value="SSS">SSS</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Subject</label>
+              <select id="settingsSubjectName" class="form-control">
+                <option disabled selected>Subject</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Class</label>
+            <select id="settingsSubjectClass" class="form-control">
+              <option disabled selected>Class</option>
+            </select>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-outline w-full"
+            onclick="app.addSettingsSubject()"
+          >
+            Add Subject Assignment
+          </button>
+
+          <div class="subject-builder" style="margin-top: 15px">
+            <label>Requested Subject List:</label>
+            <div id="settingsChipList" class="chip-list"></div>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary w-full"
+            style="margin-top: 20px"
+            onclick="app.submitSubjectChangeRequest()"
+          >
+            Submit Requests
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Direct Teacher Modification Modal -->
+    <div id="modal-modify-teacher" class="modal-overlay">
+      <div class="modal" style="max-width: 600px">
+        <div
+          class="flex justify-between items-center"
+          style="margin-bottom: 20px"
+        >
+          <h3><i class="fas fa-user-edit"></i> Modify Teacher Account</h3>
+          <button class="btn btn-sm btn-outline" onclick="app.closeModals()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <input type="hidden" id="modifierTeacherId" />
+        <div class="form-group">
+          <label>Teacher Full Name</label>
+          <input
+            type="text"
+            id="modifierTeacherName"
+            class="form-control"
+            readonly
+            style="background: #f1f5f9"
+          />
+        </div>
+        <div class="form-group">
+          <label>Assigned Form Class</label>
+          <select id="modifierTeacherClass" class="form-control"></select>
+        </div>
+
+        <hr
+          style="margin: 15px 0; border: 0; border-top: 1px solid var(--border)"
+        />
+        <h4>Assigned Subjects & Classes</h4>
+        <div class="grid-2" style="margin-top: 10px">
+          <div class="form-group">
+            <label>Level</label>
+            <select
+              id="modifierSubjectLevel"
+              class="form-control"
+              onchange="app.populateModifierSubjects()"
+            >
+              <option value="">Select Level</option>
+              <option value="JSS">JSS</option>
+              <option value="SSS">SSS</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Subject</label>
+            <select id="modifierSubjectName" class="form-control">
+              <option disabled selected>Subject</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Class</label>
+          <select id="modifierSubjectClass" class="form-control">
+            <option disabled selected>Class</option>
+          </select>
+        </div>
+        <button
+          type="button"
+          class="btn btn-outline w-full"
+          onclick="app.addModifierSubject()"
+        >
+          Add Assigned Subject
+        </button>
+
+        <div class="subject-builder" style="margin-top: 15px">
+          <label>Subjects Directory:</label>
+          <div id="modifierChipList" class="chip-list"></div>
+        </div>
+        <button
+          type="button"
+          class="btn btn-primary w-full"
+          style="margin-top: 20px"
+          onclick="app.saveModifierTeacher()"
+        >
+          Save Modifications
+        </button>
+      </div>
+    </div>
     <!-- E-LEARNING RESOURCE MODAL -->
     <div id="modal-resource" class="modal-overlay">
       <div class="modal" style="max-width: 550px">
@@ -4493,6 +6137,25 @@ ANSWER: B</pre
             <option value="1st" selected>1st Term</option>
             <option value="2nd">2nd Term</option>
             <option value="3rd">3rd Term</option>
+          </select>
+        </div>
+        <!-- NEW: Class picker - only shown for the Past Results Archive panel,
+             since archived results are fetched by class group (JSS/SSS) sheet -->
+        <div
+          class="form-group"
+          id="printConfigClassGroup"
+          style="display: none"
+        >
+          <label>Class</label>
+          <select id="printConfigClass" class="form-control">
+            <optgroup label="Secondary">
+              <option value="JSS1">JSS1</option>
+              <option value="JSS2">JSS2</option>
+              <option value="JSS3">JSS3</option>
+              <option value="SSS1">SSS1</option>
+              <option value="SSS2">SSS2</option>
+              <option value="SSS3">SSS3</option>
+            </optgroup>
           </select>
         </div>
         <div class="form-group">
@@ -5270,7 +6933,193 @@ ANSWER: B</pre
           cbtPageSize: 15,
           cbtAiGenerated: [], // Temp storage for AI-generated questions
           printAllMode: false,
-          downloadMode: false, // <-- ADD THIS
+          downloadMode: false,
+          settingsSubjects: [],
+          modifierSubjects: [], // <-- ADD THIS
+        },
+
+        /* ==========================================
+             TOUR GUIDE SYSTEM ENGINE
+             ========================================== */
+        tour: {
+          currentStep: 0,
+          steps: [
+            {
+              title: "Welcome, Teacher! 👋",
+              desc: "Let's take a quick 1-minute interactive tour of your digital workspace to help you master navigation instantly.",
+              target: null,
+            },
+            {
+              title: "Theme Controller 🌗",
+              desc: "Working late at night grading? Click this controller to toggle between comfortable Dark Mode and Light Mode layouts.",
+              target: "#themeToggle",
+            },
+            {
+              title: "Dashboard Directories 🗺️",
+              desc: "This main workspace grid is your central launchpad. Depending on your role, you can open Exam Directories, CBT questions, the Question Bank, and class resources right here.",
+              target: "#landing-grid",
+            },
+            {
+              title: "Profile & Settings ⚙️",
+              desc: "Open Settings to change your security passwords, or request modifications to your assigned subjects and classes from administrators.",
+              target: "#btnSettings",
+            },
+            {
+              title: "Draft Manager & Help 💡",
+              desc: "Need assistance? Restart this guide at any time by clicking 'Help Tour'. Note that our built-in Draft Manager automatically saves your scores locally as you type to prevent data loss!",
+              target: "#btnHelpTour",
+            },
+          ],
+
+          start: function () {
+            // Close existing modals first
+            app.closeModals();
+            this.currentStep = 0;
+
+            const backdrop = document.getElementById("tourBackdrop");
+            const card = document.getElementById("tourCard");
+            const spotlight = document.getElementById("tourSpotlight");
+
+            backdrop.classList.add("active");
+            card.classList.add("active");
+            spotlight.classList.add("active");
+
+            this.showStep();
+
+            // Recalculate on screen resize or scroll events
+            window.addEventListener(
+              "resize",
+              (this._boundResize = () => this.positionElements()),
+            );
+            window.addEventListener(
+              "scroll",
+              (this._boundScroll = () => this.positionElements()),
+            );
+          },
+
+          exit: function () {
+            document.getElementById("tourBackdrop").classList.remove("active");
+            document.getElementById("tourCard").classList.remove("active");
+            document.getElementById("tourSpotlight").classList.remove("active");
+
+            window.removeEventListener("resize", this._boundResize);
+            window.removeEventListener("scroll", this._boundScroll);
+            app.showToast(
+              "Walkthrough completed! You're ready to go.",
+              "success",
+            );
+          },
+
+          next: function () {
+            if (this.currentStep < this.steps.length - 1) {
+              this.currentStep++;
+              this.showStep();
+            } else {
+              this.exit();
+            }
+          },
+
+          prev: function () {
+            if (this.currentStep > 0) {
+              this.currentStep--;
+              this.showStep();
+            }
+          },
+
+          showStep: function () {
+            const step = this.steps[this.currentStep];
+            document.getElementById("tourTitle").textContent = step.title;
+            document.getElementById("tourDesc").textContent = step.desc;
+            document.getElementById("tourIndicator").textContent =
+              `${this.currentStep + 1} / ${this.steps.length}`;
+
+            // Handle next button labels
+            document.getElementById("btnTourNext").innerHTML =
+              this.currentStep === this.steps.length - 1
+                ? 'Finish <i class="fas fa-check"></i>'
+                : 'Next <i class="fas fa-chevron-right"></i>';
+            document.getElementById("btnTourPrev").style.visibility =
+              this.currentStep === 0 ? "hidden" : "visible";
+
+            this.positionElements();
+          },
+
+          positionElements: function () {
+            const step = this.steps[this.currentStep];
+            const card = document.getElementById("tourCard");
+            const arrow = document.getElementById("tourArrow");
+            const spotlight = document.getElementById("tourSpotlight");
+
+            const target = step.target
+              ? document.querySelector(step.target)
+              : null;
+
+            if (!target || target.offsetWidth === 0) {
+              // Centered step overlay
+              card.className = "tour-card active centered";
+              arrow.style.display = "none";
+              spotlight.style.display = "none";
+            } else {
+              // Active spotlight tracker
+              card.className = "tour-card active";
+              arrow.style.display = "block";
+              spotlight.style.display = "block";
+
+              // Get target coordinates
+              const rect = target.getBoundingClientRect();
+              const scrollY = window.scrollY || window.pageYOffset;
+              const scrollX = window.scrollX || window.pageXOffset;
+
+              // Apply spotlight dimensions around target
+              const padding = 6;
+              spotlight.style.top = rect.top + scrollY - padding + "px";
+              spotlight.style.left = rect.left + scrollX - padding + "px";
+              spotlight.style.width = rect.width + padding * 2 + "px";
+              spotlight.style.height = rect.height + padding * 2 + "px";
+
+              // Position narrative bubble (defaults below target)
+              const cardRect = card.getBoundingClientRect();
+              let cardTop = rect.bottom + scrollY + 14;
+              let cardLeft =
+                rect.left + scrollX + rect.width / 2 - cardRect.width / 2;
+
+              // Responsive bounds checking
+              if (cardLeft < 10) cardLeft = 10;
+              if (cardLeft + cardRect.width > window.innerWidth - 10) {
+                cardLeft = window.innerWidth - cardRect.width - 10;
+              }
+
+              // Flip bubble position above target if viewport bottom is constrained
+              if (rect.bottom + cardRect.height + 30 > window.innerHeight) {
+                cardTop = rect.top + scrollY - cardRect.height - 14;
+                arrow.style.top = "auto";
+                arrow.style.bottom = "-7px";
+                arrow.style.borderTop = "none";
+                arrow.style.borderLeft = "none";
+                arrow.style.borderBottom = "2px solid var(--primary)";
+                arrow.style.borderRight = "2px solid var(--primary)";
+              } else {
+                arrow.style.top = "-7px";
+                arrow.style.bottom = "auto";
+                arrow.style.borderTop = "2px solid var(--primary)";
+                arrow.style.borderLeft = "2px solid var(--primary)";
+                arrow.style.borderBottom = "none";
+                arrow.style.borderRight = "none";
+              }
+
+              // Position arrow pointer to align with spotlight center
+              const targetCenterOnCard =
+                rect.left + scrollX + rect.width / 2 - cardLeft;
+              arrow.style.left =
+                Math.max(
+                  15,
+                  Math.min(cardRect.width - 25, targetCenterOnCard),
+                ) + "px";
+
+              card.style.top = cardTop + "px";
+              card.style.left = cardLeft + "px";
+            }
+          },
         },
 
         pushHistory: function (sectionId, title, backAction = null) {
@@ -5345,6 +7194,28 @@ ANSWER: B</pre
               break;
 
             case "section-fees":
+              // FIX: Re-paint the school toggle buttons so the highlight
+              // reflects the saved selection after a refresh.
+              var savedFeeSchool = state.feeSchool || "sec";
+              document.getElementById("btn-school-sec").className =
+                savedFeeSchool === "sec"
+                  ? "btn btn-primary btn-sm"
+                  : "btn btn-outline btn-sm";
+              document.getElementById("btn-school-pry").className =
+                savedFeeSchool === "pry"
+                  ? "btn btn-primary btn-sm"
+                  : "btn btn-outline btn-sm";
+              document
+                .getElementById("th-teacher-subsidy")
+                .classList.toggle("hidden", savedFeeSchool === "sec");
+
+              // FIX: Restore the Session/Term selects before loadFees renders the table
+              var feeSessionEl = document.getElementById("feeSessionSelect");
+              var feeTermEl = document.getElementById("feeTermSelect");
+              if (feeSessionEl && state.feeSession)
+                feeSessionEl.value = state.feeSession;
+              if (feeTermEl && state.feeTerm) feeTermEl.value = state.feeTerm;
+
               // Pre-set class filter BEFORE loadFees rebuilds the options
               var feeClsFilter = document.getElementById("feeClassFilter");
               if (feeClsFilter && state.cls) feeClsFilter.value = state.cls;
@@ -5797,6 +7668,16 @@ ANSWER: B</pre
         init: function () {
           // ✅ ADD THIS LINE FIRST - Load theme before anything renders
           this.initTheme();
+
+          const firstVisit = !localStorage.getItem("hasVisitedNiftySteps");
+          if (firstVisit) {
+            localStorage.setItem("hasVisitedNiftySteps", "true");
+            setTimeout(() => {
+              if (this.state.currentUser) {
+                this.tour.start();
+              }
+            }, 1800);
+          }
 
           const remembered = localStorage.getItem("rememberedUser");
           // ... rest of existing code unchanged ...
@@ -7741,6 +9622,31 @@ ANSWER: B</pre
               "app.loadElearningSection()",
               false,
             ],
+            // New Dashboard Integrations
+            [
+              "fa-code-pull-request",
+              "#e11d48",
+              "Subject Requests",
+              "Review teacher assignments & modify logs",
+              "app.loadAdminRequests()",
+              true,
+            ],
+            [
+              "fa-id-card",
+              "#059669",
+              "Student Registry",
+              "Cross-lookup registered student directory info",
+              "app.loadAdminStudentsId()",
+              true,
+            ],
+            [
+              "fa-box-archive",
+              "#4b5563",
+              "Past Results Archive",
+              "Manage student rosters & print results from past sessions/classes",
+              "app.loadClassSelectionForAdmin('archive')",
+              true,
+            ],
           ];
 
           // Admin/Head cards first
@@ -7840,6 +9746,407 @@ ANSWER: B</pre
           document
             .querySelectorAll(".kebab-dropdown.show")
             .forEach((d) => d.classList.remove("show"));
+          // NEW: reset the Archive print flag/field so it doesn't leak into
+          // the normal (non-archive) Print Configuration flows next time.
+          this.state.printArchiveMode = false;
+          const archiveClassGroup = document.getElementById(
+            "printConfigClassGroup",
+          );
+          if (archiveClassGroup) archiveClassGroup.style.display = "none";
+        },
+
+        // ==========================================
+        // NEW SETTINGS SYSTEM (HTML Frontend logic)
+        // ==========================================
+
+        openSettingsModal: function () {
+          // Initialize modal values
+          document.getElementById("settingsCurrentPass").value = "";
+          document.getElementById("settingsNewPass").value = "";
+          document.getElementById("settingsConfirmNewPass").value = "";
+          document.getElementById("settingsSubjectLevel").value = "";
+          document.getElementById("settingsSubjectName").innerHTML =
+            "<option disabled selected>Subject</option>";
+          document.getElementById("settingsSubjectClass").innerHTML =
+            "<option disabled selected>Class</option>";
+
+          this.state.settingsSubjects = JSON.parse(
+            JSON.stringify(this.state.currentUser.subjects || []),
+          );
+          this.renderSettingsChips();
+
+          this.switchSettingsTab("password");
+          document.getElementById("modal-settings").style.display = "flex";
+        },
+
+        switchSettingsTab: function (tab) {
+          document
+            .getElementById("settings-tab-pass")
+            .classList.toggle("active", tab === "password");
+          document
+            .getElementById("settings-tab-sub")
+            .classList.toggle("active", tab === "subjects");
+          document
+            .getElementById("settings-pane-password")
+            .classList.toggle("hidden", tab !== "password");
+          document
+            .getElementById("settings-pane-subjects")
+            .classList.toggle("hidden", tab !== "subjects");
+        },
+
+        handleChangePassword: async function (e) {
+          e.preventDefault();
+          const currentPassword = document.getElementById(
+            "settingsCurrentPass",
+          ).value;
+          const newPassword = document.getElementById("settingsNewPass").value;
+          const confirmPassword = document.getElementById(
+            "settingsConfirmNewPass",
+          ).value;
+
+          if (newPassword !== confirmPassword) {
+            return this.showToast("New passwords do not match.", "error");
+          }
+
+          const res = await GoogleSheetService._post("changePassword", {
+            userId: this.state.currentUser.id,
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+          });
+
+          if (res.status === "success") {
+            this.showToast(res.message, "success");
+            this.closeModals();
+          } else {
+            this.showToast(res.message, "error");
+          }
+        },
+
+        populateSettingsSubjects: function () {
+          const level = document.getElementById("settingsSubjectLevel").value;
+          const s = document.getElementById("settingsSubjectName");
+          const c = document.getElementById("settingsSubjectClass");
+          s.innerHTML = "<option disabled selected>Subject</option>";
+          c.innerHTML = "<option disabled selected>Class</option>";
+          if (!level) return;
+          const subs = level === "JSS" ? JSS_SUBJECTS : SSS_SUBJECTS.All;
+          subs.forEach(
+            (sub) => (s.innerHTML += `<option value="${sub}">${sub}</option>`),
+          );
+          if (level === "JSS") {
+            c.innerHTML += `<option value="ALL JSS">ALL JSS</option><option value="JSS1">JSS1</option><option value="JSS2">JSS2</option><option value="JSS3">JSS3</option>`;
+          } else {
+            c.innerHTML += `<option value="ALL SSS">ALL SSS</option><option value="SSS1">SSS1</option><option value="SSS2">SSS2</option><option value="SSS3">SSS3</option>`;
+          }
+        },
+
+        addSettingsSubject: function () {
+          const s = document.getElementById("settingsSubjectName").value;
+          const c = document.getElementById("settingsSubjectClass").value;
+          if (!s || s === "Subject" || !c || c === "Class")
+            return this.showToast("Select valid subject and class", "error");
+
+          const exists = this.state.settingsSubjects.some(
+            (sub) => sub.subject === s && sub.class === c,
+          );
+          if (exists)
+            return this.showToast(
+              "This assignment is already in your list.",
+              "warning",
+            );
+
+          this.state.settingsSubjects.push({ subject: s, class: c });
+          this.renderSettingsChips();
+        },
+
+        renderSettingsChips: function () {
+          const container = document.getElementById("settingsChipList");
+          container.innerHTML = this.state.settingsSubjects
+            .map(
+              (x, i) =>
+                `<div class="subject-chip">${x.subject} (${x.class}) <span class="chip-remove" onclick="app.state.settingsSubjects.splice(${i},1);app.renderSettingsChips()">&times;</span></div>`,
+            )
+            .join("");
+        },
+
+        submitSubjectChangeRequest: async function () {
+          const res = await GoogleSheetService._post(
+            "submitSubjectChangeRequest",
+            {
+              teacherId: this.state.currentUser.id,
+              teacherName: this.state.currentUser.name,
+              requestedSubjects: this.state.settingsSubjects,
+            },
+          );
+
+          if (res.status === "success") {
+            this.showToast(res.message, "success");
+            this.closeModals();
+          } else {
+            this.showToast("Failed to submit request.", "error");
+          }
+        },
+
+        // ==========================================
+        // ADMIN DASHBOARD: REQUESTS & MODIFICATIONS
+        // ==========================================
+
+        loadAdminRequests: async function () {
+          this.showSection("section-admin-requests");
+
+          // 1. Fetch queues
+          const reqRes = await GoogleSheetService._post(
+            "getSubjectChangeRequests",
+          );
+          const teachRes = await GoogleSheetService.getAllStaff();
+
+          // 2. Render requests queue
+          const reqBody = document.getElementById("admin-requests-tbody");
+          reqBody.innerHTML = "";
+          if (reqRes.status === "success" && reqRes.requests.length > 0) {
+            reqRes.requests.forEach((req) => {
+              const subs = req.requestedSubjects
+                .map((s) => `${s.subject} (${s.class})`)
+                .join(", ");
+              const isPending = req.status === "Pending";
+              const actionButtons = isPending
+                ? `
+                <button class="btn btn-success btn-sm" onclick="app.approveRequest('${req.id}')">Approve</button>
+                <button class="btn btn-danger btn-sm" onclick="app.rejectRequest('${req.id}')">Reject</button>
+              `
+                : `<span style="font-size:0.8rem; color:var(--secondary);">Resolved</span>`;
+
+              reqBody.innerHTML += `
+                <tr>
+                  <td>${req.date}</td>
+                  <td><strong>${req.teacherName}</strong></td>
+                  <td style="font-size:0.85rem;">${subs}</td>
+                  <td><span class="badge ${req.status === "Approved" ? "badge-active" : req.status === "Pending" ? "badge-pending" : "badge-disabled"}">${req.status}</span></td>
+                  <td><div class="flex gap-2">${actionButtons}</div></td>
+                </tr>`;
+            });
+          } else {
+            reqBody.innerHTML = `<tr><td colspan="5" class="text-center" style="padding:20px;">No requests recorded.</td></tr>`;
+          }
+
+          // 3. Render modifications directory
+          const teachBody = document.getElementById("admin-teachers-tbody");
+          teachBody.innerHTML = "";
+          teachRes.forEach((t) => {
+            const isTeacher = t.role === "Teacher";
+            const modifyBtn = isTeacher
+              ? `<button class="btn btn-outline btn-sm" onclick="app.openModifyTeacherModal('${t.id}', '${t.name.replace(/'/g, "\\'")}', '${t.assignedClass}', '${JSON.stringify(t.subjects).replace(/'/g, "\\'")}')">Modify</button>`
+              : `<button class="btn btn-outline btn-sm" disabled style="opacity:0.5; cursor:not-allowed;" title="Admin and Heads cannot be modified here">Modify</button>`;
+
+            teachBody.innerHTML += `
+              <tr>
+                <td><strong>${t.name}</strong><br><small style="color:var(--secondary);">${t.role}</small></td>
+                <td>
+                  ${modifyBtn}
+                </td>
+              </tr>`;
+          });
+        },
+
+        approveRequest: async function (requestId) {
+          const res = await GoogleSheetService._post(
+            "approveSubjectChangeRequest",
+            { requestId },
+          );
+          if (res.status === "success") {
+            this.showToast(res.message, "success");
+            this.loadAdminRequests();
+          } else {
+            this.showToast(res.message, "error");
+          }
+        },
+
+        rejectRequest: async function (requestId) {
+          const res = await GoogleSheetService._post(
+            "rejectSubjectChangeRequest",
+            { requestId },
+          );
+          if (res.status === "success") {
+            this.showToast(res.message, "success");
+            this.loadAdminRequests();
+          } else {
+            this.showToast(res.message, "error");
+          }
+        },
+
+        openModifyTeacherModal: function (
+          teacherId,
+          teacherName,
+          currentClass,
+          subjectsJson,
+        ) {
+          document.getElementById("modifierTeacherId").value = teacherId;
+          document.getElementById("modifierTeacherName").value = teacherName;
+
+          // Fill classes
+          const classSelect = document.getElementById("modifierTeacherClass");
+          classSelect.innerHTML =
+            `<option value="">None</option>` +
+            ALL_CLASSES.map((c) => `<option value="${c}">${c}</option>`).join(
+              "",
+            );
+          classSelect.value = currentClass || "";
+
+          // Populate subjects list
+          this.state.modifierSubjects = JSON.parse(subjectsJson || "[]");
+          this.renderModifierChips();
+
+          document.getElementById("modifierSubjectLevel").value = "";
+          document.getElementById("modifierSubjectName").innerHTML =
+            "<option disabled selected>Subject</option>";
+          document.getElementById("modifierSubjectClass").innerHTML =
+            "<option disabled selected>Class</option>";
+
+          document.getElementById("modal-modify-teacher").style.display =
+            "flex";
+        },
+
+        populateModifierSubjects: function () {
+          const level = document.getElementById("modifierSubjectLevel").value;
+          const s = document.getElementById("modifierSubjectName");
+          const c = document.getElementById("modifierSubjectClass");
+          s.innerHTML = "<option disabled selected>Subject</option>";
+          c.innerHTML = "<option disabled selected>Class</option>";
+          if (!level) return;
+          const subs = level === "JSS" ? JSS_SUBJECTS : SSS_SUBJECTS.All;
+          subs.forEach(
+            (sub) => (s.innerHTML += `<option value="${sub}">${sub}</option>`),
+          );
+          if (level === "JSS") {
+            c.innerHTML += `<option value="ALL JSS">ALL JSS</option><option value="JSS1">JSS1</option><option value="JSS2">JSS2</option><option value="JSS3">JSS3</option>`;
+          } else {
+            c.innerHTML += `<option value="ALL SSS">ALL SSS</option><option value="SSS1">SSS1</option><option value="SSS2">SSS2</option><option value="SSS3">SSS3</option>`;
+          }
+        },
+
+        addModifierSubject: function () {
+          const s = document.getElementById("modifierSubjectName").value;
+          const c = document.getElementById("modifierSubjectClass").value;
+          if (!s || s === "Subject" || !c || c === "Class")
+            return this.showToast("Select valid subject and class", "error");
+
+          const exists = this.state.modifierSubjects.some(
+            (sub) => sub.subject === s && sub.class === c,
+          );
+          if (exists)
+            return this.showToast("Assignment already registered.", "warning");
+
+          this.state.modifierSubjects.push({ subject: s, class: c });
+          this.renderModifierChips();
+        },
+
+        renderModifierChips: function () {
+          const container = document.getElementById("modifierChipList");
+          container.innerHTML = this.state.modifierSubjects
+            .map(
+              (x, i) =>
+                `<div class="subject-chip">${x.subject} (${x.class}) <span class="chip-remove" onclick="app.state.modifierSubjects.splice(${i},1);app.renderModifierChips()">&times;</span></div>`,
+            )
+            .join("");
+        },
+
+        saveModifierTeacher: async function () {
+          const teacherId = document.getElementById("modifierTeacherId").value;
+          const assignedClass = document.getElementById(
+            "modifierTeacherClass",
+          ).value;
+
+          const res = await GoogleSheetService._post("modifyTeacher", {
+            teacherId: teacherId,
+            assignedClass: assignedClass,
+            subjects: this.state.modifierSubjects,
+          });
+
+          if (res.status === "success") {
+            this.showToast(res.message, "success");
+            this.closeModals();
+            this.loadAdminRequests();
+          } else {
+            this.showToast("Failed to modify teacher.", "error");
+          }
+        },
+
+        // ==========================================
+        // ADMIN DASHBOARD: STUDENT DIRECTORY SEARCH
+        // ==========================================
+
+        loadAdminStudentsId: async function () {
+          this.showSection("section-admin-students-id");
+
+          const filterSelect = document.getElementById(
+            "students-id-class-filter",
+          );
+          filterSelect.innerHTML =
+            `<option value="">All Classes</option>` +
+            [...ALL_CLASSES, ...PRY_CLASSES]
+              .map((c) => `<option value="${c}">${c}</option>`)
+              .join("");
+
+          const res = await GoogleSheetService._post("getAllStudentsList");
+          if (res.status === "success") {
+            this.state.allStudentsList = res.students;
+            this.renderStudentsIdTable();
+          } else {
+            this.showToast(
+              "Failed to fetch students registry directory.",
+              "error",
+            );
+          }
+        },
+
+        renderStudentsIdTable: function () {
+          const tbody = document.getElementById("students-id-tbody");
+          tbody.innerHTML = "";
+
+          const list = this.state.allStudentsList || [];
+          if (list.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="padding:20px;">No students registered.</td></tr>`;
+            return;
+          }
+
+          list.forEach((s) => {
+            tbody.innerHTML += `
+              <tr class="student-id-row" data-name="${s.name.toLowerCase()}" data-id="${s.id.toLowerCase()}" data-class="${s.class}">
+                <td><strong>NSC-${s.id}</strong></td>
+                <td><strong>${s.name}</strong></td>
+                <td><span class="badge">${s.class}</span></td>
+                <td>${s.gender}</td>
+                <td><span class="badge ${s.status === "Old" ? "badge-active" : "badge-disabled"}">${s.status}</span></td>
+              </tr>`;
+          });
+        },
+
+        filterStudentsIdTable: function () {
+          const query = document
+            .getElementById("students-id-search")
+            .value.toLowerCase()
+            .trim();
+          const classFilter = document.getElementById(
+            "students-id-class-filter",
+          ).value;
+
+          const rows = document.querySelectorAll(".student-id-row");
+          rows.forEach((row) => {
+            const name = row.getAttribute("data-name");
+            const id = row.getAttribute("data-id");
+            const cls = row.getAttribute("data-class");
+
+            const matchQuery = name.includes(query) || id.includes(query);
+            const matchClass = !classFilter || cls === classFilter;
+
+            row.style.display = matchQuery && matchClass ? "" : "none";
+          });
+        },
+        // ==========================================
+        // ADMIN DASHBOARD: RESERVED EMPTY SECTION
+        // ==========================================
+        loadAdminEmpty: function () {
+          this.showSection("section-admin-empty");
         },
 
         // --- STAFF LIST ---
@@ -8383,7 +10690,9 @@ ANSWER: B</pre
           const dirType =
             this.state.viewContext.resultType === "midterm"
               ? "Mid-Term Results"
-              : "Exam Results";
+              : this.state.viewContext.resultType === "archive"
+                ? "Past Results Archive"
+                : "Exam Results";
           document.getElementById("roster-breadcrumbs").innerHTML = `
             <span onclick="app.goHome()">Home</span> > 
             <span class="crumb-clickable" onclick="app.loadClassSelectionForAdmin('${this.state.viewContext.resultType}')">${dirType}</span> > 
@@ -8391,7 +10700,9 @@ ANSWER: B</pre
           `;
 
           document.getElementById("roster-title").textContent =
-            `${cls} - ${this.state.viewContext.resultType.toUpperCase()} Roster`;
+            this.state.viewContext.resultType === "archive"
+              ? `${cls} - Past Results Archive`
+              : `${cls} - ${this.state.viewContext.resultType.toUpperCase()} Roster`;
 
           const addBtn = document.getElementById("btn-roster-add-student");
           if (addBtn) {
@@ -8403,7 +10714,15 @@ ANSWER: B</pre
           tbody.innerHTML = "";
 
           if (stds && stds.length > 0) {
+            // NEW: route the Print action differently for the Archive panel,
+            // since archived results are pulled by session-specific sheet
+            // rather than the live/current score sheet.
+            const isArchive = this.state.viewContext.resultType === "archive";
             stds.forEach((s) => {
+              const safeName = s.name.replace(/'/g, "\\'");
+              const printOnclick = isArchive
+                ? `app.printArchiveStudentResult('${s.id}', '${safeName}', '${cls}')`
+                : `app.printStudentResult('${s.id}', '${safeName}')`;
               tbody.innerHTML += `
                 <tr>
                   <td>${s.id}</td>
@@ -8412,13 +10731,13 @@ ANSWER: B</pre
                   <td class="hide-mobile">${s.dept || "-"}</td>
                   <td>
                     <div class="action-cell-desktop">
-                      <button class="btn btn-success btn-sm" onclick="app.printStudentResult('${s.id}', '${s.name.replace(/'/g, "\\'")}')">
+                      <button class="btn btn-success btn-sm" onclick="${printOnclick}">
                         <i class="fas fa-print"></i> Print
                       </button>
                       <button class="btn btn-primary btn-sm" onclick="app.loadStudentDetail('${s.id}')">
                         View
                       </button>
-                      <button class="btn btn-outline btn-sm" onclick="app.openEditStudentModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', '${s.gender}', '${s.dept || ""}')">
+                      <button class="btn btn-outline btn-sm" onclick="app.openEditStudentModal('${s.id}', '${safeName}', '${s.gender}', '${s.dept || ""}')">
                         <i class="fas fa-edit"></i>
                       </button>
                     </div>
@@ -8426,9 +10745,9 @@ ANSWER: B</pre
                       <div class="kebab-menu">
                         <button class="kebab-trigger" onclick="app.toggleKebab(this)"><i class="fas fa-ellipsis-v"></i></button>
                         <div class="kebab-dropdown">
-                          <button onclick="app.printStudentResult('${s.id}', '${s.name.replace(/'/g, "\\'")}')"><i class="fas fa-print"></i> Print Result</button>
+                          <button onclick="${printOnclick}"><i class="fas fa-print"></i> Print Result</button>
                           <button onclick="app.loadStudentDetail('${s.id}')"><i class="fas fa-eye"></i> View Results</button>
-                          <button onclick="app.openEditStudentModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', '${s.gender}', '${s.dept || ""}')"><i class="fas fa-edit"></i> Edit Student</button>
+                          <button onclick="app.openEditStudentModal('${s.id}', '${safeName}', '${s.gender}', '${s.dept || ""}')"><i class="fas fa-edit"></i> Edit Student</button>
                         </div>
                       </div>
                     </div>
@@ -8475,7 +10794,9 @@ ANSWER: B</pre
             mode === "midterm"
               ? "Mid-Term Directory"
               : mode === "admin-manage"
-                ? "Select Class to Manage"
+                ? this.state.viewContext.resultType === "archive"
+                  ? "Select Class - Past Results Archive"
+                  : "Select Class to Manage"
                 : "Exam Directory";
           grid.innerHTML = `<div class="breadcrumbs"><span onclick="app.goHome()">Home</span> > <span>${title}</span></div>`;
 
@@ -8928,6 +11249,28 @@ ANSWER: B</pre
           document.getElementById("modal-print-config").style.display = "flex";
         },
 
+        // NEW: Print entry point for the Past Results Archive panel.
+        // Shows the same Print Configuration modal, but also reveals the
+        // "Class" field so the correct session-specific sheet
+        // (e.g. "SSS_Scores_2025_2026_1st") can be resolved.
+        printArchiveStudentResult: function (adminNo, studentName, cls) {
+          if (!adminNo || !studentName) {
+            return this.showToast("Student data missing", "error");
+          }
+
+          this.state.rosterPrintStudent = { id: adminNo, name: studentName };
+          this.state.printAllMode = false;
+          this.state.printFromRoster = true;
+          this.state.printArchiveMode = true; // NEW: routes dispatchPrintReport()
+
+          const classGroup = document.getElementById("printConfigClassGroup");
+          const classSelect = document.getElementById("printConfigClass");
+          if (classGroup) classGroup.style.display = "block";
+          if (classSelect && cls) classSelect.value = cls;
+
+          document.getElementById("modal-print-config").style.display = "flex";
+        },
+
         printAllResults: function () {
           const cls = this.state.viewContext.cls;
           if (!cls) return this.showToast("No class selected", "error");
@@ -8937,6 +11280,18 @@ ANSWER: B</pre
 
         dispatchPrintReport: function () {
           const selectedTerm = document.getElementById("printTerm").value;
+
+          // NEW: Route the Past Results Archive panel through its own
+          // print pipeline, since archived data is pulled by session-specific
+          // sheet (e.g. "SSS_Scores_2025_2026_1st") instead of the live sheet.
+          if (this.state.printArchiveMode) {
+            if (selectedTerm === "3rd") {
+              this.generateArchiveResultPrintCumulative();
+            } else {
+              this.generateArchiveResultPrint();
+            }
+            return;
+          }
 
           if (selectedTerm === "3rd") {
             if (this.state.printAllWithStampMode) {
@@ -9056,6 +11411,233 @@ ANSWER: B</pre
           // Clean up state
           this.state.printFromRoster = false;
           this.state.rosterPrintStudent = null;
+        },
+
+        // ==========================================
+        // NEW: PAST RESULTS ARCHIVE - PRINT PIPELINE
+        // ==========================================
+        // Unlike the live roster print (which always reads whatever is in
+        // the "current" sheet), archive printing must resolve the EXACT
+        // session/term-specific sheet the admin picked in the Print
+        // Configuration modal, e.g. session "2025/2026" + term "1st" for
+        // class SSS1 -> sheet "SSS_Scores_2025_2026_1st".
+        // getFullResult()/getClassScores() already build that sheet name
+        // from the session/term params we pass in (see GoogleSheetService).
+
+        // 1st or 2nd term: single-term archived report
+        generateArchiveResultPrint: async function () {
+          const adminNo = this.state.rosterPrintStudent.id;
+          const studentName = this.state.rosterPrintStudent.name;
+
+          // Config values from the modal (Session/Term/Class/Next Term)
+          const session = document.getElementById("printSession").value;
+          const term = document.getElementById("printTerm").value;
+          const nextTermDate = document.getElementById("printNextTerm").value;
+          // The Class picker (only visible in archive mode) decides which
+          // class-group sheet ("JSS_..." / "SSS_...") the result is pulled from.
+          const cls =
+            document.getElementById("printConfigClass")?.value ||
+            this.state.viewContext.cls;
+
+          this.closeModals();
+          this.toggleLoader(true);
+
+          try {
+            // Pass session/term through so the correct archived sheet is used
+            const res = await GoogleSheetService.getFullResult(
+              adminNo,
+              session,
+              term,
+            );
+            if (!res.info || !res.scores) {
+              this.toggleLoader(false);
+              return this.showToast(
+                `No archived result found for ${term} Term, ${session}`,
+                "error",
+              );
+            }
+
+            const studentInfo = res.info;
+            const scores = res.scores;
+            const isJSS = cls.startsWith("JSS");
+            const subjectsList = isJSS ? JSS_SUBJECTS : SSS_SUBJECTS.All;
+
+            // Class averages, also pulled from the same archived sheet
+            const classData = await GoogleSheetService.getClassScores(
+              cls,
+              "exam",
+              session,
+              term,
+            );
+            const subjectAverages = classData.subjectAverages || {};
+
+            const reportHtml = this.buildSingleReportHtml({
+              studentInfo,
+              scores,
+              subjectAverages,
+              subjectsList,
+              isMidTerm: false,
+              isJSS,
+              session,
+              term,
+              nextTermDate,
+              useStamp: true,
+            });
+
+            const printArea = document.getElementById("printable-area");
+            printArea.innerHTML = `
+      <style>
+        @media print {
+          @page { size: A4 portrait; margin: 12mm; }
+          body * { visibility: hidden; }
+          #printable-area, #printable-area * { visibility: visible; }
+          #printable-area { position: absolute; left: 0; top: 0; width: 100%; padding: 0; background: white; font-family: 'Times New Roman', serif; color: #000; font-size: 0.82rem; line-height: 1.35; }
+          .report-card { max-width: 100%; margin: 0 auto; page-break-after: avoid; page-break-inside: avoid; }
+          table { font-size: 0.78rem; }
+          th, td { padding: 4px 6px !important; }
+          .rp-header, .rp-info-grid, .rp-table, .summary-section, .comment-box, .rp-footer { page-break-inside: avoid; }
+        }
+      </style>
+      <div class="report-card">${reportHtml}</div>
+    `;
+
+            this.toggleLoader(false);
+            this.showToast(
+              `Preparing ${studentName}'s ${term} Term ${session} Archived Result...`,
+              "success",
+            );
+            setTimeout(() => window.print(), 700);
+          } catch (err) {
+            console.error(err);
+            this.toggleLoader(false);
+            this.showToast("Failed to generate archived result", "error");
+          }
+
+          this.state.printFromRoster = false;
+          this.state.rosterPrintStudent = null;
+          this.state.printArchiveMode = false;
+        },
+
+        // 3rd term: cumulative report, exactly like the live "Manage Exam
+        // Results" cumulative print - 1st/2nd terms come from the
+        // session-specific sheets, 3rd term comes from the base
+        // "{Group}_Scores" sheet (no session suffix), via fetchAllTermsData().
+        generateArchiveResultPrintCumulative: async function () {
+          const adminNo = this.state.rosterPrintStudent.id;
+          const studentName = this.state.rosterPrintStudent.name;
+
+          const session = document.getElementById("printSession").value;
+          const nextTermDate = document.getElementById("printNextTerm").value;
+          const cls =
+            document.getElementById("printConfigClass")?.value ||
+            this.state.viewContext.cls;
+
+          this.closeModals();
+          this.toggleLoader(true);
+
+          try {
+            const res = await GoogleSheetService.getFullResult(
+              adminNo,
+              session,
+              "1st",
+            );
+            if (!res.info) {
+              this.toggleLoader(false);
+              return this.showToast(
+                "No archived student record found",
+                "error",
+              );
+            }
+
+            const studentInfo = res.info;
+            const isJSS = cls.startsWith("JSS");
+            const subjectsList = isJSS ? JSS_SUBJECTS : SSS_SUBJECTS.All;
+
+            // Fetches 1st/2nd from session-suffixed sheets and 3rd from the
+            // base "{Group}_Scores" sheet - same helper the live cumulative
+            // print already uses.
+            const allTermsData = await this.fetchAllTermsData(
+              adminNo,
+              cls,
+              session,
+              subjectsList,
+            );
+
+            const reportHtml = this.buildThirdTermCumulativeReport({
+              studentInfo: studentInfo,
+              allTermsData: allTermsData,
+              subjectsList: subjectsList,
+              isJSS: isJSS,
+              session: session,
+              nextTermDate: nextTermDate,
+              useStamp: true,
+            });
+
+            const printArea = document.getElementById("printable-area");
+            printArea.innerHTML = `
+            <style>
+                @media print {
+                    @page { margin: 10mm; size: A4 landscape; }
+                    body * { visibility: hidden; }
+                    #printable-area, #printable-area * { visibility: visible; }
+                    #printable-area { 
+                        position: absolute; 
+                        left: 0; 
+                        top: 0; 
+                        width: 100%; 
+                        padding: 10px; 
+                        background: white; 
+                        font-family: 'Times New Roman', serif; 
+                        color: #000; 
+                    }
+                    .cumulative-table { 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                        font-size: 0.75rem; 
+                    }
+                    .cumulative-table th, 
+                    .cumulative-table td { 
+                        border: 1px solid #000; 
+                        padding: 5px 4px; 
+                        text-align: center; 
+                    }
+                    .cumulative-table th { 
+                        background-color: #e2e8f0; 
+                        font-weight: bold; 
+                        font-size: 0.7rem;
+                    }
+                    .subject-col { 
+                        text-align: left !important; 
+                        padding-left: 8px !important;
+                        font-weight: 500;
+                    }
+                    .total-row { 
+                        background-color: #f1f5f9; 
+                        font-weight: bold; 
+                    }
+                }
+            </style>
+            <div class="report-card">${reportHtml}</div>
+        `;
+
+            this.toggleLoader(false);
+            this.showToast(
+              `Preparing ${studentName}'s Cumulative Archived Result (${session})...`,
+              "success",
+            );
+            setTimeout(() => window.print(), 500);
+          } catch (err) {
+            console.error(err);
+            this.toggleLoader(false);
+            this.showToast(
+              "Failed to generate cumulative archived result",
+              "error",
+            );
+          }
+
+          this.state.printFromRoster = false;
+          this.state.rosterPrintStudent = null;
+          this.state.printArchiveMode = false;
         },
 
         openPrintConfigForEcopy: function () {
@@ -9981,45 +12563,39 @@ ANSWER: B</pre
             printArea.innerHTML = `
             <style>
                 @media print {
-                    @page { margin: 8mm; size: A4 portrait; }
+                    @page { margin: 10mm; size: A4 landscape; }
                     body * { visibility: hidden; }
                     #printable-area, #printable-area * { visibility: visible; }
                     #printable-area { 
                         position: absolute; 
                         left: 0; 
                         top: 0; 
-                        width: 200mm; 
-                        margin:0 auto;
-                        padding: 5mm; 
-                        box-sizing:border-box;
+                        width: 100%; 
+                        padding: 10px; 
                         background: white; 
                         font-family: 'Times New Roman', serif; 
                         color: #000; 
                     }
                     .cumulative-table { 
                         width: 100%; 
-                        border-collapse: collapse;
-                        table-layout:fixed; 
-                        font-size: 10.5px; 
+                        border-collapse: collapse; 
+                        font-size: 0.75rem; 
                     }
                     .cumulative-table th, 
                     .cumulative-table td { 
                         border: 1px solid #000; 
-                        padding: 2px;
-                        vertical-align:middle; 
+                        padding: 5px 4px; 
                         text-align: center; 
-                        word-wrap:break-word;
                     }
                     .cumulative-table th { 
                         background-color: #e2e8f0; 
                         font-weight: bold; 
-                        font-size: 10px;
+                        font-size: 0.7rem;
                     }
                     .subject-col { 
-                        width:25%;
                         text-align: left !important; 
                         padding-left: 8px !important;
-                        white-space:normal;
+                        font-weight: 500;
                     }
                     .total-row { 
                         background-color: #f1f5f9; 
@@ -10321,19 +12897,7 @@ ANSWER: B</pre
 
             // CALCULATIONS
             const cumulativeTotal = t1 + t2 + t3;
-
-            // Count only terms that actually have a score
-            let termsAvailable = 0;
-
-            if (t1 > 0) termsAvailable++;
-            if (t2 > 0) termsAvailable++;
-            if (t3 > 0) termsAvailable++;
-
-            // Prevent division by zero
-            const cumulativeAverage =
-              termsAvailable > 0
-                ? (cumulativeTotal / termsAvailable).toFixed(1)
-                : "0.0";
+            const cumulativeAverage = (cumulativeTotal / 3).toFixed(1);
 
             // ✅ FIXED: Use getAvg() for robust class average lookup
             const overallClassAvg = getAvg(sub);
@@ -10353,19 +12917,19 @@ ANSWER: B</pre
               const showT2 = t2 > 0 ? t2 : "-";
 
               tableRows += `
-                <tr>
-                  <td class="subject-col">${sub}</td>
-                  <td>${showCA}</td>
-                  <td>${showExam}</td>
-                  <td style="font-weight:bold;">${showT3}</td>
-                  <td>${showT2}</td>
-                  <td>${showT1}</td>
-                  <td style="color:#2563eb; font-weight:600;">${overallClassAvg}</td>
-                  <td style="font-weight:bold; background:#fef3c7;">${cumulativeAverage}%</td>
-                  <td style="font-weight:bold;">${gradeInfo.g}</td>
-                  <td style="text-align:left; font-size:0.72rem;">${gradeInfo.remark}</td>
-                </tr>
-              `;
+        <tr>
+            <td class="subject-col">${sub}</td>
+            <td>${showCA}</td>
+            <td>${showExam}</td>
+            <td style="font-weight:bold;">${showT3}</td>
+            <td>${showT2}</td>
+            <td>${showT1}</td>
+            <td style="color:#2563eb; font-weight:600;">${overallClassAvg}</td>
+            <td style="font-weight:bold; background:#fef3c7;">${cumulativeAverage}%</td>
+            <td style="font-weight:bold;">${gradeInfo.g}</td>
+            <td style="text-align:left; font-size:0.72rem;">${gradeInfo.remark}</td>
+        </tr>
+      `;
             }
           });
 
@@ -10445,9 +13009,9 @@ ANSWER: B</pre
                     <th rowspan="2">2ND<br>TERM</th>
                     <th rowspan="2">1ST<br>TERM</th>
                     <th rowspan="2">CL.AVG</th>
-                    <th rowspan="2">AVG(%)</th>
+                    <th rowspan="2">AVERAGE<br>(%)</th>
                     <th rowspan="2">GRADE</th>
-                    <th rowspan="2">REMARK</th>
+                    <th rowspan="2">COMMENT</th>
                 </tr>
                 <tr>
                     <th>CA</th>
@@ -10778,10 +13342,13 @@ ANSWER: B</pre
           tbody.innerHTML = "";
 
           // --- SESSION RESUME: Save fee context with class ---
+          // FIX: also persist the selected session/term so they survive a refresh
           StateManager.save({
             sectionId: "section-fees",
             cls: cls,
             feeSchool: this.state.feeSchool || "sec",
+            feeSession: session,
+            feeTerm: term,
           });
           // --- END SESSION RESUME ---
 
@@ -10797,13 +13364,11 @@ ANSWER: B</pre
 
           stds.forEach((s) => {
             // --- 1. TYPE LOGIC ---
-            // Force "Old" for everyone except Custom and Scholarship
+            // FIX: Use the type exactly as stored in the Google Sheet database
+            // so "New" / "Teacher's Child" get their correct fee calculation
+            // instead of always being flattened to "Old".
             let rawType = s.status || "Old";
             let displayType = rawType;
-
-            if (rawType !== "Custom" && rawType !== "Scholarship") {
-              displayType = "Old";
-            }
 
             const customAmt = s.customFee || 0;
 
@@ -11558,8 +14123,12 @@ ANSWER: B</pre
           const modal = document.getElementById("modal-debtors");
           const select = document.getElementById("debtorsClassSelect");
 
+          // FIX: Show Pry classes or Sec classes depending on the active school toggle
+          const debtorClasses =
+            this.state.feeSchool === "pry" ? PRY_CLASSES : ALL_CLASSES;
+
           select.innerHTML = '<option value="ALL">All Classes</option>';
-          ALL_CLASSES.forEach((c) => {
+          debtorClasses.forEach((c) => {
             select.innerHTML += `<option value="${c}">${c}</option>`;
           });
 
@@ -11573,8 +14142,12 @@ ANSWER: B</pre
           const allTx = await GoogleSheetService.getFeeTransactions();
           let students = [];
 
+          // FIX: "ALL" should mean all classes of the currently selected school
+          const debtorClasses =
+            this.state.feeSchool === "pry" ? PRY_CLASSES : ALL_CLASSES;
+
           if (cls === "ALL") {
-            for (const c of ALL_CLASSES) {
+            for (const c of debtorClasses) {
               const stds = await GoogleSheetService.loadStudents(c);
               students.push(...stds);
             }
@@ -12287,6 +14860,652 @@ ANSWER: B</pre
             .forEach((d) => d.classList.remove("show"));
         }
       });
+      // ==========================================
+      // STUDENT REGISTRY (single, authoritative implementation)
+      // ==========================================
+      // GLOBAL REGISTRY STATE
+      let allRegistryStudents = [];
+      let nextSuggestedAdminNo = "1";
+      let pendingRegistryDeleteId = null;
+
+      /**
+       * Loads all students automatically sorted by Admin No (0 - 100+)
+       */
+      function fetchAndRenderStudentDirectory() {
+        const tbody = document.getElementById("student-registry-tbody");
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px;">Fetching all student records...</td></tr>`;
+
+        // NEW: Populate the Class filter options once (Secondary + Primary)
+        populateStudentRegistryFilterClasses();
+
+        // Call Google Apps Script Backend
+        googleScriptRun("getAllStudentsList", {}, function (response) {
+          if (response.status === "success") {
+            allRegistryStudents = response.students || [];
+            nextSuggestedAdminNo = String(
+              response.nextAdminNo || allRegistryStudents.length + 1,
+            );
+
+            // Update total badge count
+            document.getElementById("total-student-count-badge").innerText =
+              `Total: ${allRegistryStudents.length}`;
+
+            // NEW: Update Male / Female counts
+            const maleCount = allRegistryStudents.filter(
+              (s) => String(s.gender).toLowerCase() === "male",
+            ).length;
+            const femaleCount = allRegistryStudents.filter(
+              (s) => String(s.gender).toLowerCase() === "female",
+            ).length;
+            document.getElementById("male-student-count-badge").innerText =
+              `Male: ${maleCount}`;
+            document.getElementById("female-student-count-badge").innerText =
+              `Female: ${femaleCount}`;
+
+            // Re-apply any active search/filter instead of always
+            // showing the unfiltered list, so filter state survives a refresh.
+            const searchBox = document.getElementById("student-search-input");
+            const filterSelect = document.getElementById(
+              "student-registry-filter-select",
+            );
+            if (
+              (searchBox && searchBox.value.trim()) ||
+              (filterSelect && filterSelect.value !== "all")
+            ) {
+              filterStudentRegistryTable();
+            } else {
+              renderStudentRegistryTable(allRegistryStudents);
+            }
+          } else {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: red;">Error: ${response.message}</td></tr>`;
+          }
+        });
+      }
+
+      /**
+       * NEW: Fills the "Class" section of the registry filter dropdown
+       * with Secondary and Primary classes (only runs once).
+       */
+      function populateStudentRegistryFilterClasses() {
+        const secGroup = document.getElementById("registry-filter-sec-group");
+        const pryGroup = document.getElementById("registry-filter-pry-group");
+        if (!secGroup || !pryGroup || secGroup.children.length > 0) return; // already populated
+
+        ALL_CLASSES.forEach((c) => {
+          secGroup.innerHTML += `<option value="class:${c}">${c}</option>`;
+        });
+        PRY_CLASSES.forEach((c) => {
+          pryGroup.innerHTML += `<option value="class:${c}">${c}</option>`;
+        });
+      }
+
+      /**
+       * Renders table rows with interactive student names
+       */
+      function renderStudentRegistryTable(students) {
+        const tbody = document.getElementById("student-registry-tbody");
+        if (!students || students.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px;">No registered students found.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = students
+          .map(
+            (s) => `
+    <tr>
+      <td><strong>${s.id}</strong></td>
+      <td>
+        <a href="javascript:void(0)" 
+           onclick="openStudentAcademicProfile('${s.id}')" 
+           style="color: var(--primary, #0284c7); text-decoration: underline; font-weight: 600;">
+          ${s.name}
+        </a>
+      </td>
+      <td>${s.class}</td>
+      <td>${s.gender}</td>
+      <td>${s.dept || "N/A"}</td>
+      <td><span class="badge ${s.status === "New" ? "badge-approved" : "badge-pending"}">${s.status}</span></td>
+      <td style="text-align: center; position: relative;">
+        <!-- Desktop View: Icon-Only Buttons -->
+        <div class="action-buttons-desktop">
+          <button class="btn btn-sm btn-outline" onclick="openStudentAcademicProfile('${s.id}')">
+            <i class="fas fa-user"></i>
+          </button>
+          <button class="btn btn-sm btn-outline" onclick="studentRegistryOpenEdit('${s.id}')">
+            <i class="fas fa-pen"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="studentRegistryOpenDelete('${s.id}')">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+
+        <!-- Mobile View: Kebab Menu -->
+        <div class="kebab-menu-container">
+          <button class="btn-icon kebab-btn" onclick="toggleKebabMenu(event, this)" title="Actions">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+          <div class="kebab-dropdown" style="display: none;">
+            <button class="btn btn-sm btn-outline" onclick="openStudentAcademicProfile('${s.id}'); closeAllKebabs();">
+              <i class="fas fa-user"></i> Profile
+            </button>
+            <button class="btn btn-sm btn-outline" onclick="studentRegistryOpenEdit('${s.id}'); closeAllKebabs();">
+              <i class="fas fa-pen"></i> Edit
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="studentRegistryOpenDelete('${s.id}'); closeAllKebabs();">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  `,
+          )
+          .join("");
+      }
+
+      /**
+       * Search/Filter handler (case-insensitive, by ADM No or Name),
+       * combined with the Gender/Class dropdown filter.
+       */
+      function filterStudentRegistryTable() {
+        const query = document
+          .getElementById("student-search-input")
+          .value.toLowerCase()
+          .trim();
+        const filterVal =
+          document.getElementById("student-registry-filter-select")?.value ||
+          "all";
+
+        const filtered = allRegistryStudents.filter((s) => {
+          const matchesSearch =
+            String(s.name).toLowerCase().includes(query) ||
+            String(s.id).toLowerCase().includes(query);
+
+          let matchesFilter = true;
+          if (filterVal === "Male" || filterVal === "Female") {
+            matchesFilter =
+              String(s.gender).toLowerCase() === filterVal.toLowerCase();
+          } else if (filterVal.startsWith("class:")) {
+            matchesFilter = s.class === filterVal.slice(6);
+          }
+
+          return matchesSearch && matchesFilter;
+        });
+        renderStudentRegistryTable(filtered);
+      }
+
+      /**
+       * Open Modal in ADD mode with the next Admission Number auto-assigned
+       */
+      function studentRegistryOpenAdd() {
+        document.getElementById("student-registry-modal-title").innerHTML =
+          '<i class="fas fa-user-plus"></i> Register New Student';
+        document.getElementById("reg-student-editing-id").value = "";
+        document.getElementById("reg-student-adm").value = nextSuggestedAdminNo;
+        document.getElementById("reg-student-name").value = "";
+        document.getElementById("reg-student-class").value = "JSS1";
+        document.getElementById("reg-student-gender").value = "Male";
+        document.getElementById("reg-student-dept").value = "General";
+        document.getElementById("reg-student-status").value = "New";
+        document.getElementById("reg-student-save-btn").textContent =
+          "Save Student";
+        // FIX: show the OVERLAY wrapper (not the inner card) - the overlay
+        // is the element whose CSS actually controls visibility/centering.
+        document.getElementById(
+          "modal-student-registry-overlay",
+        ).style.display = "flex";
+      }
+
+      /**
+       * Open Modal in EDIT mode, pre-filled with the selected student's data.
+       * ADM No is kept read-only - it is the student's permanent identifier.
+       */
+      function studentRegistryOpenEdit(id) {
+        const student = allRegistryStudents.find(
+          (s) => String(s.id) === String(id),
+        );
+        if (!student) {
+          alert("Could not find that student. Please refresh and try again.");
+          return;
+        }
+
+        document.getElementById("student-registry-modal-title").innerHTML =
+          '<i class="fas fa-pen"></i> Edit Student';
+        document.getElementById("reg-student-editing-id").value = student.id;
+        document.getElementById("reg-student-adm").value = student.id;
+        document.getElementById("reg-student-name").value = student.name;
+        document.getElementById("reg-student-class").value =
+          student.class || "JSS1";
+        document.getElementById("reg-student-gender").value =
+          student.gender || "Male";
+        document.getElementById("reg-student-dept").value =
+          student.dept && student.dept !== "N/A" ? student.dept : "General";
+        document.getElementById("reg-student-status").value =
+          student.status === "New" ? "New" : "Old";
+        document.getElementById("reg-student-save-btn").textContent =
+          "Update Student";
+        // FIX: show the OVERLAY wrapper (not the inner card)
+        document.getElementById(
+          "modal-student-registry-overlay",
+        ).style.display = "flex";
+      }
+
+      function closeStudentRegistryModal() {
+        document.getElementById(
+          "modal-student-registry-overlay",
+        ).style.display = "none";
+      }
+
+      /**
+       * Handles both Add and Update submissions from the single Registry modal
+       */
+      function handleStudentRegistrySubmit(event) {
+        event.preventDefault();
+
+        const editingId = document
+          .getElementById("reg-student-editing-id")
+          .value.trim();
+        const name = document.getElementById("reg-student-name").value.trim();
+        const cls = document.getElementById("reg-student-class").value;
+        const gender = document.getElementById("reg-student-gender").value;
+        const dept = document.getElementById("reg-student-dept").value;
+        const status = document.getElementById("reg-student-status").value;
+
+        if (!name) {
+          alert("Please enter the student's full name.");
+          return;
+        }
+
+        if (editingId) {
+          // --- UPDATE EXISTING STUDENT ---
+          const payload = {
+            action: "updateStudent",
+            id: editingId,
+            name: name,
+            gender: gender,
+            className: cls,
+            dept: dept,
+            status: status,
+          };
+          googleScriptRun("updateStudent", payload, function (res) {
+            if (res.status === "success") {
+              alert(res.message || "Student updated successfully!");
+              closeStudentRegistryModal();
+              GoogleSheetService.clearCache();
+              fetchAndRenderStudentDirectory();
+            } else {
+              alert("Failed to update student: " + res.message);
+            }
+          });
+        } else {
+          // --- ADD NEW STUDENT ---
+          const admNo = document.getElementById("reg-student-adm").value.trim();
+          const payload = {
+            action: "addStudent",
+            id: admNo,
+            name: name,
+            class: cls,
+            gender: gender,
+            dept: dept,
+            status: status || "New",
+          };
+
+          googleScriptRun("addStudent", payload, function (res) {
+            if (res.status === "success") {
+              alert(
+                `Student "${payload.name}" added successfully with Admin No ${payload.id}!`,
+              );
+              closeStudentRegistryModal();
+              GoogleSheetService.clearCache();
+              fetchAndRenderStudentDirectory(); // Reload directory automatically
+            } else {
+              alert("Failed to add student: " + res.message);
+            }
+          });
+        }
+      }
+
+      /**
+       * Open the destructive delete-confirmation modal for a student
+       */
+      function studentRegistryOpenDelete(id) {
+        const student = allRegistryStudents.find(
+          (s) => String(s.id) === String(id),
+        );
+        if (!student) {
+          alert("Could not find that student. Please refresh and try again.");
+          return;
+        }
+
+        pendingRegistryDeleteId = student.id;
+        document.getElementById("reg-delete-adm").textContent = student.id;
+        document.getElementById("reg-delete-name").textContent = student.name;
+        document.getElementById("reg-delete-class").textContent =
+          student.class || "N/A";
+        document.getElementById("modal-student-registry-delete").style.display =
+          "flex";
+      }
+
+      function closeStudentRegistryDeleteModal() {
+        pendingRegistryDeleteId = null;
+        document.getElementById("modal-student-registry-delete").style.display =
+          "none";
+      }
+
+      /**
+       * Executes the delete after confirmation. Always identifies the
+       * student by ADM No (never by array/row position).
+       */
+      function confirmStudentRegistryDelete() {
+        if (!pendingRegistryDeleteId) return;
+
+        googleScriptRun(
+          "deleteStudent",
+          { id: pendingRegistryDeleteId },
+          function (res) {
+            if (res.status === "success") {
+              closeStudentRegistryDeleteModal();
+              GoogleSheetService.clearCache();
+              fetchAndRenderStudentDirectory(); // Recalculates count & next ADM No
+            } else {
+              alert("Failed to delete student: " + res.message);
+            }
+          },
+        );
+      }
+
+      // NEW: remembers which student's report is currently open, so the
+      // Session/Term selectors can re-fetch without needing the admin no again.
+      let currentProfileAdminNo = null;
+
+      /**
+       * Open Academic Performance Profile Modal on Student Click
+       */
+      function openStudentAcademicProfile(adminNo) {
+        const modal = document.getElementById("modal-student-profile");
+        // FIX: use "flex" (matching the overlay's CSS) so the card is
+        // actually centered - "block" broke the flex centering and made
+        // the report render pinned to the corner.
+        modal.style.display = "flex";
+
+        currentProfileAdminNo = adminNo;
+
+        // NEW: default the Session/Term selects to the most recent option
+        // the first time this modal is opened (leave the user's choice
+        // alone on subsequent opens within the same session).
+        const sessionSel = document.getElementById("profile-session-select");
+        const termSel = document.getElementById("profile-term-select");
+        if (sessionSel && !sessionSel.value) sessionSel.selectedIndex = 0;
+        if (termSel && !termSel.value) termSel.selectedIndex = 0;
+
+        fetchStudentAcademicProfile(adminNo);
+      }
+
+      /**
+       * NEW: Re-fetches the report when the Session or Term dropdown changes.
+       */
+      function handleProfileReportFilterChange() {
+        if (currentProfileAdminNo) {
+          fetchStudentAcademicProfile(currentProfileAdminNo);
+        }
+      }
+
+      /**
+       * Fetches and renders the academic profile/report for the given
+       * student, scoped to the currently selected Session/Term.
+       */
+      function fetchStudentAcademicProfile(adminNo) {
+        // Reset fields
+        document.getElementById("profile-student-name").innerText =
+          "Loading...";
+        document.getElementById("profile-admin-no").innerText = adminNo;
+        document.getElementById("profile-strengths-list").innerHTML =
+          "<li>Loading strengths...</li>";
+        document.getElementById("profile-weaknesses-list").innerHTML =
+          "<li>Loading weaknesses...</li>";
+        document.getElementById("profile-scores-tbody").innerHTML =
+          `<tr><td colspan="4" style="text-align: center;">Calculating scores...</td></tr>`;
+
+        const session = document.getElementById("profile-session-select").value;
+        const term = document.getElementById("profile-term-select").value;
+
+        // Fetch performance data from GAS
+        // NOTE: session/term are passed through so the backend can scope
+        // the report to that Session/Term. If "getStudentAcademicProfile"
+        // in code.gs doesn't yet read these two params, it will need a
+        // small update there to filter the score sheet by session/term
+        // before this will show anything other than the current term.
+        googleScriptRun(
+          "getStudentAcademicProfile",
+          { adminNo: adminNo, session: session, term: term },
+          function (res) {
+            if (res.status === "error") {
+              alert("Error loading profile: " + res.message);
+              closeStudentProfileModal();
+              return;
+            }
+
+            const std = res.student || {};
+            document.getElementById("profile-student-name").innerText =
+              std.name || "Student Profile";
+            document.getElementById("profile-class").innerText =
+              std.class || "N/A";
+            document.getElementById("profile-overall-score").innerText =
+              res.overallScore;
+            document.getElementById("profile-overall-percentage").innerText =
+              `${res.overallPercentage}%`;
+
+            // Calculate Rating
+            let rating = "Needs Improvement";
+            if (res.overallPercentage >= 75) rating = "Outstanding 🌟";
+            else if (res.overallPercentage >= 60)
+              rating = "Good Performance 👍";
+            else if (res.overallPercentage >= 50)
+              rating = "Average Performance ⚖️";
+            document.getElementById("profile-rating").innerText = rating;
+
+            // Render Strengths
+            const strengthsList = document.getElementById(
+              "profile-strengths-list",
+            );
+            if (res.strengths && res.strengths.length > 0) {
+              strengthsList.innerHTML = res.strengths
+                .map(
+                  (s) => `<li><strong>${s.subject}</strong>: ${s.score}%</li>`,
+                )
+                .join("");
+            } else {
+              strengthsList.innerHTML =
+                "<li>No specific strong subjects identified.</li>";
+            }
+
+            // Render Weaknesses
+            const weaknessesList = document.getElementById(
+              "profile-weaknesses-list",
+            );
+            if (res.weaknesses && res.weaknesses.length > 0) {
+              weaknessesList.innerHTML = res.weaknesses
+                .map(
+                  (w) => `<li><strong>${w.subject}</strong>: ${w.score}%</li>`,
+                )
+                .join("");
+            } else {
+              weaknessesList.innerHTML =
+                "<li>No critical weaknesses detected (all subjects ≥ 50%).</li>";
+            }
+
+            // Render Scores Breakdown Table
+            const tbody = document.getElementById("profile-scores-tbody");
+            if (res.scoreBreakdown && res.scoreBreakdown.length > 0) {
+              tbody.innerHTML = res.scoreBreakdown
+                .map(
+                  (b) => `
+        <tr>
+          <td><strong>${b.subject}</strong></td>
+          <td>${b.ca}</td>
+          <td>${b.exam}</td>
+          <td><strong style="color: ${b.score >= 50 ? "#15803d" : "#b91c1c"};">${b.score}</strong></td>
+        </tr>
+      `,
+                )
+                .join("");
+            } else {
+              tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">No score sheet records available for current term.</td></tr>`;
+            }
+          },
+        );
+      }
+
+      function closeStudentProfileModal() {
+        document.getElementById("modal-student-profile").style.display = "none";
+      }
+
+      /**
+       * NEW: Prints just the currently-displayed academic report
+       * (name, session/term, summary cards, strengths/weaknesses, score table)
+       * using the app's existing #printable-area print convention.
+       */
+      function printStudentAcademicProfile() {
+        const name = document.getElementById("profile-student-name").innerText;
+        const adminNo = document.getElementById("profile-admin-no").innerText;
+        const cls = document.getElementById("profile-class").innerText;
+        const session = document.getElementById("profile-session-select").value;
+        const term = document.getElementById("profile-term-select").value;
+        const overallScore = document.getElementById(
+          "profile-overall-score",
+        ).innerText;
+        const overallPct = document.getElementById(
+          "profile-overall-percentage",
+        ).innerText;
+        const rating = document.getElementById("profile-rating").innerText;
+        const strengthsHtml = document.getElementById(
+          "profile-strengths-list",
+        ).innerHTML;
+        const weaknessesHtml = document.getElementById(
+          "profile-weaknesses-list",
+        ).innerHTML;
+        const scoresHtml = document.getElementById(
+          "profile-scores-tbody",
+        ).innerHTML;
+
+        const html = `
+    <div class="rp-header">
+      <h2>NIFTY STEPS COLLEGE</h2>
+      <div class="rp-report-title">STUDENT ACADEMIC REPORT - ${term} Term, ${session}</div>
+      <p>Date: ${new Date().toLocaleDateString()}</p>
+    </div>
+    <p><strong>Name:</strong> ${name} &nbsp; | &nbsp; <strong>Admin No:</strong> ${adminNo} &nbsp; | &nbsp; <strong>Class:</strong> ${cls}</p>
+    <p><strong>Overall Total:</strong> ${overallScore} &nbsp; | &nbsp; <strong>Average %:</strong> ${overallPct} &nbsp; | &nbsp; <strong>Rating:</strong> ${rating}</p>
+    <h4>Key Strengths</h4>
+    <ul>${strengthsHtml}</ul>
+    <h4>Areas for Improvement</h4>
+    <ul>${weaknessesHtml}</ul>
+    <h4>Subject Scoresheet Breakdown</h4>
+    <table class="rp-table">
+      <thead><tr><th>Subject</th><th>CA</th><th>Exam</th><th>Total</th></tr></thead>
+      <tbody>${scoresHtml}</tbody>
+    </table>
+  `;
+
+        document.getElementById("printable-area").innerHTML = html;
+        setTimeout(() => window.print(), 300);
+      }
+
+      // Wrapper for backend calls used by the Student Registry.
+      // Uses the same fetch()-based Web App endpoint as the rest of the
+      // application (GoogleSheetService.URL) instead of google.script.run,
+      // which is only available when this page is served directly through
+      // Apps Script's HtmlService and does not work in this deployment.
+      function googleScriptRun(actionName, data, callback) {
+        const payload = Object.assign({ action: actionName }, data || {});
+        fetch(GoogleSheetService.URL, {
+          method: "POST",
+          body: JSON.stringify(payload),
+        })
+          .then((res) => res.json())
+          .then((response) => callback(response))
+          .catch((err) => {
+            console.error("Student Registry API Error:", err);
+            alert("Server Error: " + err.message);
+          });
+      }
+
+      // Automatically load student roster when section becomes active
+      document.addEventListener("DOMContentLoaded", function () {
+        fetchAndRenderStudentDirectory();
+      });
+      // NOTE: studentRegistryOpenAdd() and closeStudentRegistryModal() are
+      // now defined once, above, where the Admission Number pre-fill and
+      // field resets happen. (Removed the dead duplicate re-declarations
+      // that used to silently override those and skip the ADM No pre-fill.)
+      // --- Delete Confirmation Modal ---
+      function openStudentRegistryDeleteModal() {
+        const modal = document.getElementById("modal-student-registry-delete");
+        if (modal) modal.style.display = "flex";
+      }
+
+      function closeStudentRegistryDeleteModal() {
+        const modal = document.getElementById("modal-student-registry-delete");
+        if (modal) modal.style.display = "none";
+      }
+
+      // --- Student Profile Modal ---
+      function openStudentProfileModal() {
+        const modal = document.getElementById("modal-student-profile");
+        if (modal) modal.style.display = "flex";
+      }
+
+      function closeStudentProfileModal() {
+        const modal = document.getElementById("modal-student-profile");
+        if (modal) modal.style.display = "none";
+      }
+      // Toggle Kebab Dropdown
+      function toggleKebabMenu(event, button) {
+        event.stopPropagation();
+        const currentDropdown = button.nextElementSibling;
+        const isCurrentlyOpen = currentDropdown.style.display === "block";
+
+        // Close any other open kebab menus
+        closeAllKebabs();
+
+        // Toggle state
+        if (!isCurrentlyOpen) {
+          currentDropdown.style.display = "block";
+        }
+      }
+
+      // Close all open kebab dropdowns
+      function closeAllKebabs() {
+        document.querySelectorAll(".kebab-dropdown").forEach((dropdown) => {
+          dropdown.style.display = "none";
+        });
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (event) {
+        if (!event.target.closest(".kebab-menu-container")) {
+          closeAllKebabs();
+        }
+      });
+
+      // ==========================================
+      // NEW: SCROLL TO TOP BUTTON
+      // ==========================================
+      // Shows the button once the page has been scrolled down a bit,
+      // hides it again near the top.
+      window.addEventListener("scroll", function () {
+        const btn = document.getElementById("scrollToTopBtn");
+        if (!btn) return;
+        if (window.scrollY > 300) {
+          btn.classList.add("show");
+        } else {
+          btn.classList.remove("show");
+        }
+      });
+
+      function scrollPageToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
     </script>
   </body>
 </html>
