@@ -2902,7 +2902,6 @@ max-height: 350px !important;
                     style="width: 150px"
                     onchange="app.handleFeeHistoryChange()"
                   >
-                    <option value="2027/2028">2027/2028</option>
                     <option value="2026/2027">2026/2027</option>
                     <option value="2025/2026">2025/2026</option>
                   </select>
@@ -2921,7 +2920,7 @@ max-height: 350px !important;
                     class="btn btn-outline btn-sm"
                     onclick="app.openDebtorModal()"
                   >
-                    📄 Print Debtors
+                    📄 Print Fee Status
                   </button>
                   <select
                     id="feeClassFilter"
@@ -3614,7 +3613,6 @@ max-height: 350px !important;
                   style="width: 140px"
                   onchange="handleProfileReportFilterChange()"
                 >
-                  <option value="2027/2028">2027/2028</option>
                   <option value="2026/2027">2026/2027</option>
                   <option value="2025/2026">2025/2026</option>
                 </select>
@@ -6079,7 +6077,8 @@ ANSWER: B</pre
     <!-- Debtors Modal -->
     <div id="modal-debtors" class="modal-overlay">
       <div class="modal">
-        <h3>Print Debtors Report</h3>
+        <!-- CHANGED: now prints ALL students (paid + owing), not just debtors -->
+        <h3>Print Fee Status Report</h3>
         <div class="form-group">
           <label>Select Class</label>
           <select id="debtorsClassSelect" class="form-control">
@@ -14135,6 +14134,9 @@ ANSWER: B</pre
           modal.style.display = "flex";
         },
 
+        // CHANGED: now builds a full Fee Status report - every student
+        // (both fully paid AND still owing), not just debtors. Kept the
+        // function name so the existing onclick/wiring doesn't need touching.
         generateDebtorReport: async function () {
           this.closeModals();
           const cls = document.getElementById("debtorsClassSelect").value;
@@ -14142,7 +14144,7 @@ ANSWER: B</pre
           const allTx = await GoogleSheetService.getFeeTransactions();
           let students = [];
 
-          // FIX: "ALL" should mean all classes of the currently selected school
+          // "ALL" means all classes of the currently selected school
           const debtorClasses =
             this.state.feeSchool === "pry" ? PRY_CLASSES : ALL_CLASSES;
 
@@ -14157,7 +14159,9 @@ ANSWER: B</pre
 
           // Fetch settings from Google Sheet
           const config = await GoogleSheetService.getFeeSettings();
-          let debtors = [];
+          // CHANGED: renamed from "debtors" to "allStudentsFeeStatus" since
+          // this now holds every student, not just those owing.
+          let allStudentsFeeStatus = [];
 
           for (const s of students) {
             const type = s.status || "Old";
@@ -14178,30 +14182,29 @@ ANSWER: B</pre
 
             const balance = totalDue - paid;
 
-            if (balance > 0) {
-              debtors.push({
-                name: s.name,
-                id: s.id,
-                class: s.class,
-                type: type,
-                total: totalDue,
-                paid: paid,
-                balance: balance,
-              });
-            }
+            // CHANGED: no longer skips students with balance <= 0 -
+            // every student is included, tagged Paid or Owing.
+            allStudentsFeeStatus.push({
+              name: s.name,
+              id: s.id,
+              class: s.class,
+              type: type,
+              total: totalDue,
+              paid: paid,
+              balance: balance,
+              status: balance > 0 ? "Owing" : "Paid",
+            });
           }
 
-          // ... (rest of the HTML generation code remains the same)
-          if (debtors.length === 0) {
-            this.showToast("No debtors found", "success");
+          if (allStudentsFeeStatus.length === 0) {
+            this.showToast("No students found", "success");
             return;
           }
-          // ... (rest of the print logic)
 
           let html = `
     <div class="rp-header">
       <h2>NIFTY STEPS COLLEGE</h2>
-      <div class="rp-report-title">DEBTORS REPORT - ${cls === "ALL" ? "All Classes" : cls}</div>
+      <div class="rp-report-title">FEE STATUS REPORT - ${cls === "ALL" ? "All Classes" : cls}</div>
       <p>Date: ${new Date().toLocaleDateString()}</p>
     </div>
     <table class="rp-table">
@@ -14214,12 +14217,14 @@ ANSWER: B</pre
           <th>Total Due</th>
           <th>Paid</th>
           <th>Balance</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody>
   `;
 
-          debtors.forEach((d) => {
+          allStudentsFeeStatus.forEach((d) => {
+            const isOwing = d.status === "Owing";
             html += `
       <tr>
         <td>${d.name}</td>
@@ -14228,7 +14233,8 @@ ANSWER: B</pre
         <td>${d.type}</td>
         <td>₦${d.total.toLocaleString()}</td>
         <td>₦${d.paid.toLocaleString()}</td>
-        <td style="color:#b91c1c">₦${d.balance.toLocaleString()}</td>
+        <td style="${isOwing ? "color:#b91c1c" : ""}">₦${d.balance.toLocaleString()}</td>
+        <td style="color:${isOwing ? "#b91c1c" : "#15803d"}; font-weight:600">${d.status}</td>
       </tr>
     `;
           });
@@ -14238,7 +14244,7 @@ ANSWER: B</pre
           document.getElementById("printable-area").innerHTML = html;
           setTimeout(() => window.print(), 300);
           this.showToast(
-            `Generated debtors report for ${cls === "ALL" ? "all classes" : cls}`,
+            `Generated fee status report for ${cls === "ALL" ? "all classes" : cls}`,
             "success",
           );
         },
