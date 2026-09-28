@@ -5849,6 +5849,38 @@ ANSWER: B</pre
                 display: flex;
                 align-items: center;
                 gap: 5px;
+              "
+            >
+              <input
+                type="radio"
+                name="stdType"
+                value="Discount 5%"
+                onchange="app.calcModalTotal()"
+              />
+              2 Students (5% Off)
+            </label>
+            <label
+              style="
+                font-weight: normal;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              "
+            >
+              <input
+                type="radio"
+                name="stdType"
+                value="Discount 7.5%"
+                onchange="app.calcModalTotal()"
+              />
+              3 Students (7.5% Off)
+            </label>
+            <label
+              style="
+                font-weight: normal;
+                display: flex;
+                align-items: center;
+                gap: 5px;
                 grid-column: span 2;
               "
             >
@@ -5926,7 +5958,11 @@ ANSWER: B</pre
           <button class="btn btn-outline" onclick="app.closeModals()">
             Cancel
           </button>
-          <button class="btn btn-primary" onclick="app.confirmPayment()">
+          <button
+            id="confirmPaymentBtn"
+            class="btn btn-primary"
+            onclick="app.confirmPayment()"
+          >
             Save Payment
           </button>
         </div>
@@ -5962,6 +5998,8 @@ ANSWER: B</pre
               Teacher's Child (50% Discount)
             </option>
             <option value="Scholarship">Scholarship (Free)</option>
+            <option value="Discount 5%">2 Students (5% Discount)</option>
+            <option value="Discount 7.5%">3 Students (7.5% Discount)</option>
             <option value="Custom">Custom Amount</option>
           </select>
         </div>
@@ -6012,7 +6050,11 @@ ANSWER: B</pre
           <button class="btn btn-outline" onclick="app.closeModals()">
             Cancel
           </button>
-          <button class="btn btn-primary" onclick="app.saveFeeProfile()">
+          <button
+            id="saveFeeProfileBtn"
+            class="btn btn-primary"
+            onclick="app.saveFeeProfile()"
+          >
             Update Profile
           </button>
         </div>
@@ -6926,6 +6968,7 @@ ANSWER: B</pre
           navHistory: [],
           lowThreshold: 50,
           feeSchool: "sec", // 'sec' or 'pry'
+          feeSaveLock: false, // Prevents double-submission of fee payments/profile edits
           cbtQuestions: [], // All loaded CBT questions
           cbtFilteredQuestions: [], // After filtering
           cbtCurrentPage: 1,
@@ -13244,6 +13287,12 @@ ANSWER: B</pre
               return isPry ? baseFee + regFee - subsidy : baseFee * 0.5;
             case "Scholarship":
               return 0;
+            case "Discount 5%":
+              // 2 students from same family: 5% off the term fee
+              return baseFee * 0.95;
+            case "Discount 7.5%":
+              // 3 students from same family: 7.5% off the term fee
+              return baseFee * 0.925;
             case "Custom":
               return customAmount || 0;
             default:
@@ -13474,6 +13523,8 @@ ANSWER: B</pre
                     <option value="New" ${isSelected("New")}>New</option>
                     <option value="Teacher's Child" ${isSelected("Teacher's Child")}>Teacher's Child</option>
                     <option value="Scholarship" ${isSelected("Scholarship")}>Scholarship</option>
+                    <option value="Discount 5%" ${isSelected("Discount 5%")}>2 Students (5% Off)</option>
+                    <option value="Discount 7.5%" ${isSelected("Discount 7.5%")}>3 Students (7.5% Off)</option>
                     <option value="Custom" ${isSelected("Custom")}>Custom</option>
                   </select>
                   <div class="custom-fee-inline ${displayType === "Custom" ? "show" : ""}">
@@ -13516,26 +13567,14 @@ ANSWER: B</pre
             this.filterFeeTable();
           }
 
-          // ════════════════════════════════════════════════════════════
-          // DRAFT AUTO-SAVE: Restore fee draft and attach listeners
-          // ════════════════════════════════════════════════════════════
-          const feeSession = document.getElementById("feeSessionSelect").value;
-          const feeTerm = document.getElementById("feeTermSelect").value;
-
-          setTimeout(() => {
-            // Attempt to restore any existing fee draft
-            const draftRestored = DraftManager.restoreFeeDraft(
-              cls,
-              feeSession,
-              feeTerm,
-            );
-            if (draftRestored) {
-              app.showToast("Fee draft restored!", "warning");
-            }
-
-            // Attach auto-save listeners to all fee payment inputs
-            DraftManager.attachFeeListeners(cls, feeSession, feeTerm);
-          }, 100);
+          // FEE DRAFT AUTO-SAVE DISABLED: fee payment entries are no longer
+          // auto-saved or restored. Also clear any old fee drafts that are
+          // still sitting in this browser's storage.
+          try {
+            Object.keys(localStorage)
+              .filter((k) => k.startsWith("draft_fees_"))
+              .forEach((k) => localStorage.removeItem(k));
+          } catch (e) {}
         },
 
         // Handles when user changes the Type dropdown in the table
@@ -13624,6 +13663,15 @@ ANSWER: B</pre
 
         // The main function to save everything
         saveAllFeePayments: async function () {
+          // GUARD: block a second click while a save is already in flight
+          if (this.state.feeSaveLock) {
+            return this.showToast("Already saving, please wait...", "warning");
+          }
+          this.state.feeSaveLock = true;
+
+          const floatingBtn = document.getElementById("floatingSaveBtn");
+          if (floatingBtn) floatingBtn.disabled = true;
+
           const loader = document.getElementById("loader");
           loader.style.display = "flex";
           const rows = document.querySelectorAll("#fee-tbody tr");
@@ -13632,69 +13680,78 @@ ANSWER: B</pre
           // GET GLOBAL SESSION/TERM
           const session = document.getElementById("feeSessionSelect").value;
           const term = document.getElementById("feeTermSelect").value;
+          // FIX: 'cls' was previously undefined here, which threw a
+          // ReferenceError after saving and silently skipped the cache
+          // clear + table refresh below (stale data -> looked like a
+          // "loading" bug, and led staff to click Save again -> duplicates).
+          const cls = document.getElementById("feeClassFilter").value;
 
-          for (let row of rows) {
-            const studentId = row.dataset.sid;
-            const originalType = row.dataset.originalType;
+          try {
+            for (let row of rows) {
+              const studentId = row.dataset.sid;
+              const originalType = row.dataset.originalType;
 
-            // 1. Get Current UI Values
-            const typeSelect = row.querySelector(".fee-table-select");
-            const newType = typeSelect.value;
-            const customInput = row.querySelector(".custom-fee-inline input");
-            const customAmt = parseFloat(customInput.value) || 0;
+              // 1. Get Current UI Values
+              const typeSelect = row.querySelector(".fee-table-select");
+              const newType = typeSelect.value;
+              const customInput = row.querySelector(".custom-fee-inline input");
+              const customAmt = parseFloat(customInput.value) || 0;
 
-            const paymentInput = row.querySelector(".payment-entry");
-            const paymentAmount = parseFloat(paymentInput.value) || 0;
+              const paymentInput = row.querySelector(".payment-entry");
+              const paymentAmount = parseFloat(paymentInput.value) || 0;
 
-            // 2. Check if Profile Type needs updating
-            if (
-              newType !== originalType ||
-              (newType === "Custom" && customAmt > 0)
-            ) {
-              await GoogleSheetService.updateStudentFeeProfile(
-                studentId,
-                newType,
-                newType === "Custom" ? customAmt : 0,
-                null, // Don't change paid amount here
+              // 2. Check if Profile Type needs updating
+              if (
+                newType !== originalType ||
+                (newType === "Custom" && customAmt > 0)
+              ) {
+                await GoogleSheetService.updateStudentFeeProfile(
+                  studentId,
+                  newType,
+                  newType === "Custom" ? customAmt : 0,
+                  null, // Don't change paid amount here
+                );
+                updatesCount++;
+              }
+
+              // 3. Check if Payment needs recording
+              if (paymentAmount > 0) {
+                await GoogleSheetService.saveFeeTransaction({
+                  txId: Date.now().toString() + studentId,
+                  studentId: studentId,
+                  amount: paymentAmount,
+                  type: newType,
+                  date: new Date().toISOString().split("T")[0],
+                  session: session, // ADDED
+                  term: term, // ADDED
+                });
+                updatesCount++;
+
+                // Clear input visually so user knows it was processed
+                paymentInput.value = "";
+              }
+            }
+
+            if (updatesCount > 0) {
+              this.showToast(
+                `${updatesCount} updates saved successfully!`,
+                "success",
               );
-              updatesCount++;
+              GoogleSheetService.clearCache();
+              await this.renderFeeTable(cls); // Refresh with fresh data
+            } else {
+              this.showToast("No changes to save.", "warning");
             }
-
-            // 3. Check if Payment needs recording
-            if (paymentAmount > 0) {
-              await GoogleSheetService.saveFeeTransaction({
-                txId: Date.now().toString() + studentId,
-                studentId: studentId,
-                amount: paymentAmount,
-                type: newType,
-                date: new Date().toISOString().split("T")[0],
-                session: session, // ADDED
-                term: term, // ADDED
-              });
-              updatesCount++;
-
-              // Clear input visually so user knows it was processed
-              paymentInput.value = "";
-            }
-          }
-
-          loader.style.display = "none";
-
-          if (updatesCount > 0) {
+          } catch (err) {
+            console.error("saveAllFeePayments failed:", err);
             this.showToast(
-              `${updatesCount} updates saved successfully!`,
-              "success",
+              "Something went wrong while saving. Please check and try again.",
+              "error",
             );
-            // ════════════════════════════════════════════════════════════
-            // DRAFT AUTO-SAVE: Destroy fee draft after successful save
-            // ════════════════════════════════════════════════════════════
-            DraftManager.destroyFeeDraft(cls, session, term);
-            GoogleSheetService.clearCache();
-            this.renderFeeTable(
-              document.getElementById("feeClassFilter").value,
-            ); // Refresh
-          } else {
-            this.showToast("No changes to save.", "warning");
+          } finally {
+            loader.style.display = "none";
+            this.state.feeSaveLock = false;
+            if (floatingBtn) floatingBtn.disabled = false;
           }
         },
 
@@ -13780,6 +13837,11 @@ ANSWER: B</pre
         },
 
         confirmPayment: async function () {
+          // GUARD: block a second click while a save is already in flight
+          if (this.state.feeSaveLock) {
+            return this.showToast("Already saving, please wait...", "warning");
+          }
+
           const amount = parseInt(document.getElementById("payAmount").value);
           const selectedType = document.querySelector(
             'input[name="stdType"]:checked',
@@ -13801,42 +13863,59 @@ ANSWER: B</pre
           if (amount > totalDue && selectedType !== "Custom")
             return this.showToast("Amount exceeds due", "error");
 
-          // --- NEW: AUTO-UPDATE PROFILE TYPE ---
-          // If the user changed the type in the modal (e.g., switched to Scholarship), save it to the sheet
-          if (this.state.feeContext.currentType !== selectedType) {
-            let customAmt = 0;
-            if (selectedType === "Custom") {
-              customAmt =
-                parseInt(document.getElementById("payCustomAmount").value) || 0;
+          this.state.feeSaveLock = true;
+          const payBtn = document.getElementById("confirmPaymentBtn");
+          if (payBtn) payBtn.disabled = true;
+
+          try {
+            // --- NEW: AUTO-UPDATE PROFILE TYPE ---
+            // If the user changed the type in the modal (e.g., switched to Scholarship), save it to the sheet
+            if (this.state.feeContext.currentType !== selectedType) {
+              let customAmt = 0;
+              if (selectedType === "Custom") {
+                customAmt =
+                  parseInt(document.getElementById("payCustomAmount").value) ||
+                  0;
+              }
+
+              // Update profile silently in background
+              await GoogleSheetService.updateStudentFeeProfile(
+                this.state.feeContext.sid,
+                selectedType,
+                customAmt,
+                null, // Do not overwrite paid amount, the transaction below handles the math
+              );
+              // Clear cache so table reloads fresh data
+              GoogleSheetService.clearCache();
             }
+            // --------------------------------------
 
-            // Update profile silently in background
-            await GoogleSheetService.updateStudentFeeProfile(
-              this.state.feeContext.sid,
-              selectedType,
-              customAmt,
-              null, // Do not overwrite paid amount, the transaction below handles the math
+            // 1. Save Transaction
+            const res = await GoogleSheetService.saveFeeTransaction({
+              txId: Date.now().toString() + "-" + this.state.feeContext.sid,
+              studentId: this.state.feeContext.sid,
+              amount: amount,
+              type: selectedType,
+              date: new Date().toISOString().split("T")[0],
+            });
+
+            if (res.status === "success") {
+              this.showToast("Payment Recorded Successfully", "success");
+              this.closeModals();
+              GoogleSheetService.clearCache();
+              await this.renderFeeTable(this.state.feeContext.cls);
+            } else {
+              this.showToast("Error saving payment", "error");
+            }
+          } catch (err) {
+            console.error("confirmPayment failed:", err);
+            this.showToast(
+              "Something went wrong while saving. Please check and try again.",
+              "error",
             );
-            // Clear cache so table reloads fresh data
-            GoogleSheetService.clearCache();
-          }
-          // --------------------------------------
-
-          // 1. Save Transaction
-          const res = await GoogleSheetService.saveFeeTransaction({
-            txId: Date.now().toString(),
-            studentId: this.state.feeContext.sid,
-            amount: amount,
-            type: selectedType,
-            date: new Date().toISOString().split("T")[0],
-          });
-
-          if (res.status === "success") {
-            this.showToast("Payment Recorded Successfully", "success");
-            this.closeModals();
-            this.renderFeeTable(this.state.feeContext.cls);
-          } else {
-            this.showToast("Error saving payment", "error");
+          } finally {
+            this.state.feeSaveLock = false;
+            if (payBtn) payBtn.disabled = false;
           }
         },
 
@@ -13872,6 +13951,11 @@ ANSWER: B</pre
         },
 
         saveFeeProfile: async function () {
+          // GUARD: block a second click while a save is already in flight
+          if (this.state.feeSaveLock) {
+            return this.showToast("Already saving, please wait...", "warning");
+          }
+
           const sid = document.getElementById("editFeeStudentId").value;
           const type = document.getElementById("editFeeType").value;
           const customAmt =
@@ -13888,22 +13972,37 @@ ANSWER: B</pre
             );
           }
 
-          // UPDATED: Send paidAmt to server
-          const res = await GoogleSheetService.updateStudentFeeProfile(
-            sid,
-            type,
-            customAmt,
-            paidAmt, // New parameter
-          );
+          this.state.feeSaveLock = true;
+          const saveBtn = document.getElementById("saveFeeProfileBtn");
+          if (saveBtn) saveBtn.disabled = true;
 
-          if (res.status === "success") {
-            this.showToast("Profile & Payments Updated", "success");
-            this.closeModals();
-            // Clear cache to reflect changes immediately
-            GoogleSheetService.clearCache();
-            this.loadFees();
-          } else {
-            this.showToast("Error updating profile", "error");
+          try {
+            // UPDATED: Send paidAmt to server
+            const res = await GoogleSheetService.updateStudentFeeProfile(
+              sid,
+              type,
+              customAmt,
+              paidAmt, // New parameter
+            );
+
+            if (res.status === "success") {
+              this.showToast("Profile & Payments Updated", "success");
+              this.closeModals();
+              // Clear cache to reflect changes immediately
+              GoogleSheetService.clearCache();
+              await this.loadFees();
+            } else {
+              this.showToast("Error updating profile", "error");
+            }
+          } catch (err) {
+            console.error("saveFeeProfile failed:", err);
+            this.showToast(
+              "Something went wrong while saving. Please check and try again.",
+              "error",
+            );
+          } finally {
+            this.state.feeSaveLock = false;
+            if (saveBtn) saveBtn.disabled = false;
           }
         },
 
@@ -14141,10 +14240,21 @@ ANSWER: B</pre
           this.closeModals();
           const cls = document.getElementById("debtorsClassSelect").value;
 
+          // Use the SAME session/term that is selected on the Fee page
+          const session = document.getElementById("feeSessionSelect").value;
+          const term = document.getElementById("feeTermSelect").value;
+          const termNames = {
+            "1st": "1st Term",
+            "2nd": "2nd Term",
+            "3rd": "3rd Term",
+          };
+          const termIndex = { "1st": 1, "2nd": 2, "3rd": 3 };
+          const currentTermNum = termIndex[term];
+
           const allTx = await GoogleSheetService.getFeeTransactions();
+          const allSettings = await GoogleSheetService.getFeeSettings();
           let students = [];
 
-          // "ALL" means all classes of the currently selected school
           const debtorClasses =
             this.state.feeSchool === "pry" ? PRY_CLASSES : ALL_CLASSES;
 
@@ -14157,89 +14267,161 @@ ANSWER: B</pre
             students = await GoogleSheetService.loadStudents(cls);
           }
 
-          // Fetch settings from Google Sheet
-          const config = await GoogleSheetService.getFeeSettings();
-          // CHANGED: renamed from "debtors" to "allStudentsFeeStatus" since
-          // this now holds every student, not just those owing.
-          let allStudentsFeeStatus = [];
+          let rows = [];
+          let totals = { exp: 0, col: 0, out: 0 };
 
           for (const s of students) {
             const type = s.status || "Old";
             const customAmt = s.customFee || 0;
-            const fees = config[s.class] || { schoolFee: 0, regFee: 0 }; // Use fetched config
+            const config = allSettings[s.class] || {
+              fee_1st: 0,
+              fee_2nd: 0,
+              fee_3rd: 0,
+              regFee: 0,
+              teacherSubsidy: 0,
+            };
 
-            const totalDue = this.calculateTotalFee(
-              fees.schoolFee,
-              fees.regFee,
-              type,
-              customAmt,
-              this.state.feeSchool, // FIX: Pass current school
-              fees.teacherSubsidy || 0, // FIX: Pass subsidy
-            );
+            // Fee for a given term (same formula as the fee table)
+            const feeFor = (t) =>
+              this.calculateTotalFee(
+                config[`fee_${t}`] || 0,
+                config.regFee,
+                type,
+                customAmt,
+                this.state.feeSchool,
+                config.teacherSubsidy,
+              );
+            const paidIn = (t) =>
+              allTx
+                .filter(
+                  (x) =>
+                    x.studentId === s.id &&
+                    x.session === session &&
+                    x.term === t,
+                )
+                .reduce((sum, x) => sum + Number(x.amount), 0);
 
-            const myTxs = allTx.filter((t) => t.studentId === s.id);
-            const paid = myTxs.reduce((sum, t) => sum + Number(t.amount), 0);
+            const currentFee = feeFor(term);
 
+            // Outstanding carried over from previous terms
+            let outstanding = 0;
+            for (let i = 1; i < currentTermNum; i++) {
+              const prev = Object.keys(termIndex).find(
+                (k) => termIndex[k] === i,
+              );
+              outstanding += feeFor(prev) - paidIn(prev);
+            }
+
+            const paid = paidIn(term);
+            const totalDue = currentFee + outstanding;
             const balance = totalDue - paid;
 
-            // CHANGED: no longer skips students with balance <= 0 -
-            // every student is included, tagged Paid or Owing.
-            allStudentsFeeStatus.push({
+            totals.exp += totalDue;
+            totals.col += paid;
+            totals.out += balance;
+
+            rows.push({
               name: s.name,
               id: s.id,
               class: s.class,
-              type: type,
-              total: totalDue,
-              paid: paid,
-              balance: balance,
-              status: balance > 0 ? "Owing" : "Paid",
+              type,
+              currentFee,
+              outstanding,
+              totalDue,
+              paid,
+              balance,
+              status: balance <= 0 ? "Paid" : paid > 0 ? "Partial" : "Owing",
             });
           }
 
-          if (allStudentsFeeStatus.length === 0) {
+          if (rows.length === 0) {
             this.showToast("No students found", "success");
             return;
           }
 
-          let html = `
-    <div class="rp-header">
-      <h2>NIFTY STEPS COLLEGE</h2>
-      <div class="rp-report-title">FEE STATUS REPORT - ${cls === "ALL" ? "All Classes" : cls}</div>
-      <p>Date: ${new Date().toLocaleDateString()}</p>
-    </div>
-    <table class="rp-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>ID</th>
-          <th>Class</th>
-          <th>Type</th>
-          <th>Total Due</th>
-          <th>Paid</th>
-          <th>Balance</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
+          const fmt = (n) => `₦${Number(n).toLocaleString()}`;
+          const statusColor = {
+            Paid: "#15803d",
+            Partial: "#b45309",
+            Owing: "#b91c1c",
+          };
 
-          allStudentsFeeStatus.forEach((d) => {
-            const isOwing = d.status === "Owing";
+          let html = `
+    <style>
+      @media print {
+        @page { size: A4 landscape; margin: 8mm; }
+        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      }
+      .fs-wrap { font-family: Arial, Helvetica, sans-serif; color: #000; }
+      .fs-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 10px; }
+      .fs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; }
+      .fs-title { font-size: 14px; font-weight: bold; margin-top: 4px; }
+      .fs-meta { font-size: 12px; margin-top: 3px; }
+      .fs-cards { display: flex; gap: 14px; margin: 10px 0 14px; }
+      .fs-card { flex: 1; border: 1px solid #cbd5e1; border-left: 5px solid #2563eb; border-radius: 8px; padding: 10px 14px; }
+      .fs-card.income { border-left-color: #15803d; }
+      .fs-card.pending { border-left-color: #b91c1c; }
+      .fs-card-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #475569; }
+      .fs-card-value { font-size: 20px; font-weight: 800; margin-top: 3px; }
+      .fs-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+      .fs-table th, .fs-table td { border: 1px solid #000; padding: 4px 6px; text-align: left; }
+      .fs-table th { background: #e2e8f0; }
+      .fs-table thead { display: table-header-group; }
+      .fs-table tr { page-break-inside: avoid; }
+      .fs-table .num { text-align: right; }
+      .fs-table tfoot td { font-weight: 800; background: #f1f5f9; }
+    </style>
+    <div class="fs-wrap">
+      <div class="fs-header">
+        <h2>NIFTY STEPS COLLEGE</h2>
+        <div class="fs-title">FEE STATUS REPORT - ${cls === "ALL" ? "All Classes" : cls}</div>
+        <div class="fs-meta">Session: ${session} &nbsp;|&nbsp; Term: ${termNames[term] || term} &nbsp;|&nbsp; Date: ${new Date().toLocaleDateString()}</div>
+      </div>
+
+      <div class="fs-cards">
+        <div class="fs-card"><div class="fs-card-title">Total Expected</div><div class="fs-card-value">${fmt(totals.exp)}</div></div>
+        <div class="fs-card income"><div class="fs-card-title">Total Collected</div><div class="fs-card-value">${fmt(totals.col)}</div></div>
+        <div class="fs-card pending"><div class="fs-card-title">Outstanding</div><div class="fs-card-value">${fmt(totals.out)}</div></div>
+      </div>
+
+      <table class="fs-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>ID</th><th>Class</th><th>Type</th>
+            <th class="num">Current Fee</th><th class="num">Outstanding</th>
+            <th class="num">Total Due</th><th class="num">Paid</th>
+            <th class="num">Balance</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+          rows.forEach((d, i) => {
             html += `
-      <tr>
-        <td>${d.name}</td>
-        <td>${d.id}</td>
-        <td>${d.class}</td>
-        <td>${d.type}</td>
-        <td>₦${d.total.toLocaleString()}</td>
-        <td>₦${d.paid.toLocaleString()}</td>
-        <td style="${isOwing ? "color:#b91c1c" : ""}">₦${d.balance.toLocaleString()}</td>
-        <td style="color:${isOwing ? "#b91c1c" : "#15803d"}; font-weight:600">${d.status}</td>
-      </tr>
-    `;
+          <tr>
+            <td>${i + 1}</td><td>${d.name}</td><td>${d.id}</td><td>${d.class}</td><td>${d.type}</td>
+            <td class="num">${fmt(d.currentFee)}</td>
+            <td class="num">${fmt(d.outstanding)}</td>
+            <td class="num">${fmt(d.totalDue)}</td>
+            <td class="num">${fmt(d.paid)}</td>
+            <td class="num" style="color:${d.balance > 0 ? "#b91c1c" : "#000"}">${fmt(d.balance)}</td>
+            <td style="color:${statusColor[d.status]}; font-weight:700">${d.status}</td>
+          </tr>`;
           });
 
-          html += `</tbody></table>`;
+          html += `
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="6">TOTAL (${rows.length} students)</td>
+            <td class="num">${fmt(rows.reduce((a, r) => a + r.outstanding, 0))}</td>
+            <td class="num">${fmt(totals.exp)}</td>
+            <td class="num">${fmt(totals.col)}</td>
+            <td class="num">${fmt(totals.out)}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>`;
 
           document.getElementById("printable-area").innerHTML = html;
           setTimeout(() => window.print(), 300);
