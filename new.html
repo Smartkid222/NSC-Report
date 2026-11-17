@@ -15290,7 +15290,46 @@ ANSWER: B</pre
         // class SSS1 -> sheet "SSS_Scores_2025_2026_1st".
         // getFullResult()/getClassScores() already build that sheet name
         // from the session/term params we pass in (see GoogleSheetService).
+        // Scales the report inside #printable-area so it always fits ONE A4 portrait page
+        fitPrintToOnePage: function () {
+          const area = document.getElementById("printable-area");
+          const card = area && area.querySelector(".report-card");
+          if (!card) return;
 
+          const mm = 96 / 25.4;
+          const W = 190 * mm; // A4 width (210mm) minus 10mm margins
+          const Hmax = 277 * mm - 8; // A4 height (297mm) minus 10mm margins, small safety gap
+
+          // Wrap the report so we can scale it without breaking layout
+          const wrap = document.createElement("div");
+          const inner = document.createElement("div");
+          card.parentNode.insertBefore(wrap, card);
+          inner.appendChild(card);
+          wrap.appendChild(inner);
+
+          // Measure it off-screen using print sizing
+          const oldAreaStyle = area.getAttribute("style") || "";
+          const oldFont = document.documentElement.style.fontSize;
+          area.style.cssText = `display:block;position:absolute;left:-99999px;top:0;width:${W}px;visibility:hidden;`;
+          document.documentElement.style.fontSize = "16px"; // print uses 16px base
+          inner.style.width = W + "px";
+          const h = inner.scrollHeight;
+
+          // Restore
+          if (oldAreaStyle) area.setAttribute("style", oldAreaStyle);
+          else area.removeAttribute("style");
+          document.documentElement.style.fontSize = oldFont;
+
+          // Shrink only if taller than one page
+          const s = Math.min(1, Hmax / h);
+          inner.style.transformOrigin = "top left";
+          inner.style.transform = `scale(${s})`;
+          wrap.style.width = W + "px";
+          wrap.style.height = Math.floor(h * s) + "px";
+          wrap.style.overflow = "hidden";
+          wrap.style.pageBreakInside = "avoid";
+          wrap.style.breakInside = "avoid";
+        },
         // 1st or 2nd term: single-term archived report
         generateArchiveResultPrint: async function () {
           const adminNo = this.state.rosterPrintStudent.id;
@@ -15368,6 +15407,7 @@ ANSWER: B</pre
       <div class="report-card">${reportHtml}</div>
     `;
 
+            this.fitPrintToOnePage();
             this.toggleLoader(false);
             this.showToast(
               `Preparing ${studentName}'s ${term} Term ${session} Archived Result...`,
@@ -15444,7 +15484,7 @@ ANSWER: B</pre
             printArea.innerHTML = `
             <style>
                 @media print {
-                    @page { margin: 10mm; size: A4 landscape; }
+                    @page { margin: 10mm; size: A4 portrait; }
                     body * { visibility: hidden; }
                     #printable-area, #printable-area * { visibility: visible; }
                     #printable-area { 
@@ -15487,6 +15527,7 @@ ANSWER: B</pre
             <div class="report-card">${reportHtml}</div>
         `;
 
+            this.fitPrintToOnePage();
             this.toggleLoader(false);
             this.showToast(
               `Preparing ${studentName}'s Cumulative Archived Result (${session})...`,
