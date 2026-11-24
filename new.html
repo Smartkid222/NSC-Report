@@ -15110,6 +15110,7 @@ ANSWER: B</pre
             this.state.rosterPrintStudent = { id: sid, name: rawName };
             this.state.printFromRoster = true;
             this.state.printArchiveMode = true;
+            this.state.archiveUseStamp = false;
 
             const classGroup = document.getElementById("printConfigClassGroup");
             const classSelect = document.getElementById("printConfigClass");
@@ -15149,6 +15150,7 @@ ANSWER: B</pre
           this.state.printAllMode = false;
           this.state.printFromRoster = true;
           this.state.printArchiveMode = true; // NEW: routes dispatchPrintReport()
+          this.state.archiveUseStamp = true;
 
           const classGroup = document.getElementById("printConfigClassGroup");
           const classSelect = document.getElementById("printConfigClass");
@@ -15407,7 +15409,7 @@ ANSWER: B</pre
               session,
               term,
               nextTermDate,
-              useStamp: true,
+              useStamp: this.state.archiveUseStamp === true,
             });
 
             const printArea = document.getElementById("printable-area");
@@ -15497,7 +15499,7 @@ ANSWER: B</pre
               isJSS: isJSS,
               session: session,
               nextTermDate: nextTermDate,
-              useStamp: true,
+              useStamp: this.state.archiveUseStamp === true,
             });
 
             const printArea = document.getElementById("printable-area");
