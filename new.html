@@ -15098,6 +15098,26 @@ ANSWER: B</pre
             return;
           }
           this.state.printAllMode = false;
+          this.state.printFromRoster = false;
+
+          // Past Results Archive: use the archive print pipeline + show Class picker
+          if (this.state.viewContext.resultType === "archive") {
+            const rawName =
+              (document.getElementById("det-name")?.textContent || "").replace(
+                /\s*\((Exam|Mid-Term)\)\s*$/,
+                "",
+              ) || sid;
+            this.state.rosterPrintStudent = { id: sid, name: rawName };
+            this.state.printFromRoster = true;
+            this.state.printArchiveMode = true;
+
+            const classGroup = document.getElementById("printConfigClassGroup");
+            const classSelect = document.getElementById("printConfigClass");
+            if (classGroup) classGroup.style.display = "block";
+            if (classSelect && this.state.viewContext.cls)
+              classSelect.value = this.state.viewContext.cls;
+          }
+
           document.getElementById("modal-print-config").style.display = "flex";
         },
 
@@ -15363,7 +15383,7 @@ ANSWER: B</pre
               );
             }
 
-            const studentInfo = res.info;
+            const studentInfo = Object.assign({}, res.info, { class: cls });
             const scores = res.scores;
             const isJSS = cls.startsWith("JSS");
             const subjectsList = isJSS ? JSS_SUBJECTS : SSS_SUBJECTS.All;
@@ -15456,7 +15476,7 @@ ANSWER: B</pre
               );
             }
 
-            const studentInfo = res.info;
+            const studentInfo = Object.assign({}, res.info, { class: cls });
             const isJSS = cls.startsWith("JSS");
             const subjectsList = isJSS ? JSS_SUBJECTS : SSS_SUBJECTS.All;
 
@@ -16471,7 +16491,7 @@ ANSWER: B</pre
             printArea.innerHTML = `
             <style>
                 @media print {
-                    @page { margin: 10mm; size: A4 landscape; }
+                    @page { margin: 10mm; size: A4 portrait; }
                     body * { visibility: hidden; }
                     #printable-area, #printable-area * { visibility: visible; }
                     #printable-area { 
