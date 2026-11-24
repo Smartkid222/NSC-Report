@@ -16737,39 +16737,31 @@ ANSWER: B</pre
           // ════════════════════════════════════════════════════════════
           // 🔧 FIX: Normalized lookup for cumulative report too
           // ════════════════════════════════════════════════════════════
-          const avgLookup = {};
+          const avgSums = {}; // { subject: { total, count } }
 
-          // Build lookup from all terms data
           ["1st", "2nd", "3rd"].forEach(function (term) {
             const termData = allTermsData[term];
-            if (termData && termData.subjectAverages) {
-              for (const rawKey in termData.subjectAverages) {
-                const cleanKey = String(rawKey).trim();
-                if (!avgLookup[cleanKey]) {
-                  avgLookup[cleanKey] = termData.subjectAverages[rawKey];
-                }
-                avgLookup[rawKey] = termData.subjectAverages[rawKey];
-              }
+            if (!termData || !termData.subjectAverages) return;
+            for (const rawKey in termData.subjectAverages) {
+              const val = termData.subjectAverages[rawKey];
+              // skip empty / missing values so they can't wipe out a good one
+              if (val === null || val === undefined || val === "") continue;
+              const num = Number(val);
+              if (isNaN(num) || num <= 0) continue;
+              const key = String(rawKey).trim().toLowerCase();
+              if (!avgSums[key]) avgSums[key] = { total: 0, count: 0 };
+              avgSums[key].total += num;
+              avgSums[key].count += 1;
             }
           });
 
           const getAvg = function (subjectName) {
-            const name = String(subjectName || "").trim();
-            let val = avgLookup[name];
-            if (val === undefined) val = avgLookup[subjectName];
-
-            // null = column doesn't exist
-            if (val === null || val === undefined) {
-              return "N/A";
-            }
-
-            const numVal = Number(val);
-            if (isNaN(numVal)) {
-              return "N/A";
-            }
-
-            // Return formatted average (including "0.0" if all scored 0)
-            return numVal.toFixed(1);
+            const key = String(subjectName || "")
+              .trim()
+              .toLowerCase();
+            const entry = avgSums[key];
+            if (!entry || entry.count === 0) return "N/A";
+            return (entry.total / entry.count).toFixed(1);
           };
           // ════════════════════════════════════════════════════════════
 
